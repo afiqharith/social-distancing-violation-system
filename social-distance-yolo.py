@@ -9,6 +9,7 @@ red = (0,0,255)
 yellow = (0,255,255)
 white = (255,255,255)
 orange = (0,165,255)
+font = cv2.FONT_HERSHEY_SIMPLEX
 
 # Load video
 videosrc = "TownCentre.mp4"
@@ -70,7 +71,6 @@ def main():
         net.setInput(blob)
         outs = net.forward(output_layers)
 
-        # Showing informations on the screen
         class_ids = []
         confidences = []
         boxes = []
@@ -97,7 +97,6 @@ def main():
 
         indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
 
-        font = cv2.FONT_HERSHEY_SIMPLEX
         for i in range(len(boxes)):
             if i in indexes:
                 x, y, w, h = boxes[i]
