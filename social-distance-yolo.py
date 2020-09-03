@@ -16,19 +16,19 @@ video = cv2.VideoCapture(videosrc)
 
 #config for different datasets
 if videosrc == 'TownCentre.mp4':
-    distance = config.towncentre['distance']
-    h = config.towncentre['height']
-    w = config.towncentre['width']
+    distance = config.towncentre.get('distance')
+    h = config.towncentre.get('height')
+    w = config.towncentre.get('width')
 
 if videosrc == 'PETS2009.mp4':
-    distance = config.pets2009['distance']
-    h = config.pets2009['height']
-    w = config.pets2009['width']
+    distance = config.pets2009.get('distance')
+    h = config.pets2009.get('height')
+    w = config.pets2009.get('width')
 
 if videosrc == 'VIRAT.mp4':
-    distance = config.virat['distance']
-    h = config.virat['height']
-    w = config.virat['width']
+    distance = config.virat.get('distance')
+    h = config.virat.get('height')
+    w = config.virat.get('width')
 
 # Load Yolo
 net, output_layers, classes = load_model.loading_dependencies()
