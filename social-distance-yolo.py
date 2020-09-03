@@ -9,7 +9,6 @@ red = (0,0,255)
 yellow = (0,255,255)
 white = (255,255,255)
 orange = (0,165,255)
-font = cv2.FONT_HERSHEY_SIMPLEX
 
 # Load video
 videosrc = "TownCentre.mp4"
@@ -144,7 +143,7 @@ def main():
 
                 y1label = max(y1, labelSize[1])
                 cv2.rectangle(frame, (x1, y1label - labelSize[1]),(x1 + labelSize[0], y1 + baseLine), (255, 255, 255), cv2.FILLED)
-                cv2.putText(frame, label, (x1, y1), font, 0.5, green, 1,cv2.LINE_AA)
+                cv2.putText(frame, label, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, green, 1,cv2.LINE_AA)
             else:
                 cv2.rectangle(frame,(x1,y1),(x2,y2), red, 2)
                 # cv2.ellipse(frame, centroide, (35, 19), 0.0, 0.0, 360.0, red, 2)
@@ -154,7 +153,7 @@ def main():
 
                 y1label = max(y1, labelSize[1])
                 cv2.rectangle(frame, (x1, y1label - labelSize[1]),(x1 + labelSize[0], y1 + baseLine), (255, 255, 255), cv2.FILLED)
-                cv2.putText(frame, label, (x1, y1), font, 0.5, orange, 1,cv2.LINE_AA)
+                cv2.putText(frame, label, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, orange, 1,cv2.LINE_AA)
 
         cv2.imshow("Social Distance System", frame)
 
