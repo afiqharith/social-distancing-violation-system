@@ -21,7 +21,7 @@ python3 social-distance-yolo.py
 
 - No camera calibration for intrinsic parameter
 
-**Future upgrade:**
+**Future upgrades:**
 
 - [ ] Camera calibration for intrinsic parameter (distance)
 - [ ] Add facemask detection
