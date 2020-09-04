@@ -6,6 +6,8 @@ The initial idea of this project is to use MobileNet SSD with Caffe implementati
 
 - No camera calibration for intrinsic parameter
 
+###
+
 _Install the dependencies on command line:_
 
 ```sh
@@ -17,6 +19,8 @@ _To run the program on command line:_
 ```sh
 python3 social-distance-yolo.py
 ```
+
+###
 
 **Future upgrade:**
 
