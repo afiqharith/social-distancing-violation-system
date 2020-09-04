@@ -27,15 +27,16 @@ python3 social-distance-yolo.py
 
 **Kindly check out below URL:**
 
-- **Output video URL**
+-**Output video URL**
 
 _Youtube URL:_ <https://youtu.be/zXBDvDaJLHA>
 
-- **Object Detection Model**
+-**Object Detection Model**
 
 _YOLO object detection model URL:_ <https://pjreddie.com/darknet/yolo/>
+
 CC: <https://pjreddie.com/>
 
-- **Dataset**
+-**Dataset**
 
 _Dataset from Oxford TownCentre:_ <https://megapixels.cc/>; MegaPixels: Origins, Ethics, and Privacy Implications of Publicly Available Face Recognition Image Datasets
