@@ -29,11 +29,11 @@ python3 social-distance-yolo.py
 
 -**Output video URL**
 
-_Youtube URL:_ <https://youtu.be/zXBDvDaJLHA>
+_Youtube:_ [Person Detection for Social Distance](https://youtu.be/zXBDvDaJLHA)
 
 -**Object Detection Model**
 
-_YOLO object detection model URL:_ https://pjreddie.com/darknet/yolo/ - automatic!
+_YOLO object detection model:_ [YOLO](https://pjreddie.com/darknet/yolo/)
 
 CC: <https://pjreddie.com/>
 
