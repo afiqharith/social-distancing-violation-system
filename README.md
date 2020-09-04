@@ -33,7 +33,7 @@ _Youtube URL:_ <https://youtu.be/zXBDvDaJLHA>
 
 -**Object Detection Model**
 
-_YOLO object detection model URL:_ <https://pjreddie.com/darknet/yolo/>
+_YOLO object detection model URL:_ https://pjreddie.com/darknet/yolo/ - automatic!
 
 CC: <https://pjreddie.com/>
 
