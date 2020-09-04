@@ -1,6 +1,7 @@
 # Social Distance using pre-trained YOLOv3 model
 
 The initial idea of this project is to use MobileNet SSD with Caffe implementation as the person detection algorithm. After I've finished my Final Year Project on July 2020, I decided to further improve the detection algorithm by using YOLOv3 to increase the accuracy
+</br>
 
 _Install the dependencies on command line:_
 
@@ -13,6 +14,8 @@ _To run the program on command line:_
 ```sh
 python3 social-distance-yolo.py
 ```
+
+</br>
 
 **Social distance using distance formula Drawback:**
 
