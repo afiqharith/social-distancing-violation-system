@@ -21,6 +21,11 @@ python3 social-distance-yolo.py
 ![outputimage](/images/image.png) |
 --------------------------------- |
 
+**Accuracy:**
+Dataset | TP | TN | FP | FN
+------- | -- | -- | -- | --
+Oxford Town Centre | n/a | n/a | n/a | n/a
+
 **Social distance using distance formula Drawback:**
 
 - No camera calibration for intrinsic parameter
