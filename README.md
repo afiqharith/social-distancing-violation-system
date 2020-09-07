@@ -17,6 +17,9 @@ python3 social-distance-yolo.py
 
 </br>
 
+**Output example:**
+![outputimage](/images/image.png)
+
 **Social distance using distance formula Drawback:**
 
 - No camera calibration for intrinsic parameter
