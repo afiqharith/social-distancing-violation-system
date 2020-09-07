@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import math
-import config, load_model
+from setup import config, load_model
 
 blue = (255,0,0)
 green = (0,255,0)
