@@ -21,7 +21,12 @@ python3 social-distance-yolo.py
 ![outputimage](/images/image.png) |
 --------------------------------- |
 
-**Accuracy:**
+**Accuracy for person detection:**
+Dataset | TP | TN | FP | FN | %
+------- | -- | -- | -- | -- | --
+Oxford Town Centre | n/a | n/a | n/a | n/a | n/a
+
+**Accuracy for social distance monitoring:**
 Dataset | TP | TN | FP | FN | %
 ------- | -- | -- | -- | -- | --
 Oxford Town Centre | n/a | n/a | n/a | n/a | n/a
