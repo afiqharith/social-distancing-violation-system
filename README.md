@@ -22,9 +22,9 @@ python3 social-distance-yolo.py
 --------------------------------- |
 
 **Accuracy:**
-Dataset | TP | TN | FP | FN
-------- | -- | -- | -- | --
-Oxford Town Centre | n/a | n/a | n/a | n/a
+Dataset | TP | TN | FP | FN | %
+------- | -- | -- | -- | -- | --
+Oxford Town Centre | n/a | n/a | n/a | n/a | n/a
 
 **Social distance using distance formula Drawback:**
 
