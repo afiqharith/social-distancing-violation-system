@@ -40,8 +40,14 @@ def calculateCentroid(xmin,ymin,xmax,ymax):
     return xmid,ymid,centroid
 
 def get_distance(x1,x2,y1,y2):
-  distance = math.sqrt((x1-x2)**2 + (y1-y2)**2)
-  return distance
+
+    distance = math.sqrt((x1-x2)**2 + (y1-y2)**2)
+    
+    return distance
+
+def draw_detection_box(frame,x1,y1,x2,y2,color):
+
+    cv2.rectangle(frame,(x1,y1),(x2,y2), color, 2)
 
 def main():
 
@@ -73,7 +79,9 @@ def main():
                 scores = detection[5:]
                 class_id = np.argmax(scores)
                 confidence = scores[class_id]
-                if confidence > 0.5:
+
+                #if prediction is 50% and class id is 0 which is 'person'
+                if confidence > 0.5 and class_id == 0:
                     
                     # Object detected
                     center_x = int(detection[0] * width)
@@ -89,6 +97,7 @@ def main():
                     confidences.append(float(confidence))
                     class_ids.append(class_id)
 
+        # apply non-max suppression
         indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
 
         for i in range(len(boxes)):
@@ -100,25 +109,27 @@ def main():
                 xmax = (x + w)
                 ymax = (y + h)
 
-                label = str(classes[class_ids[i]])
-                if label == 'person':
-                    #calculate centroid point for bounding boxes
-                    xmid, ymid, centroid = calculateCentroid(xmin,ymin,xmax,ymax)
-                    detectedBox.append([xmin,ymin,xmax,ymax,centroid])
+                '''use when to select person based on class label's name instead of object's class id'''
+                # label = str(classes[class_ids[i]])
+                # if label == 'person':
 
-                    my_color = 0
-                    for k in range (len(centroids)):
-                        c = centroids[k]
-                        
-                        if get_distance(c[0],centroid[0],c[1],centroid[1]) <= distance:
-                            box_colors[k] = 1
-                            my_color = 1
-                            cv2.line(frame, (int(c[0]),int(c[1])), (int(centroid[0]),int(centroid[1])), yellow, 1,cv2.LINE_AA)
-                            cv2.circle(frame, (int(c[0]),int(c[1])), 3, orange, -1,cv2.LINE_AA)
-                            cv2.circle(frame, (int(centroid[0]),int(centroid[1])), 3, orange, -1,cv2.LINE_AA)
-                            break
-                    centroids.append(centroid)
-                    box_colors.append(my_color)        
+                #calculate centroid point for bounding boxes
+                xmid, ymid, centroid = calculateCentroid(xmin,ymin,xmax,ymax)
+                detectedBox.append([xmin,ymin,xmax,ymax,centroid])
+
+                my_color = 0
+                for k in range (len(centroids)):
+                    c = centroids[k]
+                    
+                    if get_distance(c[0],centroid[0],c[1],centroid[1]) <= distance:
+                        box_colors[k] = 1
+                        my_color = 1
+                        cv2.line(frame, (int(c[0]),int(c[1])), (int(centroid[0]),int(centroid[1])), yellow, 1,cv2.LINE_AA)
+                        cv2.circle(frame, (int(c[0]),int(c[1])), 3, orange, -1,cv2.LINE_AA)
+                        cv2.circle(frame, (int(centroid[0]),int(centroid[1])), 3, orange, -1,cv2.LINE_AA)
+                        break
+                centroids.append(centroid)
+                box_colors.append(my_color)        
 
         for i in range (len(detectedBox)):
             x1 = detectedBox[i][0]
@@ -132,17 +143,19 @@ def main():
             centroide = (int(xc),int(yc))
 
             if box_colors[i] == 0:
-                cv2.rectangle(frame,(x1,y1),(x2,y2), white, 2,cv2.LINE_AA)
+                color = white
+                draw_detection_box(frame,x1,y1,x2,y2,color)
                 label = "safe"
                 labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
 
                 y1label = max(y1, labelSize[1])
                 cv2.rectangle(frame, (x1, y1label - labelSize[1]),(x1 + labelSize[0], y1 + baseLine), (255, 255, 255), cv2.FILLED)
                 cv2.putText(frame, label, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, green, 1,cv2.LINE_AA)
-            else:
-                cv2.rectangle(frame,(x1,y1),(x2,y2), red, 2)
-                # cv2.ellipse(frame, centroide, (35, 19), 0.0, 0.0, 360.0, red, 2)
 
+            else:
+                color = red
+                draw_detection_box(frame,x1,y1,x2,y2,color)
+                # cv2.ellipse(frame, centroide, (35, 19), 0.0, 0.0, 360.0, red, 2)
                 label = "unsafe"
                 labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
 

@@ -1,9 +1,14 @@
 import cv2
 import numpy as np
+import os 
+
+foldersPath = "utils/model/"
+weightsPath = os.path.join(os.getcwd(), foldersPath, "yolov3.weights")
+cfgPath = os.path.join(os.getcwd(), foldersPath, "yolov3.cfg")
 
 def loading_dependencies():
 
-    net = cv2.dnn.readNet("utils/model/yolov3.weights", "utils/model/yolov3.cfg")
+    net = cv2.dnn.readNet(weightsPath, cfgPath)
 
     classes = []
 
