@@ -5,6 +5,7 @@ import os
 foldersPath = "utils/model/"
 weightsPath = os.path.join(os.getcwd(), foldersPath, "yolov3.weights")
 cfgPath = os.path.join(os.getcwd(), foldersPath, "yolov3.cfg")
+coco_namePath = os.path.join(os.getcwd(), "utils/", "coco.names")
 
 def loading_dependencies():
 
@@ -12,7 +13,7 @@ def loading_dependencies():
 
     classes = []
 
-    with open("utils/coco.names", "r") as f:
+    with open(coco_namePath, "r") as f:
         classes = [line.strip() for line in f.readlines()]
 
     layer_names = net.getLayerNames()
