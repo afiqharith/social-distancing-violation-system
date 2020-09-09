@@ -52,7 +52,7 @@ _Youtube:_ [Person Detection for Social Distance](https://youtu.be/zXBDvDaJLHA)
 
 _Object detection model:_ [YOLO](https://pjreddie.com/darknet/yolo/)
 
-_CC:_ [Darknet](https://pjreddie.com/)
+_CC:_ [Darknet](https://pjreddie.com/darknet/), [GitHub](https://github.com/pjreddie/darknet.git)
 
 ### 3. Dataset
 
