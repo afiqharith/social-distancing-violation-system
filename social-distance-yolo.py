@@ -6,6 +6,7 @@ __status__ = "Development"
 import cv2
 import numpy as np
 import math
+import os
 from setup import config, load_model
 
 
@@ -17,17 +18,20 @@ WHITE = colors.get('WHITE')
 ORANGE = colors.get('ORANGE')
 
 # Load video
-videosrc = "TownCentre.mp4"
-video = cv2.VideoCapture(videosrc)
+video_name = "TownCentre.mp4"
+videosPath = "videos/"
+videoSRC = os.path.join(os.getcwd(), videosPath, video_name)
+
+video = cv2.VideoCapture(videoSRC)
 
 #config for different datasets
-if videosrc == 'TownCentre.mp4':
+if video_name == 'TownCentre.mp4':
     configuration = config.TOWNCENTRE
 
-if videosrc == 'PETS2009.mp4':
+if video_name == 'PETS2009.mp4':
     configuration = config.PETS2009
 
-if videosrc == 'VIRAT.mp4':
+if video_name == 'VIRAT.mp4':
     configuration = config.VIRAT
 
 distance = configuration.get('distance')
