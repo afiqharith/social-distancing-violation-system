@@ -8,12 +8,13 @@ import numpy as np
 import math
 from setup import config, load_model
 
-blue = (255,0,0)
-green = (0,255,0)
-red = (0,0,255)
-yellow = (0,255,255)
-white = (255,255,255)
-orange = (0,165,255)
+
+colors = config.COLORS
+GREEN = colors.get('GREEN')
+RED = colors.get('RED')
+YELLOW = colors.get('YELLOW')
+WHITE = colors.get('WHITE')
+ORANGE = colors.get('ORANGE')
 
 # Load video
 videosrc = "TownCentre.mp4"
@@ -21,13 +22,13 @@ video = cv2.VideoCapture(videosrc)
 
 #config for different datasets
 if videosrc == 'TownCentre.mp4':
-    configuration = config.towncentre
+    configuration = config.TOWNCENTRE
 
 if videosrc == 'PETS2009.mp4':
-    configuration = config.pets2009
+    configuration = config.PETS2009
 
 if videosrc == 'VIRAT.mp4':
-    configuration = config.virat
+    configuration = config.VIRAT
 
 distance = configuration.get('distance')
 h = configuration.get('height')
@@ -129,9 +130,9 @@ def main():
                     if get_distance(c[0],centroid[0],c[1],centroid[1]) <= distance:
                         box_colors[k] = 1
                         my_color = 1
-                        cv2.line(frame, (int(c[0]),int(c[1])), (int(centroid[0]),int(centroid[1])), yellow, 1,cv2.LINE_AA)
-                        cv2.circle(frame, (int(c[0]),int(c[1])), 3, orange, -1,cv2.LINE_AA)
-                        cv2.circle(frame, (int(centroid[0]),int(centroid[1])), 3, orange, -1,cv2.LINE_AA)
+                        cv2.line(frame, (int(c[0]),int(c[1])), (int(centroid[0]),int(centroid[1])), YELLOW, 1,cv2.LINE_AA)
+                        cv2.circle(frame, (int(c[0]),int(c[1])), 3, ORANGE, -1,cv2.LINE_AA)
+                        cv2.circle(frame, (int(centroid[0]),int(centroid[1])), 3, ORANGE, -1,cv2.LINE_AA)
                         break
                 centroids.append(centroid)
                 box_colors.append(my_color)        
@@ -148,25 +149,25 @@ def main():
             centroide = (int(xc),int(yc))
 
             if box_colors[i] == 0:
-                color = white
+                color = WHITE
                 draw_detection_box(frame,x1,y1,x2,y2,color)
                 label = "safe"
                 labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
 
                 y1label = max(y1, labelSize[1])
                 cv2.rectangle(frame, (x1, y1label - labelSize[1]),(x1 + labelSize[0], y1 + baseLine), (255, 255, 255), cv2.FILLED)
-                cv2.putText(frame, label, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, green, 1,cv2.LINE_AA)
+                cv2.putText(frame, label, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, GREEN, 1,cv2.LINE_AA)
 
             else:
-                color = red
+                color = RED
                 draw_detection_box(frame,x1,y1,x2,y2,color)
-                # cv2.ellipse(frame, centroide, (35, 19), 0.0, 0.0, 360.0, red, 2)
+                # cv2.ellipse(frame, centroide, (35, 19), 0.0, 0.0, 360.0, RED, 2)
                 label = "unsafe"
                 labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
 
                 y1label = max(y1, labelSize[1])
                 cv2.rectangle(frame, (x1, y1label - labelSize[1]),(x1 + labelSize[0], y1 + baseLine), (255, 255, 255), cv2.FILLED)
-                cv2.putText(frame, label, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, orange, 1,cv2.LINE_AA)
+                cv2.putText(frame, label, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, ORANGE, 1,cv2.LINE_AA)
 
         cv2.imshow("Social Distance System", frame)
 
