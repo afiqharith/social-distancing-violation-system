@@ -35,8 +35,6 @@ if video_name == 'VIRAT.mp4':
     configuration = config.VIRAT
 
 distance = configuration.get('distance')
-h = configuration.get('height')
-w = configuration.get('width')
 
 # Load Yolo
 net, output_layers, classes = load_model.loading_dependencies()
