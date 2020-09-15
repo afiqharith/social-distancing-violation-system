@@ -46,14 +46,14 @@ Oxford Town Centre | n/a | n/a | n/a | n/a | n/a
 
 ### 🎥 Output video
 
-_🔗 Youtube:_ [Person Detection for Social Distance](https://youtu.be/zXBDvDaJLHA)
+_Youtube:_ [Person Detection for Social Distance](https://youtu.be/zXBDvDaJLHA)
 
 ### 👀 YOLO Pre-Trained Model
 
-_🔗 Object detection model:_ [YOLO](https://pjreddie.com/darknet/yolo/)
+_Object detection model:_ [YOLO](https://pjreddie.com/darknet/yolo/)
 
 _CC:_ [pjreddie](https://github.com/pjreddie/darknet.git), [Darknet](https://pjreddie.com/darknet/)
 
 ### 📊 Dataset
 
-_🔗 Dataset from Oxford TownCentre:_ <https://megapixels.cc/>; MegaPixels: Origins, Ethics, and Privacy Implications of Publicly Available Face Recognition Image Datasets
+_Dataset from Oxford TownCentre:_ <https://megapixels.cc/>; MegaPixels: Origins, Ethics, and Privacy Implications of Publicly Available Face Recognition Image Datasets
