@@ -17,7 +17,7 @@ python3 social-distance-yolo.py
 
 </br>
 
-**Output example:**
+**🎬 Output example:**
 ![outputimage](/images/image.png) |
 --------------------------------- |
 
