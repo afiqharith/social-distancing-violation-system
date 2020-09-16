@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="images/SoDV.png" width="250" height="250">
+  <img src="images/SoDV.png" width="300" height="300">
 </div>
 
 # 🚶‍♂️ Social Distance using pre-trained YOLOv3 model (SoDV)
