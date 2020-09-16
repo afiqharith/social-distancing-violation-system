@@ -2,9 +2,9 @@
   <img src="images/SoDV.png">
 </div>
 
-# 🚶‍♂️ Social Distance Violation Detection (SoDV) using pre-trained YOLOv3 model ![SoDV](https://img.shields.io/badge/Build-v1.0-BLUE)
+# 🚶‍♂️ Social Distance Violation Detection (SoDV) using pre-trained YOLOv3 model ![SoDV](https://img.shields.io/badge/Build-v1.1-BLUE)
 
-The initial idea of this project is to use MobileNet SSD with Caffe implementation as the person detection algorithm. After I've finished my [Final Year Project](https://github.com/afiqharith/Social-Distancing-and-Safety-Violation-Alert-ROI-MobileNetSSD-FYP) in July 2020, I decided to further improve the detection algorithm by using YOLOv3 to increase the accuracy.
+The initial idea of this project is to use MobileNet SSD with Caffe implementation as the person detection algorithm. After I've finished my Final Year Project [![FYP](https://img.shields.io/badge/Build-v1.0-BRIGHTGREEN)](https://github.com/afiqharith/Social-Distancing-and-Safety-Violation-Alert-ROI-MobileNetSSD-FYP) in July 2020, I decided to further improve the detection algorithm by using YOLOv3 to increase the accuracy.
 </br>
 
 _💻 Install the dependencies on command line:_
