@@ -10,13 +10,13 @@ The initial idea of this project is to use MobileNet SSD with Caffe implementati
 _💻 Install the dependencies on command line:_
 
 ```sh
-pip3 install -r requirement.txt
+$ pip3 install -r requirement.txt
 ```
 
 _💻 To run the program on command line:_
 
 ```sh
-python3 social-distance-yolo.py
+$ python3 social-distance-yolo.py
 ```
 
 </br>
@@ -41,8 +41,10 @@ Oxford Town Centre | n/a | n/a | n/a | n/a | n/a
 
 **⏳ Future upgrades:**
 
-- [ ] Camera calibration for intrinsic parameter (distance)
-- [ ] Add facemask detection
+| Build                                                 | Status                                                                |
+| ----------------------------------------------------- | --------------------------------------------------------------------- |
+| Camera calibration for intrinsic parameter (distance) | ![STATUS](https://img.shields.io/badge/camera_calibration-TBD-orange) |
+| Add facemask detection                                | ![STATUS](https://img.shields.io/badge/facemask_detection-TBD-orange) |
 
 ---
 
