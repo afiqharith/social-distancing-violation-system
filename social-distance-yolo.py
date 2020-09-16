@@ -16,6 +16,8 @@ RED = colors.get('RED')
 YELLOW = colors.get('YELLOW')
 WHITE = colors.get('WHITE')
 ORANGE = colors.get('ORANGE')
+BLUE = colors.get('BLUE')
+GREY = colors.get('GREY')
 
 # Load video
 video_name = "TownCentre.mp4"
@@ -60,6 +62,8 @@ def draw_detection_box(frame,x1,y1,x2,y2,color):
 def main():
 
     while True:
+        stat_H = 0
+        stat_L = 0
 
         centroids = []
         box_colors = []
@@ -157,8 +161,9 @@ def main():
                 labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
 
                 y1label = max(y1, labelSize[1])
-                cv2.rectangle(frame, (x1, y1label - labelSize[1]),(x1 + labelSize[0], y1 + baseLine), (255, 255, 255), cv2.FILLED)
+                cv2.rectangle(frame, (x1, y1label - labelSize[1]),(x1 + labelSize[0], y1 + baseLine), WHITE, cv2.FILLED)
                 cv2.putText(frame, label, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, GREEN, 1,cv2.LINE_AA)
+                stat_L += 1
 
             else:
                 color = RED
@@ -168,8 +173,19 @@ def main():
                 labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
 
                 y1label = max(y1, labelSize[1])
-                cv2.rectangle(frame, (x1, y1label - labelSize[1]),(x1 + labelSize[0], y1 + baseLine), (255, 255, 255), cv2.FILLED)
+                cv2.rectangle(frame, (x1, y1label - labelSize[1]),(x1 + labelSize[0], y1 + baseLine), WHITE, cv2.FILLED)
                 cv2.putText(frame, label, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, ORANGE, 1,cv2.LINE_AA)
+                stat_H += 1
+
+        cv2.rectangle(frame, (13, 10),(250, 60), GREY, cv2.FILLED)
+        LINE = "--"
+        INDICATION_H = f'HIGH RISK: {str(stat_H)} people'
+        cv2.putText(frame, LINE, (30,30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RED, 1,cv2.LINE_AA)
+        cv2.putText(frame, INDICATION_H, (60,30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, BLUE, 1,cv2.LINE_AA)
+
+        INDICATION_L = f'LOW RISK : {str(stat_L)} people'
+        cv2.putText(frame, LINE, (30,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, WHITE, 1,cv2.LINE_AA)
+        cv2.putText(frame, INDICATION_L, (60,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, BLUE, 1,cv2.LINE_AA)
 
         cv2.imshow("Social Distance System", frame)
 
