@@ -52,7 +52,7 @@ Oxford Town Centre | n/a | n/a | n/a | n/a | n/a
 
 ### 🎥 Output video
 
-[![Youtube](https://img.shields.io/static/v1?message=YouTube&label=Social_Distance_Violation_Detection&color=RED)](https://www.youtube.com/watch?v=zXBDvDaJLHA)
+[![Youtube](https://img.shields.io/static/v1?message=YouTube&label=Social Distance Violation Detection&color=RED)](https://www.youtube.com/watch?v=zXBDvDaJLHA)
 
 ### 👀 YOLO Pre-Trained Model
 
