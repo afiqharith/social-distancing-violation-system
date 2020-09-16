@@ -23,8 +23,12 @@ $ python3 social-distance-yolo.py
 
 ### 🎬 Output example:
 
-| ![outputimage](/images/data/frame%20225.jpg) ![outputimage](/images/TownCentre_new.gif) |
-| --------------------------------------------------------------------------------------- |
+| ![outputimage](/images/TownCentre_new.gif) |
+| ------------------------------------------ |
+
+
+| ![outputimage](/images/data/frame%20225.jpg) |
+| -------------------------------------------- |
 
 
 ### 🎯 Accuracy for person detection:
