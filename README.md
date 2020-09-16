@@ -54,7 +54,7 @@ Oxford Town Centre | n/a | n/a | n/a | n/a | n/a
 
 ### 👀 YOLO Pre-Trained Model
 
-[![YOLO](https://img.shields.io/badge/YOLO-Darknet-YELLOW)](https://pjreddie.com/darknet/yolo/) CC: [![pjreddie](https://img.shields.io/badge/pjreddie-GitHub-YELLOWGREEN)](https://github.com/pjreddie/darknet.git) [![Darknet](https://img.shields.io/badge/Darknet-pjreddie-YELLOWGREEN)](https://pjreddie.com/darknet/)
+[![YOLO](https://img.shields.io/badge/YOLO-Darknet-YELLOW)](https://pjreddie.com/darknet/yolo/) CC: [![Darknet](https://img.shields.io/badge/Darknet-GitHub-lightgrey)](https://github.com/pjreddie/darknet.git)
 
 ### 📊 Dataset
 
