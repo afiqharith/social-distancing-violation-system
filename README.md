@@ -2,7 +2,7 @@
   <img src="images/SoDV.png">
 </div>
 
-[![Youtube](https://img.shields.io/badge/Youtube-Afiq_Harith-RED)](https://youtu.be/zXBDvDaJLHA)
+[![Youtube](https://img.shields.io/badge/Youtube-Afiq_Harith-RED)](https://www.youtube.com/channel/UC3lrxKjDnlP18WwbE-Oa-0Q?view_as=subscriber)
 
 # 🚶‍♂️ Social Distance Violation Detection (SoDV) using pre-trained YOLOv3 model
 
@@ -52,7 +52,7 @@ Oxford Town Centre | n/a | n/a | n/a | n/a | n/a
 
 ### 🎥 Output video
 
-_Youtube:_ [Person Detection for Social Distance](https://youtu.be/zXBDvDaJLHA)
+[![Youtube](https://img.shields.io/static/v1?message=SoDV&label=Youtube&color=RED)](https://www.youtube.com/watch?v=zXBDvDaJLHA)
 
 ### 👀 YOLO Pre-Trained Model
 
