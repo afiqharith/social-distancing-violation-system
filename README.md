@@ -1,6 +1,6 @@
 # 🚶‍♂️ Social Distance using pre-trained YOLOv3 model (SoDV)
 
-The initial idea of this project is to use MobileNet SSD with Caffe implementation as the person detection algorithm. After I've finished my Final Year Project in July 2020, I decided to further improve the detection algorithm by using YOLOv3 to increase the accuracy.
+The initial idea of this project is to use MobileNet SSD with Caffe implementation as the person detection algorithm. After I've finished my [Final Year Project](https://github.com/afiqharith/Social-Distancing-and-Safety-Violation-Alert-ROI-MobileNetSSD-FYP) in July 2020, I decided to further improve the detection algorithm by using YOLOv3 to increase the accuracy.
 </br>
 
 _💻 Install the dependencies on command line:_
