@@ -2,8 +2,6 @@
   <img src="images/SoDV.png">
 </div>
 
-[![Youtube](https://img.shields.io/badge/Youtube-Afiq_Harith-RED)](https://www.youtube.com/channel/UC3lrxKjDnlP18WwbE-Oa-0Q?view_as=subscriber)
-
 # 🚶‍♂️ Social Distance Violation Detection (SoDV) using pre-trained YOLOv3 model
 
 The initial idea of this project is to use MobileNet SSD with Caffe implementation as the person detection algorithm. After I've finished my [Final Year Project](https://github.com/afiqharith/Social-Distancing-and-Safety-Violation-Alert-ROI-MobileNetSSD-FYP) in July 2020, I decided to further improve the detection algorithm by using YOLOv3 to increase the accuracy.
@@ -56,9 +54,7 @@ Oxford Town Centre | n/a | n/a | n/a | n/a | n/a
 
 ### 👀 YOLO Pre-Trained Model
 
-[![YOLO](https://img.shields.io/badge/YOLO-Darknet-YELLOW)](https://pjreddie.com/darknet/yolo/)
-
-_CC:_ [![pjreddie](https://img.shields.io/badge/pjreddie-GitHub-YELLOWGREEN)](https://github.com/pjreddie/darknet.git) [![Darknet](https://img.shields.io/badge/pjreddie-GitHub-YELLOWGREEN)](https://pjreddie.com/darknet/)
+[![YOLO](https://img.shields.io/badge/YOLO-Darknet-YELLOW)](https://pjreddie.com/darknet/yolo/) CC: [![pjreddie](https://img.shields.io/badge/pjreddie-GitHub-YELLOWGREEN)](https://github.com/pjreddie/darknet.git) [![Darknet](https://img.shields.io/badge/Darknet-pjreddie-YELLOWGREEN)](https://pjreddie.com/darknet/)
 
 ### 📊 Dataset
 
