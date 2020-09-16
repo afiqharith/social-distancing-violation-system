@@ -26,14 +26,16 @@ $ python3 social-distance-yolo.py
 --------------------------------- |
 
 **🎯 Accuracy for person detection:**
-Dataset | TP | TN | FP | FN | %
-------- | -- | -- | -- | -- | --
-Oxford Town Centre | 29 | 0 | 0 | 11 | 72.5
+
+| Dataset            | TP  | TN  | FP  | FN  | %    |
+| ------------------ | --- | --- | --- | --- | ---- |
+| Oxford Town Centre | 29  | 0   | 0   | 11  | 72.5 |
 
 **🎯 Accuracy for social distance monitoring:**
-Dataset | TP | TN | FP | FN | %
-------- | -- | -- | -- | -- | --
-Oxford Town Centre | n/a | n/a | n/a | n/a | n/a
+
+| Dataset            | TP  | TN  | FP  | FN  | %   |
+| ------------------ | --- | --- | --- | --- | --- |
+| Oxford Town Centre | n/a | n/a | n/a | n/a | n/a |
 
 **⛔ Social distance using distance formula Drawback:**
 
@@ -41,7 +43,7 @@ Oxford Town Centre | n/a | n/a | n/a | n/a | n/a
 
 **⏳ Future upgrades:**
 
-| Build                                                 | Status                                                                |
+| Features                                              | Status                                                                |
 | ----------------------------------------------------- | --------------------------------------------------------------------- |
 | Camera calibration for intrinsic parameter (distance) | ![STATUS](https://img.shields.io/badge/camera_calibration-TBD-orange) |
 | Add facemask detection                                | ![STATUS](https://img.shields.io/badge/facemask_detection-TBD-orange) |
