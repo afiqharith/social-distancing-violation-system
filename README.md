@@ -27,9 +27,9 @@ $ python3 social-distance-yolo.py
 | ------------------------------------------ |
 
 
+**At frame 225:**
 | ![outputimage](/images/data/frame%20225.jpg) |
 | -------------------------------------------- |
-
 
 ### 🎯 Accuracy for person detection:
 
