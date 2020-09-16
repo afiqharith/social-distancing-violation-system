@@ -21,29 +21,29 @@ $ python3 social-distance-yolo.py
 
 </br>
 
-**🎬 Output example:**
+### 🎬 Output example:
 
 | ![outputimage](/images/image.png) |
 | --------------------------------- |
 
 
-**🎯 Accuracy for person detection:**
+### 🎯 Accuracy for person detection:
 
 | Dataset            | TP  | TN  | FP  | FN  | %    |
 | ------------------ | --- | --- | --- | --- | ---- |
 | Oxford Town Centre | 29  | 0   | 0   | 11  | 72.5 |
 
-**🎯 Accuracy for social distance violation detection:**
+### 🎯 Accuracy for social distance violation detection:
 
 | Dataset            | TP  | TN  | FP  | FN  | %   |
 | ------------------ | --- | --- | --- | --- | --- |
 | Oxford Town Centre | n/a | n/a | n/a | n/a | n/a |
 
-**⛔ Social distance violation detection using distance formula Drawback:**
+### ⛔ Social distance violation detection using distance formula Drawback:
 
 - No camera calibration for intrinsic parameter
 
-**⏳ Future upgrades:**
+### ⏳ Future upgrades:
 
 | Features                                              | Status                                                                |
 | ----------------------------------------------------- | --------------------------------------------------------------------- |
@@ -54,14 +54,14 @@ $ python3 social-distance-yolo.py
 
 ## Kindly check out below URL:
 
-### 🎥 Output video
+**🎥 Output video**
 
 [![Youtube](https://img.shields.io/badge/Social_Distance_Violation_Detection-Youtube-RED)](https://www.youtube.com/watch?v=zXBDvDaJLHA)
 
-### 👀 YOLO Pre-Trained Model
+**👀 YOLO Pre-Trained Model**
 
 [![YOLO](https://img.shields.io/badge/YOLO-Darknet-YELLOW)](https://pjreddie.com/darknet/yolo/) [![Darknet](https://img.shields.io/badge/Darknet-GitHub-lightgrey)](https://github.com/pjreddie/darknet.git)
 
-### 📊 Dataset
+**📊 Dataset**
 
 _Dataset from Oxford TownCentre:_ <https://megapixels.cc/>; MegaPixels: Origins, Ethics, and Privacy Implications of Publicly Available Face Recognition Image Datasets
