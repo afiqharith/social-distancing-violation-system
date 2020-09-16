@@ -2,7 +2,7 @@
   <img src="images/SoDV.png">
 </div>
 
-[![Youtube](https://img.shields.io/badge/<Youtube>-<Afiq_Harith>-<COLOR>)](https://youtu.be/zXBDvDaJLHA)
+[![Youtube](https://img.shields.io/badge/Youtube-Afiq_Harith-RED)](https://youtu.be/zXBDvDaJLHA)
 
 # 🚶‍♂️ Social Distance Violation Detection (SoDV) using pre-trained YOLOv3 model
 
