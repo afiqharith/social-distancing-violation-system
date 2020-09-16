@@ -22,8 +22,10 @@ $ python3 social-distance-yolo.py
 </br>
 
 **🎬 Output example:**
-![outputimage](/images/image.png) |
---------------------------------- |
+
+| ![outputimage](/images/image.png) |
+| --------------------------------- |
+
 
 **🎯 Accuracy for person detection:**
 
@@ -31,13 +33,13 @@ $ python3 social-distance-yolo.py
 | ------------------ | --- | --- | --- | --- | ---- |
 | Oxford Town Centre | 29  | 0   | 0   | 11  | 72.5 |
 
-**🎯 Accuracy for social distance monitoring:**
+**🎯 Accuracy for social distance violation detection:**
 
 | Dataset            | TP  | TN  | FP  | FN  | %   |
 | ------------------ | --- | --- | --- | --- | --- |
 | Oxford Town Centre | n/a | n/a | n/a | n/a | n/a |
 
-**⛔ Social distance using distance formula Drawback:**
+**⛔ Social distance violation detection using distance formula Drawback:**
 
 - No camera calibration for intrinsic parameter
 
