@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="images/Github.png" width="300" height="300">
+  <img src="images/Github.png" width="150" height="150">
 </div>
 
 # 🚶‍♂️ Social Distance using pre-trained YOLOv3 model (SoDV)
