@@ -31,11 +31,11 @@ $ python3 social-distance-yolo.py
 
 | ![outputimage](/images/data/frame%200.jpg) | ![outputimage](/images/data/frame%20100.jpg) | ![outputimage](/images/data/frame%20200.jpg) |
 | :----------------------------------------: | :------------------------------------------: | :------------------------------------------: |
-|               **_FRAME 0_**                |               **_FRAME 100_**                |               **_FRAME 200_**                |
+|                **FRAME 0**                 |                **FRAME 100**                 |                **FRAME 200**                 |
 
 | ![outputimage](/images/data/frame%20300.jpg) | ![outputimage](/images/data/frame%20400.jpg) | ![outputimage](/images/data/frame%20500.jpg) |
 | :------------------------------------------: | :------------------------------------------: | :------------------------------------------: |
-|               **_FRAME 300_**                |               **_FRAME 400_**                |               **_FRAME 500 _**               |
+|                **FRAME 300**                 |                **FRAME 400**                 |                **FRAME 500**                 |
 
 ### 🎯 Accuracy for person detection:
 
