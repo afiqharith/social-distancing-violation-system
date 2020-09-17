@@ -56,7 +56,7 @@ $ python3 social-distance-yolo.py
 
 ---
 
-## Kindly check out below URL:
+## Kindly check out links:
 
 **🎥 Output video**
 
