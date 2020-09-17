@@ -62,7 +62,7 @@ $ python3 social-distance-yolo.py
 
 ---
 
-## Kindly check out links:
+## Kindly check out below links:
 
 **🎥 Output video** </br>
 [![Youtube](https://img.shields.io/badge/Social_Distance_Violation_Detection-Youtube-RED)](https://www.youtube.com/watch?v=zXBDvDaJLHA)
