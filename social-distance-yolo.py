@@ -62,9 +62,7 @@ def draw_detection_box(frame,x1,y1,x2,y2,color):
 def main():
 
     while True:
-        stat_H = 0
-        stat_L = 0
-
+        stat_H, stat_L = 0, 0
         centroids = []
         box_colors = []
         detectedBox = []
