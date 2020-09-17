@@ -7,13 +7,13 @@
 The initial idea of this project is to use MobileNet SSD with Caffe implementation as the person detection algorithm. After I've finished my Final Year Project [![FYP](https://img.shields.io/badge/Build-v1.0_pass-BRIGHTGREEN)](https://github.com/afiqharith/Social-Distancing-and-Safety-Violation-Alert-ROI-MobileNetSSD-FYP) in July 2020, I decided to further improve the detection algorithm by using YOLOv3 to increase the accuracy.
 </br>
 
-_💻 Install the dependencies on command line:_
+_💻 Install the dependencies on command line:_ </br>
 
 ```sh
 $ pip3 install -r requirement.txt
 ```
 
-_💻 To run the program on command line:_
+_💻 To run the program on command line:_ </br>
 
 ```sh
 $ python3 social-distance-yolo.py
@@ -27,7 +27,7 @@ $ python3 social-distance-yolo.py
 | ------------------------------------------ |
 
 
-**At frame 225:**
+**At frame 225:** </br>
 | ![outputimage](/images/data/frame%20225.jpg) |
 | -------------------------------------------- |
 
@@ -58,15 +58,12 @@ $ python3 social-distance-yolo.py
 
 ## Kindly check out links:
 
-**🎥 Output video**
-
+**🎥 Output video** </br>
 [![Youtube](https://img.shields.io/badge/Social_Distance_Violation_Detection-Youtube-RED)](https://www.youtube.com/watch?v=zXBDvDaJLHA)
 
-**👀 YOLO Pre-Trained Model**
-
+**👀 YOLO Pre-Trained Model** </br>
 [![YOLO](https://img.shields.io/badge/YOLO-Darknet-YELLOW)](https://pjreddie.com/darknet/yolo/) [![Darknet](https://img.shields.io/badge/Darknet-GitHub-lightgrey)](https://github.com/pjreddie/darknet.git)
 
-**📊 Dataset**
-
+**📊 Dataset** </br>
 MegaPixels: Origins, Ethics, and Privacy Implications of Publicly Available Face Recognition Image Datasets </br>
 [![Oxford TownCentre](https://img.shields.io/badge/Oxford_Town_Centre-URL-yellowgreen)](https://megapixels.cc/)
