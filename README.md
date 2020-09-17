@@ -47,7 +47,7 @@ $ python3 social-distance-yolo.py
 
 | Dataset            | TP  | TN  | FP  | FN  | %   |
 | ------------------ | --- | --- | --- | --- | --- |
-| Oxford Town Centre | n/a | n/a | n/a | n/a | n/a |
+| Oxford Town Centre | NA  | NA  | NA  | NA  | NA  |
 
 ### ⛔ Social distance violation detection using distance formula Drawback:
 
