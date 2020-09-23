@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="images/SoDV.png">
+  <img src="images/SoDV-v0.2.png">
 </div>
 
 # Social Distance Violation Detection (SoDV) using pre-trained YOLOv3 model ![SoDV](https://img.shields.io/badge/Build-v1.1-BLUE)
