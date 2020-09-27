@@ -1,3 +1,5 @@
+**Special Thanks:** [![RMC](https://img.shields.io/badge/Research_Management_Centre-UiTM-purple)](https://rmc.uitm.edu.my/v2/) [![FKE](https://img.shields.io/badge/Faculty_of_Electrical_Engineering-UiTM-purple)](https://fke.uitm.edu.my/v5x/) </br>
+
 <div align="center">
   <img src="images/SoDV-v0.2.png">
 </div>
