@@ -1,5 +1,7 @@
-<div dir="rtl">
+<div align="left">
+
 **Special Thanks:** [![RMC](https://img.shields.io/badge/Research_Management_Centre-UiTM-purple)](https://rmc.uitm.edu.my/v2/) [![FKE](https://img.shields.io/badge/Faculty_of_Electrical_Engineering-UiTM-purple)](https://fke.uitm.edu.my/v5x/) </br>
+
 </div>
 
 <div align="center">
