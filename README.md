@@ -2,7 +2,7 @@
   <img src="images/SoDV-v0.2.png">
 </div>
 
-# Social Distance Violation Detection (SoDV) using pre-trained YOLOv3 model ![SoDV](https://img.shields.io/badge/Build-v1.1-BLUE) [![GPLv3](https://img.shields.io/badge/License-GPLv3-blue)](https://perso.crans.org/besson/LICENSE.html)
+# Social Distance Violation Detection (SoDV) using pre-trained YOLOv3 model ![SoDV](https://img.shields.io/badge/Build-v1.1-BLUE) [![FKE](https://img.shields.io/badge/UiTM-FKE-purple)](https://fke.uitm.edu.my/) [![RMC](https://img.shields.io/badge/UiTM-RMC-purple)](https://rmc.uitm.edu.my/v2/)
 
 The previous development of this project is to use MobileNet SSD with Caffe implementation as the person detection algorithm. After the [previous project](https://github.com/afiqharith/Social-Distancing-and-Safety-Violation-Alert-ROI-MobileNetSSD-FYP 'Build v1.0 passing') finished in July 2020, I decided to further improve the detection algorithm by using YOLOv3 to improve the accuracy. This project was proposed to be submitted to Malaysia Technology Expo (MTE) Special Edition 2020 under Faculty of Electrical Engineering of Universiti Teknologi MARA.
 </br>
@@ -73,7 +73,3 @@ $ python3 social-distance-yolo.py
 **📊 Dataset** </br>
 MegaPixels: Origins, Ethics, and Privacy Implications of Publicly Available Face Recognition Image Datasets </br>
 [![Oxford TownCentre](https://img.shields.io/badge/Oxford_Town_Centre-URL-yellowgreen)](https://megapixels.cc/)
-
-</br>
-
-_SoDV Copyright © 2020 Afiq Harith_
