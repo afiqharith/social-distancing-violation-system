@@ -1,3 +1,6 @@
+[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
+**SoDV Copyright (C) 2020 Afiq Harith**
+
 <div align="center">
   <img src="images/SoDV-v0.2.png">
 </div>
