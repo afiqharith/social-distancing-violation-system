@@ -2,11 +2,9 @@
   <img src="images/SoDV-v0.2.png">
 </div>
 
-<div align="right">
-[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)
-</div>
+<span style="display:block;text-align:right">[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)</span>
 
-_SoDV Copyright (C) 2020 Afiq Harith_
+_SoDV Copyright (c) 2020 Afiq Harith_
 
 # Social Distance Violation Detection (SoDV) using pre-trained YOLOv3 model ![SoDV](https://img.shields.io/badge/Build-v1.1-BLUE)
 
