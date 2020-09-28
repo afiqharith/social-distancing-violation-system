@@ -2,7 +2,9 @@
   <img src="images/SoDV-v0.2.png">
 </div>
 
-<span style="display:block;text-align:right">[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)</span>
+<p align="right">
+    <a href="http://perso.crans.org/besson/LICENSE.html" alt="GPLv3"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" /></a>
+</p>
 
 _SoDV Copyright © 2020 Afiq Harith_
 
