@@ -4,7 +4,7 @@
 
 <span style="display:block;text-align:right">[![GPLv3 license](https://img.shields.io/badge/License-GPLv3-blue.svg)](http://perso.crans.org/besson/LICENSE.html)</span>
 
-_SoDV Copyright (c) 2020 Afiq Harith_
+_SoDV Copyright © 2020 Afiq Harith_
 
 # Social Distance Violation Detection (SoDV) using pre-trained YOLOv3 model ![SoDV](https://img.shields.io/badge/Build-v1.1-BLUE)
 
@@ -77,3 +77,5 @@ $ python3 social-distance-yolo.py
 **📊 Dataset** </br>
 MegaPixels: Origins, Ethics, and Privacy Implications of Publicly Available Face Recognition Image Datasets </br>
 [![Oxford TownCentre](https://img.shields.io/badge/Oxford_Town_Centre-URL-yellowgreen)](https://megapixels.cc/)
+
+_Yoyodyne, Inc., hereby disclaims all copyright interest in the program “Woodpecker” (which deconstructs trees) written by James Hacker._
