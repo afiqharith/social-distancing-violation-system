@@ -2,7 +2,7 @@
   <img src="images/SoDV-v0.2.png">
 </div>
 
-# Social Distance Violation Detection (SoDV) using pre-trained YOLOv3 model ![SoDV](https://img.shields.io/badge/Build-v1.1-BLUE) [![FKE](https://img.shields.io/badge/FKE-UiTM-purple)](https://fke.uitm.edu.my/) [![RMC](https://img.shields.io/badge/RMC-UiTM-purple)](https://rmc.uitm.edu.my/v2/)
+# Social Distance Violation Detection (SoDV) using pre-trained YOLOv3 model ![SoDV](https://img.shields.io/badge/Build-v1.1-blue) [![FKE](https://img.shields.io/badge/FKE-UiTM-purple)](https://fke.uitm.edu.my/) [![RMC](https://img.shields.io/badge/RMC-UiTM-purple)](https://rmc.uitm.edu.my/v2/)
 
 The previous development of this project is to use MobileNet SSD with Caffe implementation as the person detection algorithm. After the [previous project](https://github.com/afiqharith/Social-Distancing-and-Safety-Violation-Alert-ROI-MobileNetSSD-FYP 'Build v1.0 passing') finished in July 2020, I decided to further improve the detection algorithm by using YOLOv3 to improve the accuracy. This project was proposed to be submitted to Malaysia Technology Expo (MTE) Special Edition 2020 under Faculty of Electrical Engineering of Universiti Teknologi MARA.
 </br>
