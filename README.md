@@ -73,3 +73,7 @@ $ python3 social-distance-yolo.py
 **📊 Dataset** </br>
 MegaPixels: Origins, Ethics, and Privacy Implications of Publicly Available Face Recognition Image Datasets </br>
 [![Oxford TownCentre](https://img.shields.io/badge/Oxford_Town_Centre-URL-yellowgreen)](https://megapixels.cc/)
+
+### LICENSE
+
+_This project is under MIT license, please look at ![LICENSE](https://github.com/afiqharith/Social-Distance-Detector-SoDV/blob/master/LICENSE)._
