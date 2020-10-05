@@ -76,4 +76,4 @@ MegaPixels: Origins, Ethics, and Privacy Implications of Publicly Available Face
 
 ### LICENSE
 
-_This project is under MIT license, please look at ![LICENSE](https://github.com/afiqharith/Social-Distance-Detector-SoDV/blob/master/LICENSE)._
+_This project is under MIT license, please look at [LICENSE](https://github.com/afiqharith/Social-Distance-Detector-SoDV/blob/master/LICENSE)._
