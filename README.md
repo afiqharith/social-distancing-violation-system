@@ -4,7 +4,7 @@
 
 # Social Distance Violation Detection (SoDV) using pre-trained YOLOv3 model ![SoDV](https://img.shields.io/badge/Build-v1.1-blue) [![LICENSE](https://img.shields.io/badge/license-MIT-blue)](https://github.com/afiqharith/SocialDistanceDetector-SODV/blob/master/LICENSE) [![FKE](https://img.shields.io/badge/FKE-UiTM-purple)](https://fke.uitm.edu.my/) [![RMC](https://img.shields.io/badge/RMC-UiTM-purple)](https://rmc.uitm.edu.my/v2/)
 
-The previous development of this project is to use MobileNet SSD with Caffe implementation as the person detection algorithm. After the [previous project](https://github.com/afiqharith/SocialDistancing-SafetyViolationROI-MobileNetSSD-FYP.git 'Build v1.0 passing') finished in July 2020, I decided to further improve the detection algorithm by using YOLOv3 to improve the accuracy. This project was proposed to be submitted to Malaysia Technology Expo (MTE) Special Edition 2020 under Faculty of Electrical Engineering of Universiti Teknologi MARA.
+The previous development of this project used MobileNet SSD pre-trained on MS-COCO as the person detection algorithm. After the [previous project](https://github.com/afiqharith/SocialDistancing-SafetyViolationROI-MobileNetSSD-FYP.git 'Build v1.0 passing') finished in July 2020, I decided to further improve the detection algorithm by changing from MobileNet SSD to YOLOv3 to increase the accuracy. The program uses OpenCV API for the image processing and utilizing the DNN module which solely tested on CPU. The system accuracy tested on Oxford Town Centre dataset (530 frames). This project was submitted to Malaysia Technology Expo (MTE) Special Edition 2020 under Faculty of Electrical Engineering of Universiti Teknologi MARA.
 </br>
 
 _💻 Install the dependencies on command line:_
