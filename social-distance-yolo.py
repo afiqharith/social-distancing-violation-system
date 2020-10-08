@@ -185,7 +185,7 @@ def main():
         cv2.putText(frame, LINE, (30,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, WHITE, 1,cv2.LINE_AA)
         cv2.putText(frame, INDICATION_L, (60,50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, BLUE, 1,cv2.LINE_AA)
 
-        cv2.imshow("Social Distance System", frame)
+        cv2.imshow("SODV", frame)
 
         if cv2.waitKey(1) >= 0:  
             break
