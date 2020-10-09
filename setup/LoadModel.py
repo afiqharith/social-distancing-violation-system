@@ -4,21 +4,14 @@ import os
 
 class LoadModel:
 
-    def pathing():
+    def get():
 
         foldersPath = "utils/model/"
         weightsPath = os.path.join(os.getcwd(), foldersPath, "yolov3.weights")
         cfgPath = os.path.join(os.getcwd(), foldersPath, "yolov3.cfg")
         coco_namePath = os.path.join(os.getcwd(), "utils/", "coco.names")
-
-        return foldersPath, weightsPath, cfgPath, coco_namePath
-
-
-    def get():
-
-        foldersPath,weightsPath,cfgPath,coco_namePath = LoadModel.pathing()
+        
         net = cv2.dnn.readNet(weightsPath, cfgPath)
-
         classes = []
         with open(coco_namePath, "r") as f:
             classes = [line.strip() for line in f.readlines()]
