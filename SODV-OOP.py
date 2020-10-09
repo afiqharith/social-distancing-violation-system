@@ -8,16 +8,15 @@ import numpy as np
 import math
 import os
 from setup.LoadModel import LoadModel
-from setup import config
+from setup.config import Config
 
-colors = config.COLORS
-GREEN = colors.get('GREEN')
-RED = colors.get('RED')
-YELLOW = colors.get('YELLOW')
-WHITE = colors.get('WHITE')
-ORANGE = colors.get('ORANGE')
-BLUE = colors.get('BLUE')
-GREY = colors.get('GREY')
+GREEN = Config.colors('GREEN')
+RED = Config.colors('RED')
+YELLOW = Config.colors('YELLOW')
+WHITE = Config.colors('WHITE')
+ORANGE = Config.colors('ORANGE')
+BLUE = Config.colors('BLUE')
+GREY = Config.colors('GREY')
 
 class SODV:
     def __init__(self,videoSRC,distance):
@@ -172,18 +171,10 @@ class SODV:
 if __name__ == '__main__':
 
     # Load video
-    video_name = "TownCentre.mp4"
+    videoName = "TownCentre.mp4"
     videosPath = "videos/"
-    videoSRC = os.path.join(os.getcwd(), videosPath, video_name)
-
-    #config for different datasets
-    if video_name == 'TownCentre.mp4':
-        configuration = config.TOWNCENTRE
-    if video_name == 'PETS2009.mp4':
-        configuration = config.PETS2009
-    if video_name == 'VIRAT.mp4':
-        configuration = config.VIRAT
-    distance = configuration.get('distance')
+    videoSRC = os.path.join(os.getcwd(), videosPath, videoName)
+    distance, *_ = Config.get2Data(videoName)
 
     SODV(videoSRC,distance)
     cv2.destroyAllWindows()
