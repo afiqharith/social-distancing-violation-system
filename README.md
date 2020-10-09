@@ -64,8 +64,8 @@ $ python3 SODV-OOP.py
 | Features                                              | Status                                                                |
 | ----------------------------------------------------- | --------------------------------------------------------------------- |
 | Camera calibration for intrinsic parameter (distance) | ![STATUS](https://img.shields.io/badge/camera_calibration-TBD-orange) |
-| Integration with facemask detection                                | ![STATUS](https://img.shields.io/badge/facemask_detection-TBD-orange) |
-| Integration with DeepSort                                          | ![STATUS](https://img.shields.io/badge/DeepSort-TBD-orange)           |
+| Integration with facemask detection                   | ![STATUS](https://img.shields.io/badge/facemask_detection-TBD-orange) |
+| Integration with DeepSort                             | ![STATUS](https://img.shields.io/badge/DeepSort-TBD-orange)           |
 
 ---
 
