@@ -7,7 +7,8 @@ import cv2
 import numpy as np
 import math
 import os
-from setup import config, load_model
+from setup.LoadModel import LoadModel
+from setup import config
 
 
 colors = config.COLORS
@@ -39,7 +40,7 @@ if video_name == 'VIRAT.mp4':
 distance = configuration.get('distance')
 
 # Load Yolo
-net, output_layers, classes = load_model.loading_dependencies()
+net, output_layers, classes = LoadModel.get()
 
 def calculateCentroid(xmin,ymin,xmax,ymax):
 

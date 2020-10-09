@@ -7,7 +7,8 @@ import cv2
 import numpy as np
 import math
 import os
-from setup import config, load_model
+from setup.LoadModel import LoadModel
+from setup import config
 
 colors = config.COLORS
 GREEN = colors.get('GREEN')
@@ -23,12 +24,7 @@ class SODV:
         self.video = cv2.VideoCapture(videoSRC)
         self.distance = distance
         self.main()
-    
-    def load_model(self):
-        net, output_layers, classes = load_model.loading_dependencies()
-
-        return net, output_layers, classes
-    
+        
     def calculateCentroid(self, xmin,ymin,xmax,ymax):
         xmid = ((xmax+xmin)/2)
         ymid = ((ymax+ymin)/2)
@@ -45,7 +41,7 @@ class SODV:
         cv2.rectangle(frame,(x1,y1),(x2,y2), color, 2)
     
     def main(self):
-        net, output_layers, classes = self.load_model()
+        net, output_layers, classes = LoadModel.get()
 
         while True:
             stat_H, stat_L = 0, 0
