@@ -36,7 +36,7 @@ class Config:
 	Usage; to unpack on main script:
 	
 	from config import Config
-	param1, param2, param3 = Config.get2Data(variable)
+	param1, param2, param3 = Config.get2Data(param)
 
 	'''
 	def get2Data(videoname):
