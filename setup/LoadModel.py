@@ -2,18 +2,21 @@ import cv2
 import numpy as np
 import os 
 
+FOLDERPATH  = "utils/model/"
+WEIGHTS     = "yolov3.weights"
+CFG         = "yolov3.cfg"
+
 class LoadModel:
 
     def get():
 
-        foldersPath = "utils/model/"
-        weightsPath = os.path.join(os.getcwd(), foldersPath, "yolov3.weights")
-        cfgPath = os.path.join(os.getcwd(), foldersPath, "yolov3.cfg")
-        coco_namePath = os.path.join(os.getcwd(), "utils/", "coco.names")
+        WEIGHTSPATH = os.path.join(os.getcwd(), FOLDERPATH, WEIGHTS)
+        CFGPATH = os.path.join(os.getcwd(), FOLDERPATH, CFG)
+        COCO_NAMEPATH = os.path.join(os.getcwd(), "utils/", "coco.names")
         
-        net = cv2.dnn.readNet(weightsPath, cfgPath)
+        net = cv2.dnn.readNet(WEIGHTSPATH, CFGPATH)
         classes = []
-        with open(coco_namePath, "r") as f:
+        with open(COCO_NAMEPATH, "r") as f:
             classes = [line.strip() for line in f.readlines()]
 
         layer_names = net.getLayerNames()

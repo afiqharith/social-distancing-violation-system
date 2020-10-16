@@ -10,18 +10,29 @@ import os
 from setup.LoadModel import LoadModel
 from setup.config import Config as cfg
 
-GREEN = cfg.colors('GREEN')
-RED = cfg.colors('RED')
-YELLOW = cfg.colors('YELLOW')
-WHITE = cfg.colors('WHITE')
-ORANGE = cfg.colors('ORANGE')
-BLUE = cfg.colors('BLUE')
-GREY = cfg.colors('GREY')
+# Load video
+VIDEONAME   = "TownCentre.mp4"
+FOLDERNAME  = "videos/"
+VIDEOPATH   = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
+CAMERA      = False
+
+GREEN   = cfg.colors('GREEN')
+RED     = cfg.colors('RED')
+YELLOW  = cfg.colors('YELLOW')
+WHITE   = cfg.colors('WHITE')
+ORANGE  = cfg.colors('ORANGE')
+BLUE    = cfg.colors('BLUE')
+GREY    = cfg.colors('GREY')
 
 class SODV:
-    def __init__(self,videoSRC,distance):
-        self.video = cv2.VideoCapture(videoSRC)
-        self.distance = distance
+    def __init__(self, VIDEOPATH, DISTANCE, CAMERA):
+
+        if CAMERA == True:
+            self.video = cv2.VideoCapture(0)
+        else:
+            self.video = cv2.VideoCapture(VIDEOPATH)
+
+        self.distance = DISTANCE
         self.main()
         
     def calculateCentroid(self, xmin,ymin,xmax,ymax):
@@ -132,7 +143,7 @@ class SODV:
                 if box_colors[i] == 0:
                     color = WHITE
                     self.draw_detection_box(frame,x1,y1,x2,y2,color)
-                    label = "safe"
+                    label = "Low-Risk"
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
 
                     y1label = max(y1, labelSize[1])
@@ -143,7 +154,7 @@ class SODV:
                 else:
                     color = RED
                     self.draw_detection_box(frame,x1,y1,x2,y2,color)
-                    label = "unsafe"
+                    label = "High-Risk"
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
 
                     y1label = max(y1, labelSize[1])
@@ -170,11 +181,6 @@ class SODV:
 
 if __name__ == '__main__':
 
-    # Load video
-    videoName = "TownCentre.mp4"
-    videosPath = "videos/"
-    videoSRC = os.path.join(os.getcwd(), videosPath, videoName)
-    distance, *_ = cfg.get2Data(videoName)
-
-    SODV(videoSRC,distance)
+    DISTANCE, *_ = cfg.get2Data(VIDEONAME)
+    SODV(VIDEOPATH, DISTANCE, CAMERA)
     cv2.destroyAllWindows()

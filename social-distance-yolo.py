@@ -10,20 +10,25 @@ import os
 from setup.LoadModel import LoadModel
 from setup.config import Config
 
-GREEN = Config.colors('GREEN')
-RED = Config.colors('RED')
-YELLOW = Config.colors('YELLOW')
-WHITE = Config.colors('WHITE')
-ORANGE = Config.colors('ORANGE')
-BLUE = Config.colors('BLUE')
-GREY = Config.colors('GREY')
+# Colors configuration
+GREEN   = Config.colors('GREEN')
+RED     = Config.colors('RED')
+YELLOW  = Config.colors('YELLOW')
+WHITE   = Config.colors('WHITE')
+ORANGE  = Config.colors('ORANGE')
+BLUE    = Config.colors('BLUE')
+GREY    = Config.colors('GREY')
 
 # Load video
-videoName = "TownCentre.mp4"
-videosPath = "videos/"
-videoSRC = os.path.join(os.getcwd(), videosPath, videoName)
+VIDEONAME   = "TownCentre.mp4"
+FOLDERNAME  = "videos/"
+VIDEOPATH   = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
+CAMERA      = False
 
-video = cv2.VideoCapture(videoSRC)
+if CAMERA == True:
+    video = cv2.VideoCapture(0)
+else:
+    video = cv2.VideoCapture(VIDEOPATH)
 
 #config for different datasets
 distance, *_ = Config.get2Data(videoName)

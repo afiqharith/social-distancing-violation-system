@@ -50,8 +50,8 @@ class Config:
 			height = 576
 		if videoname== 'VIRAT.mp4':
 			distance = 55
-			width == 1280
-			height == 720
+			width = 1280
+			height = 720
 		
 		return distance,width,height
 
