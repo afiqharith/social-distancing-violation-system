@@ -16,13 +16,13 @@ $ pip3 install -r requirement.txt
 _💻 To run the program on command line:_
 
 ```sh
-$ python3 social-distance-yolo.py
+$ python3 SODV-app.py
 ```
 
 _💻 To run the OOP program on command line:_
 
 ```sh
-$ python3 SODV-OOP.py
+$ python3 SODV-OOP-app.py
 ```
 
 </br>
