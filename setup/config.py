@@ -1,86 +1,40 @@
-# Configuration using dict method
-# To unpack:
-# On main script -> ex: config.PETS2009.get('distance')
-PETS2009 = {
-	'distance': 70,
-	'width': 768,
-	'height': 576
-}
+# App configuration
+CAMERA 		= False
 
-TOWNCENTRE = {
-	'distance': 68.5,
-	'width': 1280,
-	'height': 720
-}
+# Model path
+MODELPATH  	= "utils/model/"
+WEIGHTS     = "yolov3.weights"
+CFG         = "yolov3.cfg"
+COCONAMES   = "coco.names"
 
-VIRAT = {
-	'distance': 55, 
-	'width': 1280,
-	'height': 720
-}
+# Video path
+FOLDERNAME  = "videos/"
+VIDEONAME   = "TownCentre.mp4"
+WIDTH 		= 1280
+HEIGHT 		= 720
+DISTANCE 	= 68.5
 
-COLORS = {
-	'GREEN' : (0,255,0),
-	'RED' : (0,0,255),
-	'YELLOW' : (0,255,255),
-	'WHITE' : (255,255,255),
-	'ORANGE' : (0,165,255),
-	'BLUE' : (255,0,0),
-	'GREY' :(192,192,192)
-}
+'''
+# PETS2009
+FOLDERNAME  = "videos/"
+VIDEONAME   = "PETS2009.mp4"
+WIDTH 		= 1280
+HEIGHT 		= 720
+DISTANCE 	= 70
 
-# Configuration using class method
-class Config:
+# VIRAT
+FOLDERNAME  = "videos/"
+VIDEONAME   = "VIRAT.mp4"
+WIDTH 		= 1280
+HEIGHT 		= 720
+DISTANCE 	= 55
+'''
 
-	'''
-	Usage; to unpack on main script:
-	
-	from config import Config
-	param1, param2, param3 = Config.get2Data(param)
-
-	'''
-	def get2Data(videoname):
-		if videoname== 'TownCentre.mp4':
-			distance = 68.5
-			width = 1280
-			height = 720
-		if videoname== 'PETS2009.mp4':
-			distance = 70
-			width = 768
-			height = 576
-		if videoname== 'VIRAT.mp4':
-			distance = 55
-			width = 1280
-			height = 720
-		
-		return distance,width,height
-
-
-	'''
-	Usage; to unpack on main script:
-	
-	from config import Config
-	param = Config.colors(variable)
-
-	'''
-	def colors(color):
-		if color == 'GREEN':
-			return (0,255,0)
-
-		if color == 'RED':
-			return (0,0,255)
-
-		if color == 'YELLOW':
-			return (0,255,255)
-
-		if color == 'WHITE':
-			return (255,255,255)
-
-		if color == 'ORANGE':
-			return (0,165,255)
-
-		if color == 'BLUE':
-			return (255,0,0)
-
-		if color == 'GREY':
-			return (192,192,192)
+# Colors configuration
+GREEN 	    = (0,255,0)
+RED 	    = (0,0,255)
+YELLOW 	    = (0,255,255)
+WHITE 	    = (255,255,255)
+ORANGE 	    = (0,165,255)
+BLUE 	    = (255,0,0)
+GREY 	    = (192,192,192)

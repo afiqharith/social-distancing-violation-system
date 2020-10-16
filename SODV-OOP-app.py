@@ -8,21 +8,10 @@ import numpy as np
 import math
 import os
 from setup.LoadModel import LoadModel
-from setup.config import Config as cfg
+from setup.config import *
 
 # Load video
-VIDEONAME   = "TownCentre.mp4"
-FOLDERNAME  = "videos/"
-VIDEOPATH   = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
-CAMERA      = False
-
-GREEN   = cfg.colors('GREEN')
-RED     = cfg.colors('RED')
-YELLOW  = cfg.colors('YELLOW')
-WHITE   = cfg.colors('WHITE')
-ORANGE  = cfg.colors('ORANGE')
-BLUE    = cfg.colors('BLUE')
-GREY    = cfg.colors('GREY')
+VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
 
 class SODV:
     def __init__(self, VIDEOPATH, DISTANCE, CAMERA):
@@ -180,7 +169,5 @@ class SODV:
         self.video.release()
 
 if __name__ == '__main__':
-
-    DISTANCE, *_ = cfg.get2Data(VIDEONAME)
     SODV(VIDEOPATH, DISTANCE, CAMERA)
     cv2.destroyAllWindows()

@@ -1,18 +1,15 @@
 import cv2
 import numpy as np
 import os 
-
-FOLDERPATH  = "utils/model/"
-WEIGHTS     = "yolov3.weights"
-CFG         = "yolov3.cfg"
+from setup.config import *
 
 class LoadModel:
 
     def get():
 
-        WEIGHTSPATH = os.path.join(os.getcwd(), FOLDERPATH, WEIGHTS)
-        CFGPATH = os.path.join(os.getcwd(), FOLDERPATH, CFG)
-        COCO_NAMEPATH = os.path.join(os.getcwd(), "utils/", "coco.names")
+        WEIGHTSPATH = os.path.join(os.getcwd(), MODELPATH, WEIGHTS)
+        CFGPATH = os.path.join(os.getcwd(), MODELPATH, CFG)
+        COCO_NAMEPATH = os.path.join(os.getcwd(), "utils/", COCONAMES)
         
         net = cv2.dnn.readNet(WEIGHTSPATH, CFGPATH)
         classes = []

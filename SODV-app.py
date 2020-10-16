@@ -8,30 +8,15 @@ import numpy as np
 import math
 import os
 from setup.LoadModel import LoadModel
-from setup.config import Config
-
-# Colors configuration
-GREEN   = Config.colors('GREEN')
-RED     = Config.colors('RED')
-YELLOW  = Config.colors('YELLOW')
-WHITE   = Config.colors('WHITE')
-ORANGE  = Config.colors('ORANGE')
-BLUE    = Config.colors('BLUE')
-GREY    = Config.colors('GREY')
+from setup.config import *
 
 # Load video
-VIDEONAME   = "TownCentre.mp4"
-FOLDERNAME  = "videos/"
-VIDEOPATH   = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
-CAMERA      = False
+VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
 
 if CAMERA == True:
     video = cv2.VideoCapture(0)
 else:
     video = cv2.VideoCapture(VIDEOPATH)
-
-#config for different datasets
-distance, *_ = Config.get2Data(videoName)
 
 # Load Yolo
 net, output_layers, classes = LoadModel.get()
@@ -126,7 +111,7 @@ def main():
                 for k in range (len(centroids)):
                     c = centroids[k]
                     
-                    if get_distance(c[0],centroid[0],c[1],centroid[1]) <= distance:
+                    if get_distance(c[0],centroid[0],c[1],centroid[1]) <= DISTANCE:
                         box_colors[k] = 1
                         my_color = 1
                         cv2.line(frame, (int(c[0]),int(c[1])), (int(centroid[0]),int(centroid[1])), YELLOW, 1,cv2.LINE_AA)
