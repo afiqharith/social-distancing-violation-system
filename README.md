@@ -19,6 +19,8 @@ _💻 To run the program on command line:_
 $ python3 SODV-app.py
 ```
 
+In order to run the program using device's camera, you are required to enable camera setting in **config.py** file. Change `CAMERA = False` to `CAMERA = True`.
+
 </br>
 
 ### 🎬 Output example:
