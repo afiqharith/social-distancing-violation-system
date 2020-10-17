@@ -20,7 +20,6 @@ $ python3 SODV-app.py
 ```
 
 In order to run the program using device's camera, you are required to enable the camera setting in **config.py** file by changing `CAMERA = False` to `CAMERA = True`.
-
 </br>
 
 ### 🎬 Output example:
