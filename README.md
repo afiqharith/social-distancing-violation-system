@@ -19,12 +19,6 @@ _💻 To run the program on command line:_
 $ python3 SODV-app.py
 ```
 
-_💻 To run the OOP program on command line:_
-
-```sh
-$ python3 SODV-OOP-app.py
-```
-
 </br>
 
 ### 🎬 Output example:
