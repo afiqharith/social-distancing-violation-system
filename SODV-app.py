@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 import math
 import os
-from setup.LoadModel import LoadModel
+from setup.model import dataFromModel
 from setup.config import *
 
 # Load video
@@ -42,7 +42,7 @@ class SODV:
         cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
     
     def main(self):
-        net, output_layers, classes = LoadModel.get()
+        net, output_layers, classes = dataFromModel.get(MODELPATH, WEIGHTS, CFG, COCONAMES)
 
         while (self.video.isOpened()):
 
