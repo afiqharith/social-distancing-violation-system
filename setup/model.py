@@ -17,10 +17,10 @@ class dataFromModel:
         with open(COCO_NAMEPATH, "r") as f:
             classes = [line.strip() for line in f.readlines()]
 
-        layer_names = net.getLayerNames()
-        outputlayers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+        layerNames = net.getLayerNames()
+        layerNames = [layerNames[i[0] - 1] for i in net.getUnconnectedOutLayers()]
         
         net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
         net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
         
-        return net, outputlayers, classes
+        return net, layerNames, classes

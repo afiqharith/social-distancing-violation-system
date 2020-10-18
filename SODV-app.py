@@ -25,10 +25,10 @@ class SODV:
 
         if START == True:
             self.main()
-        
-    def calculateCentroid(self, xmin, ymin, xmax, ymax):
-        xmid = ((xmax + xmin)/2)
-        ymid = ((ymax + ymin)/2)
+    
+    def calculateCentroid(self, xmn, ymn, xmx, ymx):
+        xmid = ((xmx + xmn)/2)
+        ymid = ((ymx + ymn)/2)
         centroid = (xmid, ymid)
 
         return xmid, ymid, centroid
@@ -42,13 +42,13 @@ class SODV:
         cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
     
     def main(self):
-        net, output_layers, classes = dataFromModel.get(MODELPATH, WEIGHTS, CFG, COCONAMES)
+        net, layerNames, classes = dataFromModel.get(MODELPATH, WEIGHTS, CFG, COCONAMES)
 
         while (self.video.isOpened()):
 
             stat_H, stat_L = 0, 0
             centroids = []
-            box_colors = []
+            boxColors = []
             detectedBox = []
 
             self.ret, self.frame = self.video.read() 
@@ -64,19 +64,20 @@ class SODV:
             blob = cv2.dnn.blobFromImage(frame_resized, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
 
             net.setInput(blob)
-            outs = net.forward(output_layers)
+            layerOutputs = net.forward(layerNames)
 
-            class_ids = []
+            classIDs = []
             confidences = []
             boxes = []
-            for out in outs:
-                for detection in out:
+
+            for output in layerOutputs:
+                for detection in output:
                     scores = detection[5:]
-                    class_id = np.argmax(scores)
-                    confidence = scores[class_id]
+                    classID = np.argmax(scores)
+                    confidence = scores[classID]
 
                     #if prediction is 50% and class id is 0 which is 'person'
-                    if confidence > 0.5 and class_id == 0:
+                    if confidence > CONFIDENCE and classID == 0:
                         
                         # Object detected
                         center_x = int(detection[0] * width)
@@ -90,67 +91,67 @@ class SODV:
 
                         boxes.append([x, y, w, h])
                         confidences.append(float(confidence))
-                        class_ids.append(class_id)
+                        classIDs.append(classID)
 
             # apply non-max suppression
-            indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
+            indexes = cv2.dnn.NMSBoxes(boxes, confidences, CONFIDENCE, THRESHOLD)
 
             for i in range(len(boxes)):
                 if i in indexes:
                     x, y, w, h = boxes[i]
 
-                    xmin = x
-                    ymin = y
-                    xmax = (x + w)
-                    ymax = (y + h)
+                    xmn = x
+                    ymn = y
+                    xmx = (x + w)
+                    ymx = (y + h)
 
                     #calculate centroid point for bounding boxes
-                    xmid, ymid, centroid = self.calculateCentroid(xmin, ymin, xmax, ymax)
-                    detectedBox.append([xmin, ymin, xmax, ymax, centroid])
+                    xmid, ymid, centroid = self.calculateCentroid(xmn, ymn, xmx, ymx)
+                    detectedBox.append([xmn, ymn, xmx, ymx, centroid])
 
-                    my_color = 0
+                    violation = False
                     for k in range (len(centroids)):
                         c = centroids[k]
                         
                         if self.get_distance(c[0], centroid[0], c[1], centroid[1]) <= self.distance:
-                            box_colors[k] = 1
-                            my_color = 1
+                            boxColors[k] = True
+                            violation = True
                             cv2.line(self.frame, (int(c[0]), int(c[1])), (int(centroid[0]), int(centroid[1])), YELLOW, 1,cv2.LINE_AA)
                             cv2.circle(self.frame, (int(c[0]), int(c[1])), 3, ORANGE, -1,cv2.LINE_AA)
                             cv2.circle(self.frame, (int(centroid[0]), int(centroid[1])), 3, ORANGE, -1,cv2.LINE_AA)
                             break
                     centroids.append(centroid)
-                    box_colors.append(my_color)        
+                    boxColors.append(violation)        
 
             for i in range (len(detectedBox)):
-                x1 = detectedBox[i][0]
-                y1 = detectedBox[i][1]
-                x2 = detectedBox[i][2]
-                y2 = detectedBox[i][3]
+                xmin = detectedBox[i][0]
+                ymin = detectedBox[i][1]
+                xmax = detectedBox[i][2]
+                ymax = detectedBox[i][3]
                 
                 #for ellipse output
-                xc = ((x2+x1)/2)
-                yc = y2-5
+                xc = ((xmax+xmin)/2)
+                yc = ymax-5
                 centroide = (int(xc),int(yc))
 
-                if box_colors[i] == 0:
-                    self.draw_detection_box(self.frame, x1, y1, x2, y2, WHITE)
+                if boxColors[i] == False:
+                    self.draw_detection_box(self.frame, xmin, ymin, xmax, ymax, WHITE)
                     label = "Low-Risk"
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
 
-                    y1label = max(y1, labelSize[1])
-                    cv2.rectangle(self.frame, (x1, y1label - labelSize[1]), (x1 + labelSize[0], y1 + baseLine), WHITE, cv2.FILLED)
-                    cv2.putText(self.frame, label, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, GREEN, 1,cv2.LINE_AA)
+                    ylabel = max(ymin, labelSize[1])
+                    cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]), (xmin + labelSize[0], ymin + baseLine), WHITE, cv2.FILLED)
+                    cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 0.5, GREEN, 1,cv2.LINE_AA)
                     stat_L += 1
 
                 else:
-                    self.draw_detection_box(self.frame, x1, y1, x2, y2, RED)
+                    self.draw_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
                     label = "High-Risk"
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
 
-                    y1label = max(y1, labelSize[1])
-                    cv2.rectangle(self.frame, (x1, y1label - labelSize[1]),(x1 + labelSize[0], y1 + baseLine), WHITE, cv2.FILLED)
-                    cv2.putText(self.frame, label, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, 0.5, ORANGE, 1,cv2.LINE_AA)
+                    ylabel = max(ymin, labelSize[1])
+                    cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]),(xmin + labelSize[0], ymin + baseLine), WHITE, cv2.FILLED)
+                    cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 0.5, ORANGE, 1,cv2.LINE_AA)
                     stat_H += 1
 
             cv2.rectangle(self.frame, (13, 10),(250, 60), GREY, cv2.FILLED)

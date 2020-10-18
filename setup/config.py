@@ -1,6 +1,12 @@
 # App configuration
 CAMERA = False
 
+# Threshold when apply NMS 
+THRESHOLD = 0.4
+
+# Detection confidence to filter weak prediction
+CONFIDENCE = 0.5
+
 # Model path
 MODELPATH = "utils/model/"
 WEIGHTS = "yolov3.weights"
