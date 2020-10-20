@@ -76,8 +76,12 @@ class SODV:
                     classID = np.argmax(scores)
                     confidence = scores[classID]
 
-                    #if prediction is 50% and class id is 0 which is 'person'
-                    if confidence > CONFIDENCE and classID == 0:
+                    # If class is not 0 which is person, ignore it.
+                    if classID != 0:
+                        continue
+
+                    # If prediction is 50% 
+                    if confidence > CONFIDENCE:
                         
                         # Object detected
                         center_x = int(detection[0] * width)
@@ -137,7 +141,7 @@ class SODV:
                 if boxColors[i] == False:
                     self.draw_detection_box(self.frame, xmin, ymin, xmax, ymax, WHITE)
                     label = "Low-Risk"
-                    labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
+                    labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
 
                     ylabel = max(ymin, labelSize[1])
                     cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]), (xmin + labelSize[0], ymin + baseLine), WHITE, cv2.FILLED)
@@ -147,7 +151,7 @@ class SODV:
                 else:
                     self.draw_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
                     label = "High-Risk"
-                    labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 2)
+                    labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
 
                     ylabel = max(ymin, labelSize[1])
                     cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]),(xmin + labelSize[0], ymin + baseLine), WHITE, cv2.FILLED)

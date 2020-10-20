@@ -37,7 +37,7 @@ DISTANCE = 55
 '''
 
 # Colors configuration
-GREEN = (0,255,0)
+GREEN = (50,205,50)
 RED = (0,0,255)
 YELLOW = (0,255,255)
 WHITE = (255,255,255)
