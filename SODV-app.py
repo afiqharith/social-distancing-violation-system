@@ -30,6 +30,7 @@ class SODV:
         return (((xmx + xmn)/2), ((ymx + ymn)/2))
     
     def calculateDistance(self, xc1, yc1, xc2, yc2):
+        # Apply Euclidean distance between two centre points
         return math.sqrt((xc1-xc2)**2 + (yc1-yc2)**2)
     
     def drawDetectionBox(self, frame, xmn, ymn, xmx, ymx, color):

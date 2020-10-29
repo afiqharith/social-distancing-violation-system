@@ -38,6 +38,12 @@ In order to run the program using device's camera, you are required to enable th
 | :------------------------------------------: | :------------------------------------------: | :------------------------------------------: |
 |                **FRAME 300**                 |                **FRAME 400**                 |                **FRAME 500**                 |
 
+### 🎯 Overall accuracies:
+
+| ![graph](/images/graph.png) |
+| --------------------------- |
+
+
 ### 🎯 Accuracy for person detection:
 
 | Dataset            | TP  | TN  | FP  | FN  | %    |
@@ -46,9 +52,9 @@ In order to run the program using device's camera, you are required to enable th
 
 ### 🎯 Accuracy for social distance violation detection:
 
-| Dataset            | TP  | TN  | FP  | FN  | %   |
-| ------------------ | --- | --- | --- | --- | --- |
-| Oxford Town Centre | NA  | NA  | NA  | NA  | NA  |
+| Dataset            | TP  | TN  | FP  | FN  | %    |
+| ------------------ | --- | --- | --- | --- | ---- |
+| Oxford Town Centre | 23  | 15  | 9   | 2   | 77.5 |
 
 ### ⛔ Social distance violation detection using distance formula Drawback:
 
