@@ -2,31 +2,34 @@
   <img src="images/SoDV-v0.2.png">
 </div>
 
-# SODV: Social Distancing Violation System using pre-trained YOLOv3 model ![SoDV](https://img.shields.io/badge/Build-v1.1-blue) [![LICENSE](https://img.shields.io/badge/license-MIT-blue)](https://github.com/afiqharith/SocialDistanceDetector-SODV/blob/master/LICENSE) [![FKE](https://img.shields.io/badge/FKE-UiTM-purple)](https://fke.uitm.edu.my/) [![RMC](https://img.shields.io/badge/RMC-UiTM-purple)](https://rmc.uitm.edu.my/v2/)
+# SODV: Social Distancing Violation System using pre-trained YOLOv3 model
+
+![SoDV](https://img.shields.io/badge/Build-v1.1-blue) [![LICENSE](https://img.shields.io/badge/license-MIT-blue)](https://github.com/afiqharith/SocialDistanceDetector-SODV/blob/master/LICENSE) [![FKE](https://img.shields.io/badge/FKE-UiTM-purple)](https://fke.uitm.edu.my/) [![RMC](https://img.shields.io/badge/RMC-UiTM-purple)](https://rmc.uitm.edu.my/v2/)
 
 The previous development of this project used MobileNet SSD pre-trained on MS-COCO as the person detection algorithm. After the [previous project](https://github.com/afiqharith/SocialDistancing-SafetyViolationROI-MobileNetSSD-FYP.git 'Build v1.0 passing') finished in July 2020, I decided to further improve the detection algorithm by changing from MobileNet SSD to YOLOv3 to increase the accuracy. The program uses OpenCV API for the image processing and utilizing the DNN module which solely tested on CPU. The system accuracy tested on Oxford Town Centre CCTV video-dataset (530 frames). This project was submitted to Malaysia Technology Expo (MTE) 2020 Special Edition COVID-19 International Innovation Awards under Faculty of Electrical Engineering of Universiti Teknologi MARA.
 </br>
 
-_💻 Install the dependencies on command line:_
+_Install the dependencies on command line:_
 
 ```sh
 $ pip3 install -r requirement.txt
 ```
 
-_💻 To run the program on command line:_
+_To run the program on command line:_
 
 ```sh
 $ python3 SODV-app.py
 ```
 
-In order to run the program using device's camera, you are required to enable the camera setting in **config.py** file by changing `CAMERA = False` to `CAMERA = True`.
-</br>
+_Edit program configuration on **config.py**:_
 
-### 🎬 Output example:
+- To use device's camera as program input, change `CAMERA = False` to `CAMERA = True`.
+  </br>
+
+### Output example:
 
 | ![outputimage](/images/TownCentre_new.gif) |
 | ------------------------------------------ |
-
 
 **Frame 10 to 500:**
 
@@ -38,29 +41,28 @@ In order to run the program using device's camera, you are required to enable th
 | :------------------------------------------: | :------------------------------------------: | :------------------------------------------: |
 |                **FRAME 300**                 |                **FRAME 400**                 |                **FRAME 500**                 |
 
-### 🎯 Overall accuracies:
+### Overall accuracies:
 
 | ![graph](/images/graph.png) |
 | --------------------------- |
 
-
-### 🎯 Accuracy for person detection:
+### Accuracy for person detection:
 
 | Dataset            | TP  | TN  | FP  | FN  | %    |
 | ------------------ | --- | --- | --- | --- | ---- |
 | Oxford Town Centre | 29  | 0   | 0   | 11  | 72.5 |
 
-### 🎯 Accuracy for social distance violation detection:
+### Accuracy for social distance violation detection:
 
 | Dataset            | TP  | TN  | FP  | FN  | %    |
 | ------------------ | --- | --- | --- | --- | ---- |
 | Oxford Town Centre | 23  | 15  | 9   | 2   | 77.5 |
 
-### ⛔ Social distance violation detection using distance formula Drawback:
+### Social distance violation detection using distance formula Drawback:
 
 - No camera calibration for intrinsic parameter
 
-### ⏳ Future upgrades:
+### Future upgrades:
 
 | Features                                              | Status                                                                |
 | ----------------------------------------------------- | --------------------------------------------------------------------- |
@@ -68,9 +70,10 @@ In order to run the program using device's camera, you are required to enable th
 | Integration with facemask detection                   | ![STATUS](https://img.shields.io/badge/facemask_detection-TBD-orange) |
 | Integration with DeepSort                             | ![STATUS](https://img.shields.io/badge/DeepSort-TBD-orange)           |
 
----
+## Kindly check out below links for references:
 
-## Kindly check out below links:
+**📑 Previous project** </br>
+[Person Detection for Social Distancing and Safety Violation Alert based on Segmented ROI](https://github.com/afiqharith/SocialDistancing-SafetyViolationROI-MobileNetSSD-FYP.git 'GitHub Repo')
 
 **🎥 Output video** </br>
 [![Youtube](https://img.shields.io/badge/Social_Distance_Violation_Detection-Youtube-red)](https://www.youtube.com/watch?v=zXBDvDaJLHA)
@@ -80,7 +83,7 @@ In order to run the program using device's camera, you are required to enable th
 
 **📊 Dataset** </br>
 MegaPixels: Origins, Ethics, and Privacy Implications of Publicly Available Face Recognition Image Datasets </br>
-[![Oxford Town Centre CCTV video-dataset](https://img.shields.io/badge/Oxford_Town_Centre-URL-yellowgreen)](https://megapixels.cc/oxford_town_centre/)
+[![Oxford Town Centre CCTV video-dataset](https://img.shields.io/badge/Oxford_Town_Centre-URL-yellowgreen)](https://exposing.ai/oxford_town_centre/)
 </br>
 
 ### LICENSE
