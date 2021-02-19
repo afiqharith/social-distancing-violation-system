@@ -51,18 +51,18 @@ class SODV:
             boxColors = []
             detectedBox = []
 
-            self.ret, self.frame = self.video.read() 
+            self.flag, self.frame = self.video.read() 
 
             # Resize frame for prediction 
-            if self.ret:
-                frameResized = cv2.resize(self.frame, (416, 416))       
+            if self.flag:
+                self.frameResized = cv2.resize(self.frame, (416, 416))       
             else:
                 break
 
             height, width, channels = self.frame.shape
 
             # Detecting objects
-            blob = cv2.dnn.blobFromImage(frameResized, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
+            blob = cv2.dnn.blobFromImage(self.frameResized, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
             net.setInput(blob)
             layerOutputs = net.forward(layerNames)
 
