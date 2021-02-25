@@ -47,9 +47,9 @@ class SODV:
         while (self.video.isOpened()):
 
             HighRiskCounter, LowRiskCounter = 0, 0
-            centroids = []
-            boxColors = []
-            detectedBox = []
+            centroids = list()
+            boxColors = list()
+            detectedBox = list()
 
             self.flag, self.frame = self.video.read() 
 
@@ -66,9 +66,9 @@ class SODV:
             net.setInput(blob)
             layerOutputs = net.forward(layerNames)
 
-            classIDs = []
-            confidences = []
-            boxes = []
+            classIDs = list()
+            confidences = list()
+            boxes = list()
 
             for output in layerOutputs:
                 for detection in output:
