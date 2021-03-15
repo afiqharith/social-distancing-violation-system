@@ -4,12 +4,12 @@ __email__ = "afiqharith05@gmail.com"
 __date__ = "08 Oct 2020"
 __status__ = "Development"
 
-import cv2
-import numpy as np
-import math
-import os
 from setup.model import Model
 from setup.config import *
+import numpy as np
+import math
+import cv2
+import os
 
 # Load video frpm PATH if CAMERA is OFF
 if CAMERA == False:
