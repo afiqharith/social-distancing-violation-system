@@ -23,9 +23,7 @@ class SODV:
         self.video = cv2.VideoCapture(source)    
         self.distance = distance
         self.model = Model(MODELPATH, WEIGHTS, CFG, COCONAMES)
-
-        if START == True:
-            self.main()
+        if START == True: self.main()
     
     def calculateCentroid(self, xmn, ymn, xmx, ymx):
         # Center point of bounding boxes
