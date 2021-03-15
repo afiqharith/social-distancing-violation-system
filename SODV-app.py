@@ -1,49 +1,50 @@
+#!/Users/Afiq/Envs/global/Scripts/python
 __author__ = "Afiq Harith"
 __email__ = "afiqharith05@gmail.com"
 __date__ = "08 Oct 2020"
-__status__ = "Development-OOP"
+__status__ = "Development"
 
 import cv2
 import numpy as np
 import math
 import os
-from setup.model import dataFromModel
+from setup.model import Model
 from setup.config import *
 
-# Load video
-VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
+# Load video frpm PATH if CAMERA is OFF
+if CAMERA == False:
+    VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
+else:
+    VIDEOPATH = 0
 
 class SODV:
-    def __init__(self, VIDEOPATH, DISTANCE, CAMERA, START = True):
+    def __init__(self, source = VIDEOPATH, distance = DISTANCE, START = True):
 
-        if CAMERA == True:
-            self.video = cv2.VideoCapture(0)
-        else:
-            self.video = cv2.VideoCapture(VIDEOPATH)    
-
-        self.distance = DISTANCE
+        self.video = cv2.VideoCapture(source)    
+        self.distance = distance
+        self.model = Model(MODELPATH, WEIGHTS, CFG, COCONAMES)
 
         if START == True:
             self.main()
     
     def calculateCentroid(self, xmn, ymn, xmx, ymx):
+        # Center point of bounding boxes
         return (((xmx + xmn)/2), ((ymx + ymn)/2))
     
-    def calculateDistance(self, xc1, yc1, xc2, yc2):
-        # Apply Euclidean distance between two centre points
-        return math.sqrt((xc1-xc2)**2 + (yc1-yc2)**2)
+    def calculateDistance(self, xcenter1, ycenter1, xcenter2, ycenter2):
+        # Euclidean distance
+        return math.sqrt((xcenter1-xcenter2)**2 + (ycenter1-ycenter2)**2)
     
     def drawDetectionBox(self, frame, xmn, ymn, xmx, ymx, color):
-        cv2.rectangle(frame, (xmn, ymn), (xmx, ymx), color, 2)
+        cv2.rectangle(frame, (xmn, ymn), (xmx, ymx), color, 1)
     
     def main(self):
         try:
-            net, layerNames, classes = dataFromModel.get(MODELPATH, WEIGHTS, CFG, COCONAMES)
+            net, layerNames, classes = self.model.predict()
             print('[PASSED] Model loaded.')
         except:
             print('[FAILED] Unable to load model.')
         
-        print('[PASSED] Starting application.')
         while (self.video.isOpened()):
 
             HighRiskCounter, LowRiskCounter = 0, 0
@@ -80,16 +81,18 @@ class SODV:
                     if classID != 0:
                         continue
 
-                    # If prediction is 50% 
+                    # If prediction is more than 50% 
                     if confidence > CONFIDENCE:
                         
                         # Object detected
                         center_x = int(detection[0] * width)
                         center_y = int(detection[1] * height)
+
+                        # Bbox width and height
                         w = int(detection[2] * width)
                         h = int(detection[3] * height)
 
-                        # Rectangle coordinates
+                        # Bbox x and y axis pixel coordinate
                         x = int(center_x - w / 2)
                         y = int(center_y - h / 2)
 
@@ -97,7 +100,7 @@ class SODV:
                         confidences.append(float(confidence))
                         classIDs.append(classID)
 
-            # Apply non-max suppression
+            # Apply non-max suppression (NMS)
             indexes = cv2.dnn.NMSBoxes(boxes, confidences, CONFIDENCE, THRESHOLD)
 
             for i in range(len(boxes)):
@@ -109,7 +112,7 @@ class SODV:
                     xmx = (x + w)
                     ymx = (y + h)
 
-                    #calculate centroid point for bounding boxes
+                    # Calculate centroid point for bbox (detectedBox)
                     centroid = self.calculateCentroid(xmn, ymn, xmx, ymx)
                     detectedBox.append([xmn, ymn, xmx, ymx, centroid])
 
@@ -117,6 +120,7 @@ class SODV:
                     for k in range (len(centroids)):
                         c = centroids[k]
                         
+                        # Compare pixel distance between bbox (detectedBox)
                         if self.calculateDistance(c[0], c[1], centroid[0], centroid[1]) <= self.distance:
                             boxColors[k] = True
                             violation = True
@@ -134,22 +138,22 @@ class SODV:
                 ymax = detectedBox[i][3]
                 
                 if boxColors[i] == False:
-                    self.drawDetectionBox(self.frame, xmin, ymin, xmax, ymax, WHITE)
-                    label = "LOW-risk"
+                    self.drawDetectionBox(self.frame, xmin, ymin, xmax, ymax, BLACK)
+                    label = "LOW"
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
 
                     ylabel = max(ymin, labelSize[1])
-                    cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]), (xmin + labelSize[0], ymin + baseLine), WHITE, cv2.FILLED)
+                    cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]), (xmin + labelSize[0], ymin + baseLine), BLACK, cv2.FILLED)
                     cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 0.5, GREEN, 1, cv2.LINE_AA)
                     LowRiskCounter += 1
 
                 else:
                     self.drawDetectionBox(self.frame, xmin, ymin, xmax, ymax, RED)
-                    label = "HIGH-risk"
+                    label = "HIGH"
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
 
                     ylabel = max(ymin, labelSize[1])
-                    cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]),(xmin + labelSize[0], ymin + baseLine), WHITE, cv2.FILLED)
+                    cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]),(xmin + labelSize[0], ymin + baseLine), RED, cv2.FILLED)
                     cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 0.5, ORANGE, 1, cv2.LINE_AA)
                     HighRiskCounter += 1
 
@@ -159,8 +163,8 @@ class SODV:
             cv2.putText(self.frame, LINE, (28, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RED, 2, cv2.LINE_AA)
             cv2.putText(self.frame, HIGHRISK_TEXT, (60, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
 
-            LOWRISK_TEXT = f'LOW  RISK: {LowRiskCounter} people'
-            cv2.putText(self.frame, LINE, (28, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, WHITE, 2, cv2.LINE_AA)
+            LOWRISK_TEXT = f'LOW RISK: {LowRiskCounter} people'
+            cv2.putText(self.frame, LINE, (28, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, BLACK, 2, cv2.LINE_AA)
             cv2.putText(self.frame, LOWRISK_TEXT, (60, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
 
             cv2.imshow("SODV", self.frame)
@@ -171,5 +175,5 @@ class SODV:
         self.video.release()
 
 if __name__ == '__main__':
-    SODV(VIDEOPATH, DISTANCE, CAMERA)
+    SODV()
     cv2.destroyAllWindows()

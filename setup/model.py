@@ -2,21 +2,21 @@ import cv2
 import numpy as np
 import os 
 
-class dataFromModel:
+class Model:
 
-    def get(MODELPATH, WEIGHTS, CFG, COCONAMES):
+    def __init__(self, MODELPATH, WEIGHTS, CFG, COCONAMES):
+       
+        self.WEIGHTSPATH = os.path.join(os.getcwd(), MODELPATH, WEIGHTS)
+        self.CFGPATH = os.path.join(os.getcwd(), MODELPATH, CFG)
+        self.COCO_NAMEPATH = os.path.join(os.getcwd(), "utils/", COCONAMES)
 
-        classes = []
+    def predict(self):
 
-        WEIGHTSPATH = os.path.join(os.getcwd(), MODELPATH, WEIGHTS)
-        CFGPATH = os.path.join(os.getcwd(), MODELPATH, CFG)
-        COCO_NAMEPATH = os.path.join(os.getcwd(), "utils/", COCONAMES)
-        
-        net = cv2.dnn.readNet(WEIGHTSPATH, CFGPATH)
-
-        with open(COCO_NAMEPATH, "r") as f:
+        classes = list()
+        with open(self.COCO_NAMEPATH, "r") as f:
             classes = [line.strip() for line in f.readlines()]
-
+        
+        net = cv2.dnn.readNet(self.WEIGHTSPATH, self.CFGPATH)
         layerNames = net.getLayerNames()
         layerNames = [layerNames[i[0] - 1] for i in net.getUnconnectedOutLayers()]
         
