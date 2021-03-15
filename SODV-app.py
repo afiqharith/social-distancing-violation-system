@@ -25,15 +25,15 @@ class SODV:
         self.model = Model(MODELPATH, WEIGHTS, CFG, COCONAMES)
         if START == True: self.main()
     
-    def calculateCentroid(self, xmn, ymn, xmx, ymx):
+    def calculate_centroid(self, xmn, ymn, xmx, ymx):
         # Center point of bounding boxes
         return (((xmx + xmn)/2), ((ymx + ymn)/2))
     
-    def calculateDistance(self, xcenter1, ycenter1, xcenter2, ycenter2):
+    def calculate_euclidean_distance(self, xcenter1, ycenter1, xcenter2, ycenter2):
         # Euclidean distance
         return math.sqrt((xcenter1-xcenter2)**2 + (ycenter1-ycenter2)**2)
     
-    def drawDetectionBox(self, frame, xmn, ymn, xmx, ymx, color):
+    def rect_detection_box(self, frame, xmn, ymn, xmx, ymx, color):
         cv2.rectangle(frame, (xmn, ymn), (xmx, ymx), color, 1)
     
     def main(self):
@@ -44,12 +44,11 @@ class SODV:
             print('[FAILED] Unable to load model.')
         
         while (self.video.isOpened()):
-
-            HighRiskCounter, LowRiskCounter = 0, 0
+            
+            high_counter, low_counter = 0, 0
             centroids = list()
-            boxColors = list()
-            detectedBox = list()
-
+            detected_bbox_colors = list()
+            detected_bbox = list()
             self.flag, self.frame = self.video.read() 
 
             # Resize frame for prediction 
@@ -110,58 +109,58 @@ class SODV:
                     xmx = (x + w)
                     ymx = (y + h)
 
-                    # Calculate centroid point for bbox (detectedBox)
-                    centroid = self.calculateCentroid(xmn, ymn, xmx, ymx)
-                    detectedBox.append([xmn, ymn, xmx, ymx, centroid])
+                    # Calculate centroid point for bbox (detected_bbox)
+                    centroid = self.calculate_centroid(xmn, ymn, xmx, ymx)
+                    detected_bbox.append([xmn, ymn, xmx, ymx, centroid])
 
                     violation = False
                     for k in range (len(centroids)):
                         c = centroids[k]
                         
-                        # Compare pixel distance between bbox (detectedBox)
-                        if self.calculateDistance(c[0], c[1], centroid[0], centroid[1]) <= self.distance:
-                            boxColors[k] = True
+                        # Compare pixel distance between bbox (detected_bbox)
+                        if self.calculate_euclidean_distance(c[0], c[1], centroid[0], centroid[1]) <= self.distance:
+                            detected_bbox_colors[k] = True
                             violation = True
                             cv2.line(self.frame, (int(c[0]), int(c[1])), (int(centroid[0]), int(centroid[1])), YELLOW, 1, cv2.LINE_AA)
                             cv2.circle(self.frame, (int(c[0]), int(c[1])), 3, ORANGE, -1,cv2.LINE_AA)
                             cv2.circle(self.frame, (int(centroid[0]), int(centroid[1])), 3, ORANGE, -1, cv2.LINE_AA)
                             break
                     centroids.append(centroid)
-                    boxColors.append(violation)        
+                    detected_bbox_colors.append(violation)        
 
-            for i in range (len(detectedBox)):
-                xmin = detectedBox[i][0]
-                ymin = detectedBox[i][1]
-                xmax = detectedBox[i][2]
-                ymax = detectedBox[i][3]
+            for i in range (len(detected_bbox)):
+                xmin = detected_bbox[i][0]
+                ymin = detected_bbox[i][1]
+                xmax = detected_bbox[i][2]
+                ymax = detected_bbox[i][3]
                 
-                if boxColors[i] == False:
-                    self.drawDetectionBox(self.frame, xmin, ymin, xmax, ymax, BLACK)
+                if detected_bbox_colors[i] == False:
+                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
                     label = "LOW"
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
 
                     ylabel = max(ymin, labelSize[1])
                     cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]), (xmin + labelSize[0], ymin + baseLine), BLACK, cv2.FILLED)
                     cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 0.5, GREEN, 1, cv2.LINE_AA)
-                    LowRiskCounter += 1
+                    low_counter += 1
 
                 else:
-                    self.drawDetectionBox(self.frame, xmin, ymin, xmax, ymax, RED)
+                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
                     label = "HIGH"
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
 
                     ylabel = max(ymin, labelSize[1])
                     cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]),(xmin + labelSize[0], ymin + baseLine), RED, cv2.FILLED)
                     cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 0.5, ORANGE, 1, cv2.LINE_AA)
-                    HighRiskCounter += 1
+                    high_counter += 1
 
             cv2.rectangle(self.frame, (13, 10),(250, 60), GREY, cv2.FILLED)
             LINE = "--"
-            HIGHRISK_TEXT = f'HIGH RISK: {HighRiskCounter} people'
+            HIGHRISK_TEXT = f'HIGH RISK: {high_counter} people'
             cv2.putText(self.frame, LINE, (28, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RED, 2, cv2.LINE_AA)
             cv2.putText(self.frame, HIGHRISK_TEXT, (60, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
 
-            LOWRISK_TEXT = f'LOW RISK: {LowRiskCounter} people'
+            LOWRISK_TEXT = f'LOW RISK: {low_counter} people'
             cv2.putText(self.frame, LINE, (28, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, BLACK, 2, cv2.LINE_AA)
             cv2.putText(self.frame, LOWRISK_TEXT, (60, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
 
