@@ -12,7 +12,7 @@ import cv2
 import os
 
 # Load video frpm PATH if CAMERA is OFF
-if CAMERA == False:
+if CAMERA_FLAG == False:
     VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
 else:
     VIDEOPATH = 0
@@ -22,7 +22,7 @@ class SODV:
 
         self.video = cv2.VideoCapture(source)    
         self.distance = distance
-        self.model = Model(MODELPATH, WEIGHTS, CFG, COCONAMES)
+        self.model = Model(UTILS, MODELPATH, WEIGHTS, CFG, COCONAMES)
         if START == True: self.main()
     
     def calculate_centroid(self, xmn, ymn, xmx, ymx):
@@ -40,7 +40,7 @@ class SODV:
         try:
             net, layerNames, classes = self.model.predict()
             print('[PASSED] Model loaded.')
-        except:
+        except Exception:
             print('[FAILED] Unable to load model.')
         
         while (self.video.isOpened()):
@@ -64,7 +64,6 @@ class SODV:
             net.setInput(blob)
             layerOutputs = net.forward(layerNames)
 
-            classIDs = list()
             confidences = list()
             boxes = list()
 
@@ -95,7 +94,6 @@ class SODV:
 
                         boxes.append([x, y, w, h])
                         confidences.append(float(confidence))
-                        classIDs.append(classID)
 
             # Apply non-max suppression (NMS)
             indexes = cv2.dnn.NMSBoxes(boxes, confidences, CONFIDENCE, THRESHOLD)

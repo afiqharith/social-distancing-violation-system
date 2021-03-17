@@ -1,5 +1,5 @@
 # App configuration
-CAMERA = False
+CAMERA_FLAG = False
 
 # Threshold when apply NMS 
 THRESHOLD = 0.4
@@ -8,7 +8,8 @@ THRESHOLD = 0.4
 CONFIDENCE = 0.5
 
 # Model path
-MODELPATH = "utils/model/"
+UTILS = "utils"
+MODELPATH = "model"
 WEIGHTS = "yolov3.weights"
 CFG = "yolov3.cfg"
 COCONAMES = "coco.names"
