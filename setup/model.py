@@ -4,17 +4,18 @@ import os
 
 class Model:
 
-    def __init__(self, UTILS, MODELPATH, WEIGHTS, CFG, COCONAMES):
+    def __init__(self, **kwargs):
         '''
+        :param all: (UTILS, MODELPATH, WEIGHTS, CFG, COCONAMES)
         :param UTILS: utils folder
         :param MODELPATH: model folder located in utils folder
         :param WEIGHTS: YOLOv3 weights file located in model folder
         :param CFG: YOLOv3 config file located in model folder
         :param COCONAMES: file of the list of the COCO object names in the dataset
         '''
-        self.WEIGHTSPATH = os.path.join(os.getcwd(), UTILS, MODELPATH, WEIGHTS)
-        self.CFGPATH = os.path.join(os.getcwd(), UTILS, MODELPATH, CFG)
-        self.COCO_NAMEPATH = os.path.join(os.getcwd(), UTILS, COCONAMES)
+        self.WEIGHTSPATH = os.path.join(os.getcwd(), kwargs['utilsdir'], kwargs['modeldir'], kwargs['weights'])
+        self.CFGPATH = os.path.join(os.getcwd(), kwargs['utilsdir'], kwargs['modeldir'], kwargs['cfg'])
+        self.COCO_NAMEPATH = os.path.join(os.getcwd(), kwargs['utilsdir'], kwargs['coco'])
 
     def predict(self):
 

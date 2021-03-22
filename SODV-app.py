@@ -6,6 +6,7 @@ __status__ = "Development"
 
 from setup.model import Model
 from setup.config import *
+from time import time
 import numpy as np
 import math
 import cv2
@@ -20,21 +21,25 @@ else:
 class SODV:
     def __init__(self, source = VIDEOPATH, distance = DISTANCE, START = True):
 
-        self.video = cv2.VideoCapture(source)    
-        self.distance = distance
-        self.model = Model(UTILS, MODELPATH, WEIGHTS, CFG, COCONAMES)
+        self.video = cv2.VideoCapture(source)
+        self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, coco=COCONAMES)    
+        self.distance = distance        
         if START == True: self.main()
     
-    def calculate_centroid(self, xmn, ymn, xmx, ymx):
+
+    # @param *args: (xmin, ymin, xmax, ymax)
+    def calculate_centroid(self, *args):
         # Center point of bounding boxes
-        return (((xmx + xmn)/2), ((ymx + ymn)/2))
+        return (((args[2] + args[0])/2), ((args[3] + args[1])/2))
     
-    def calculate_euclidean_distance(self, xcenter1, ycenter1, xcenter2, ycenter2):
+    # @param *args: (xcenter_1, ycenter_1, xcenter_2, ycenter_2)
+    def calculate_euclidean_distance(self, *args):
         # Euclidean distance
-        return math.sqrt((xcenter1-xcenter2)**2 + (ycenter1-ycenter2)**2)
+        return math.sqrt((args[0]-args[2])**2 + (args[1]-args[3])**2)
     
-    def rect_detection_box(self, frame, xmn, ymn, xmx, ymx, color):
-        cv2.rectangle(frame, (xmn, ymn), (xmx, ymx), color, 1)
+    # @param *args: (frame, xmin, ymin, xmax, ymax, color)
+    def rect_detection_box(self, *args):
+        cv2.rectangle(args[0], (args[1], args[2]), (args[3], args[4]), args[5], 1)
     
     def main(self):
         try:
@@ -170,5 +175,7 @@ class SODV:
         self.video.release()
 
 if __name__ == '__main__':
+    start_time = time()
     SODV()
+    print(f'Finished after {round(time()-start_time, 2)}s')
     cv2.destroyAllWindows()

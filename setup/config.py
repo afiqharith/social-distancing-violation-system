@@ -8,8 +8,8 @@ THRESHOLD = 0.4
 CONFIDENCE = 0.5
 
 # Model path
-UTILS = "utils"
-MODELPATH = "model"
+UTILSDIR = "utils"
+MODELDIR = "model"
 WEIGHTS = "yolov3.weights"
 CFG = "yolov3.cfg"
 COCONAMES = "coco.names"
@@ -21,7 +21,7 @@ WIDTH = 1280
 HEIGHT = 720
 DISTANCE = 68.5
 
-# Colors configuration
+# Colors configurations
 GREEN = (50,205,50)
 RED = (0,0,255)
 YELLOW = (0,255,255)
