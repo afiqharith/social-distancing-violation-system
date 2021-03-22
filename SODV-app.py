@@ -2,7 +2,6 @@
 __author__ = "Afiq Harith"
 __email__ = "afiqharith05@gmail.com"
 __date__ = "08 Oct 2020"
-__status__ = "Development"
 
 from setup.model import Model
 from setup.config import *
@@ -12,7 +11,7 @@ import math
 import cv2
 import os
 
-# Load video frpm PATH if CAMERA is OFF
+# Load video from PATH if CAMERA is OFF
 if CAMERA_FLAG == False:
     VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
 else:
@@ -26,7 +25,6 @@ class SODV:
         self.distance = distance        
         if START == True: self.main()
     
-
     # @param *args: (xmin, ymin, xmax, ymax)
     def calculate_centroid(self, *args):
         # Center point of bounding boxes
@@ -49,7 +47,6 @@ class SODV:
             print('[FAILED] Unable to load model.')
         
         while (self.video.isOpened()):
-            
             high_counter, low_counter = 0, 0
             centroids = list()
             detected_bbox_colors = list()
@@ -62,8 +59,6 @@ class SODV:
             else:
                 break
 
-            height, width, channels = self.frame.shape
-
             # Detecting objects
             blob = cv2.dnn.blobFromImage(self.frameResized, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
             net.setInput(blob)
@@ -71,7 +66,7 @@ class SODV:
 
             confidences = list()
             boxes = list()
-
+            height, width, _ = self.frame.shape
             for output in layerOutputs:
                 for detection in output:
                     scores = detection[5:]
@@ -81,18 +76,14 @@ class SODV:
                     # If class is not 0 which is person, ignore it.
                     if classID != 0:
                         continue
-
                     # If prediction is more than 50% 
                     if confidence > CONFIDENCE:
-                        
                         # Object detected
                         center_x = int(detection[0] * width)
                         center_y = int(detection[1] * height)
-
                         # Bbox width and height
                         w = int(detection[2] * width)
                         h = int(detection[3] * height)
-
                         # Bbox x and y axis pixel coordinate
                         x = int(center_x - w / 2)
                         y = int(center_y - h / 2)
@@ -102,16 +93,13 @@ class SODV:
 
             # Apply non-max suppression (NMS)
             indexes = cv2.dnn.NMSBoxes(boxes, confidences, CONFIDENCE, THRESHOLD)
-
             for i in range(len(boxes)):
                 if i in indexes:
                     x, y, w, h = boxes[i]
-
                     xmn = x
                     ymn = y
                     xmx = (x + w)
                     ymx = (y + h)
-
                     # Calculate centroid point for bbox (detected_bbox)
                     centroid = self.calculate_centroid(xmn, ymn, xmx, ymx)
                     detected_bbox.append([xmn, ymn, xmx, ymx, centroid])
@@ -119,7 +107,6 @@ class SODV:
                     violation = False
                     for k in range (len(centroids)):
                         c = centroids[k]
-                        
                         # Compare pixel distance between bbox (detected_bbox)
                         if self.calculate_euclidean_distance(c[0], c[1], centroid[0], centroid[1]) <= self.distance:
                             detected_bbox_colors[k] = True
