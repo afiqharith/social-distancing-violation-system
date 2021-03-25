@@ -1,8 +1,4 @@
 #!/Users/Afiq/Envs/global/Scripts/python
-__author__ = "Afiq Harith"
-__email__ = "afiqharith05@gmail.com"
-__date__ = "08 Oct 2020"
-
 from setup.model import Model
 from setup.config import *
 from time import time
@@ -14,14 +10,16 @@ import os
 # Load video from PATH if CAMERA is OFF
 if CAMERA_FLAG == False:
     VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
+    VIDEO_IND = VIDEONAME[:-4].upper()
 else:
     VIDEOPATH = 0
+    VIDEO_IND = "camera_01".upper()
 
 class SODV:
     def __init__(self, source = VIDEOPATH, distance = DISTANCE, START = True):
 
         self.video = cv2.VideoCapture(source)
-        self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, coco=COCONAMES)    
+        self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
         self.distance = distance        
         if START == True: self.main()
     
@@ -38,6 +36,20 @@ class SODV:
     # @param *args: (frame, xmin, ymin, xmax, ymax, color)
     def rect_detection_box(self, *args):
         cv2.rectangle(args[0], (args[1], args[2]), (args[3], args[4]), args[5], 1)
+
+    def information_display(self, *args):
+        cv2.rectangle(args[0], (13, 5), (250, 30), BLACK, cv2.FILLED)
+        cv2.putText(args[0], f'{VIDEO_IND}', (28, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, WHITE, 1, cv2.LINE_AA)
+
+        cv2.rectangle(self.frame, (13, 30), (250, 80), GREY, cv2.FILLED)
+        LINE = "--"
+        HIGHRISK_TEXT = f'HIGH RISK: {args[2]} people'
+        cv2.putText(args[0], LINE, (28, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, RED, 2, cv2.LINE_AA)
+        cv2.putText(args[0], HIGHRISK_TEXT, (60, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
+
+        LOWRISK_TEXT = f'LOW RISK: {args[1]} people'
+        cv2.putText(args[0], LINE, (28, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLACK, 2, cv2.LINE_AA)
+        cv2.putText(args[0], LOWRISK_TEXT, (60, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
     
     def main(self):
         try:
@@ -106,13 +118,12 @@ class SODV:
 
                     violation = False
                     for k in range (len(centroids)):
-                        c = centroids[k]
-                        # Compare pixel distance between bbox (detected_bbox)
-                        if self.calculate_euclidean_distance(c[0], c[1], centroid[0], centroid[1]) <= self.distance:
+                        # Compare the distance of center point with each other
+                        if self.calculate_euclidean_distance(centroids[k][0], centroids[k][1], centroid[0], centroid[1]) <= self.distance:
                             detected_bbox_colors[k] = True
                             violation = True
-                            cv2.line(self.frame, (int(c[0]), int(c[1])), (int(centroid[0]), int(centroid[1])), YELLOW, 1, cv2.LINE_AA)
-                            cv2.circle(self.frame, (int(c[0]), int(c[1])), 3, ORANGE, -1,cv2.LINE_AA)
+                            cv2.line(self.frame, (int(centroids[k][0]), int(centroids[k][1])), (int(centroid[0]), int(centroid[1])), YELLOW, 1, cv2.LINE_AA)
+                            cv2.circle(self.frame, (int(centroids[k][0]), int(centroids[k][1])), 3, ORANGE, -1,cv2.LINE_AA)
                             cv2.circle(self.frame, (int(centroid[0]), int(centroid[1])), 3, ORANGE, -1, cv2.LINE_AA)
                             break
                     centroids.append(centroid)
@@ -126,34 +137,25 @@ class SODV:
                 
                 if detected_bbox_colors[i] == False:
                     self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
-                    label = "LOW"
-                    labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+                    label = "low".upper()
+                    labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
                     ylabel = max(ymin, labelSize[1])
                     cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]), (xmin + labelSize[0], ymin + baseLine), BLACK, cv2.FILLED)
-                    cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 0.5, GREEN, 1, cv2.LINE_AA)
+                    cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, GREEN, 1, cv2.LINE_AA)
                     low_counter += 1
 
                 else:
                     self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
-                    label = "HIGH"
-                    labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+                    label = "high".upper()
+                    labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
                     ylabel = max(ymin, labelSize[1])
                     cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]),(xmin + labelSize[0], ymin + baseLine), RED, cv2.FILLED)
-                    cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 0.5, ORANGE, 1, cv2.LINE_AA)
+                    cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, ORANGE, 1, cv2.LINE_AA)
                     high_counter += 1
 
-            cv2.rectangle(self.frame, (13, 10),(250, 60), GREY, cv2.FILLED)
-            LINE = "--"
-            HIGHRISK_TEXT = f'HIGH RISK: {high_counter} people'
-            cv2.putText(self.frame, LINE, (28, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, RED, 2, cv2.LINE_AA)
-            cv2.putText(self.frame, HIGHRISK_TEXT, (60, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
-
-            LOWRISK_TEXT = f'LOW RISK: {low_counter} people'
-            cv2.putText(self.frame, LINE, (28, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, BLACK, 2, cv2.LINE_AA)
-            cv2.putText(self.frame, LOWRISK_TEXT, (60, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
-
+            self.information_display(self.frame, low_counter, high_counter)
             cv2.imshow("SODV", self.frame)
 
             if cv2.waitKey(1) >= 0:  
