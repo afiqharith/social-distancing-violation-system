@@ -23,20 +23,23 @@ class SODV:
         self.distance = distance        
         if START == True: self.main()
     
+    # Center point of bounding boxes
     # @param *args: (xmin, ymin, xmax, ymax)
     def calculate_centroid(self, *args):
-        # Center point of bounding boxes
         return (((args[2] + args[0])/2), ((args[3] + args[1])/2))
     
+    # Euclidean distance
     # @param *args: (xcenter_1, ycenter_1, xcenter_2, ycenter_2)
-    def calculate_euclidean_distance(self, *args):
-        # Euclidean distance
+    def calculate_euclidean_distance(self, *args):        
         return math.sqrt((args[0]-args[2])**2 + (args[1]-args[3])**2)
     
+    # Draw bounding boxes
     # @param *args: (frame, xmin, ymin, xmax, ymax, color)
     def rect_detection_box(self, *args):
         cv2.rectangle(args[0], (args[1], args[2]), (args[3], args[4]), args[5], 1)
 
+    # Display dtection information on top-left of the window
+    # @param *args: low_counter, high_counter
     def information_display(self, *args):
         cv2.rectangle(args[0], (13, 5), (250, 30), BLACK, cv2.FILLED)
         cv2.putText(args[0], f'{VIDEO_IND}', (28, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, WHITE, 1, cv2.LINE_AA)
@@ -96,7 +99,7 @@ class SODV:
                         # Bbox width and height
                         w = int(detection[2] * width)
                         h = int(detection[3] * height)
-                        # Bbox x and y axis pixel coordinate
+                        # Bbox x and y axis coordinate
                         x = int(center_x - w / 2)
                         y = int(center_y - h / 2)
 
@@ -135,6 +138,7 @@ class SODV:
                 xmax = detected_bbox[i][2]
                 ymax = detected_bbox[i][3]
                 
+                # If euclidean distance less than (<) DISTANCE, wrap black bbox
                 if detected_bbox_colors[i] == False:
                     self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
                     label = "low".upper()
@@ -145,6 +149,7 @@ class SODV:
                     cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, GREEN, 1, cv2.LINE_AA)
                     low_counter += 1
 
+                # Else, wrap red bbox
                 else:
                     self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
                     label = "high".upper()
