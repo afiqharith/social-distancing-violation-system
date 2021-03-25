@@ -17,7 +17,6 @@ else:
 
 class SODV:
     def __init__(self, source = VIDEOPATH, distance = DISTANCE, START = True):
-
         self.video = cv2.VideoCapture(source)
         self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
         self.distance = distance        
