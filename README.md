@@ -6,7 +6,7 @@
 
 ![SoDV](https://img.shields.io/badge/Build-v1.1-blue) [![LICENSE](https://img.shields.io/badge/license-MIT-blue)](https://github.com/afiqharith/SocialDistanceDetector-SODV/blob/master/LICENSE) [![FKE](https://img.shields.io/badge/FKE-UiTM-purple)](https://fke.uitm.edu.my/) [![RMC](https://img.shields.io/badge/RMC-UiTM-purple)](https://rmc.uitm.edu.my/v2/)
 
-The previous development of this project used MobileNet SSD pre-trained on MS-COCO as the person detection algorithm. After the [previous project](https://github.com/afiqharith/SocialDistancing-SafetyViolationROI-MobileNetSSD-FYP.git 'Build v1.0 passing') finished in July 2020, I decided to further improve the detection algorithm by changing from MobileNet SSD to YOLOv3 to increase the accuracy. The program uses OpenCV API for the image processing and utilizing the DNN module which solely tested on CPU. The system accuracy tested on Oxford Town Centre CCTV video-dataset (530 frames). This project was submitted to Malaysia Technology Expo (MTE) 2020 Special Edition COVID-19 International Innovation Awards under Faculty of Electrical Engineering of Universiti Teknologi MARA.
+The previous development of this project used MobileNet SSD pre-trained on MS-COCO as the person detection algorithm. After the [previous project](https://github.com/afiqharith/SocialDistancing-SafetyViolationROI-MobileNetSSD-FYP.git 'Build v1.0 passing') finished in July 2020, I decided to further improve the detection algorithm by changing from MobileNet SSD to YOLOv3 to increase the accuracy. The program uses OpenCV API for the image processing and utilizing the DNN module which solely tested on CPU. The system accuracy tested on Oxford Town Centre CCTV video-dataset (266 frames). This project was submitted to Malaysia Technology Expo (MTE) 2020 Special Edition COVID-19 International Innovation Awards under Faculty of Electrical Engineering of Universiti Teknologi MARA.
 </br>
 
 _Install the dependencies on command line:_
@@ -33,13 +33,13 @@ _Edit program configuration on **config.py**:_
 
 **Frame 10 to 500:**
 
-| ![outputimage](/images/data/frame%2010.jpg) | ![outputimage](/images/data/frame%20100.jpg) | ![outputimage](/images/data/frame%20200.jpg) |
-| :-----------------------------------------: | :------------------------------------------: | :------------------------------------------: |
-|                **FRAME 10**                 |                **FRAME 100**                 |                **FRAME 200**                 |
+| ![outputimage](/images/data/frame_10.jpg) | ![outputimage](/images/data/frame_50.jpg) | ![outputimage](/images/data/frame_100.jpg) |
+| :---------------------------------------: | :---------------------------------------: | :----------------------------------------: |
+|               **FRAME 10**                |               **FRAME 50**                |               **FRAME 100**                |
 
-| ![outputimage](/images/data/frame%20300.jpg) | ![outputimage](/images/data/frame%20400.jpg) | ![outputimage](/images/data/frame%20500.jpg) |
-| :------------------------------------------: | :------------------------------------------: | :------------------------------------------: |
-|                **FRAME 300**                 |                **FRAME 400**                 |                **FRAME 500**                 |
+| ![outputimage](/images/data/frame_150.jpg) | ![outputimage](/images/data/frame_200.jpg) | ![outputimage](/images/data/frame_250.jpg) |
+| :----------------------------------------: | :----------------------------------------: | :----------------------------------------: |
+|               **FRAME 150**                |               **FRAME 200**                |               **FRAME 250**                |
 
 ### Overall accuracies:
 
