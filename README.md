@@ -31,7 +31,7 @@ _Edit program configuration on **config.py**:_
 | ![outputimage](/images/TownCentre_new.gif) |
 | ------------------------------------------ |
 
-**Frame 10 to 500:**
+**Frame 10 to 250:**
 
 | ![outputimage](/images/data/frame_10.jpg) | ![outputimage](/images/data/frame_50.jpg) | ![outputimage](/images/data/frame_100.jpg) |
 | :---------------------------------------: | :---------------------------------------: | :----------------------------------------: |
