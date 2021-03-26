@@ -1,5 +1,6 @@
 # App configuration
 CAMERA_FLAG = False
+THREAD = True
 
 # Threshold when apply NMS 
 THRESHOLD   = 0.4

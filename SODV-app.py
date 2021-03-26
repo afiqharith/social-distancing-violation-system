@@ -3,6 +3,7 @@ from setup.model import Model
 from setup.config import *
 from time import time
 import numpy as np
+import threading
 import math
 import cv2
 import os
@@ -19,13 +20,14 @@ class SODV:
     def __init__(self, source = VIDEOPATH, distance = DISTANCE, START = True):
         self.video = cv2.VideoCapture(source)
         self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
-        self.distance = distance        
+        self.distance = distance    
         if START == True: self.main()
-    
+
     # Center point of bounding boxes
     # @param *args: (xmin, ymin, xmax, ymax)
     def calculate_centroid(self, *args):
-        return (((args[2] + args[0])/2), ((args[3] + args[1])/2))
+        # return (((args[2] + args[0])/2), ((args[3] + args[1])/2))
+        return (((args[2] + args[0])/2), args[3]) # use y ground
     
     # Euclidean distance
     # @param *args: (xcenter_1, ycenter_1, xcenter_2, ycenter_2)
@@ -36,6 +38,13 @@ class SODV:
     # @param *args: (frame, xmin, ymin, xmax, ymax, color)
     def rect_detection_box(self, *args):
         cv2.rectangle(args[0], (args[1], args[2]), (args[3], args[4]), args[5], 1)
+
+        '''
+        axes_1 = (((args[3] + args[1])/2) + args[1])/2
+        axes_2 = (((args[4] + args[2])/2) + args[2])/2
+        
+        # image, ((center_coordinates), (axesLength), angle), startAngle, endAngle, color, thickness
+        cv2.ellipse(args[0], ((((args[3] + args[1])/2), args[4]), (axes_1,axes_2), 285), args[5], 2)'''
 
     # Display dtection information on top-left of the window
     # @param *args: low_counter, high_counter
@@ -56,17 +65,26 @@ class SODV:
     def main(self):
         try:
             net, layerNames, classes = self.model.predict()
-            print('[PASSED] Model loaded.')
+            print('[PASSED] Model loaded')
         except Exception:
-            print('[FAILED] Unable to load model.')
-        
+            print('[FAILED] Unable to load the model')
+
         while (self.video.isOpened()):
             high_counter, low_counter = 0, 0
             centroids = list()
             detected_bbox_colors = list()
             detected_bbox = list()
-            self.flag, self.frame = self.video.read() 
 
+            self.flag, self.frame = self.video.read()
+
+            if THREAD == True:
+                self.thread_1 = threading.Thread(target=self.video.read)
+                self.thread_1.daemon = True
+                self.thread_1.start()
+                active_thread_count = int(threading.activeCount())
+            else:
+                pass
+             
             # Resize frame for prediction 
             if self.flag:
                 self.frameResized = cv2.resize(self.frame, (416, 416))       
@@ -160,15 +178,17 @@ class SODV:
                     high_counter += 1
 
             self.information_display(self.frame, low_counter, high_counter)
-            cv2.imshow("SODV", self.frame)
-
-            if cv2.waitKey(1) >= 0:  
+            # Resizable windows
+            cv2.namedWindow("SODV: Social Distancing Violation System", cv2.WINDOW_NORMAL)
+            cv2.imshow("SODV: Social Distancing Violation System", self.frame)
+             
+            if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-
+        print(f'[THREAD] Active thread used: {active_thread_count}')      
         self.video.release()
+        cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     start_time = time()
     SODV()
-    print(f'Finished after {round(time()-start_time, 2)}s')
-    cv2.destroyAllWindows()
+    print(f'[STATUS] Finished after {round(time()-start_time, 2)}s')
