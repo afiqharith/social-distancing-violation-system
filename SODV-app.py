@@ -1,9 +1,9 @@
 #!/Users/Afiq/Envs/global/Scripts/python
 from setup.model import Model
 from setup.config import *
-from time import time
 import numpy as np
 import threading
+import time
 import math
 import cv2
 import os
@@ -20,14 +20,14 @@ class SODV:
     def __init__(self, source = VIDEOPATH, distance = DISTANCE, START = True):
         self.video = cv2.VideoCapture(source)
         self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
-        self.distance = distance    
-        if START == True: self.main()
+        self.distance = distance
+        if START == True: self.main()        
 
-    # Center point of bounding boxes
+    # Ground plane center point of bbox
     # @param *args: (xmin, ymin, xmax, ymax)
     def calculate_centroid(self, *args):
-        # return (((args[2] + args[0])/2), ((args[3] + args[1])/2))
-        return (((args[2] + args[0])/2), args[3]) # use y ground
+        # return (((args[2] + args[0])/2), ((args[3] + args[1])/2)) # to use center point for bbox
+        return (((args[2] + args[0])/2), args[3]) # to use ground plane
     
     # Euclidean distance
     # @param *args: (xcenter_1, ycenter_1, xcenter_2, ycenter_2)
@@ -81,10 +81,10 @@ class SODV:
                 self.thread_1 = threading.Thread(target=self.video.read)
                 self.thread_1.daemon = True
                 self.thread_1.start()
-                active_thread_count = int(threading.activeCount())
             else:
                 pass
-             
+            active_thread_count = int(threading.activeCount())
+            
             # Resize frame for prediction 
             if self.flag:
                 self.frameResized = cv2.resize(self.frame, (416, 416))       
@@ -132,7 +132,7 @@ class SODV:
                     ymn = y
                     xmx = (x + w)
                     ymx = (y + h)
-                    # Calculate centroid point for bbox (detected_bbox)
+                    # Calculate ground plane center point of bbox (detected_bbox)
                     centroid = self.calculate_centroid(xmn, ymn, xmx, ymx)
                     detected_bbox.append([xmn, ymn, xmx, ymx, centroid])
 
@@ -189,6 +189,6 @@ class SODV:
         cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    start_time = time()
+    start_time = time.time()
     SODV()
-    print(f'[STATUS] Finished after {round(time()-start_time, 2)}s')
+    print(f'[STATUS] Finished after {round(time.time()-start_time, 2)}s')
