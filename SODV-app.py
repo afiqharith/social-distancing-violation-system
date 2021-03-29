@@ -1,4 +1,4 @@
-#!/Users/Afiq/Envs/global/Scripts/python
+#!/Users/Afiq/Project/SocialDistanceDetector-SODV (YOLOv3)/SODV_venv/Scripts/python
 from setup.model import Model
 from setup.config import *
 import numpy as np
@@ -16,11 +16,11 @@ else:
     VIDEOPATH = 0
     VIDEO_IND = "camera_01".upper()
 
-class SODV:
+class App:
     def __init__(self, source = VIDEOPATH, distance = DISTANCE, START = True):
         self.video = cv2.VideoCapture(source)
-        self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
         self.distance = distance
+        self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
         if START == True: self.main()        
 
     # Ground plane center point of bbox
@@ -38,13 +38,6 @@ class SODV:
     # @param *args: (frame, xmin, ymin, xmax, ymax, color)
     def rect_detection_box(self, *args):
         cv2.rectangle(args[0], (args[1], args[2]), (args[3], args[4]), args[5], 1)
-
-        '''
-        axes_1 = (((args[3] + args[1])/2) + args[1])/2
-        axes_2 = (((args[4] + args[2])/2) + args[2])/2
-        
-        # image, ((center_coordinates), (axesLength), angle), startAngle, endAngle, color, thickness
-        cv2.ellipse(args[0], ((((args[3] + args[1])/2), args[4]), (axes_1,axes_2), 285), args[5], 2)'''
 
     # Display dtection information on top-left of the window
     # @param *args: low_counter, high_counter
@@ -190,5 +183,5 @@ class SODV:
 
 if __name__ == '__main__':
     start_time = time.time()
-    SODV()
+    App()
     print(f'[STATUS] Finished after {round(time.time()-start_time, 2)}s')
