@@ -56,12 +56,7 @@ class App:
         cv2.putText(args[0], LOWRISK_TEXT, (60, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
     
     def main(self):
-        try:
-            net, layerNames, classes = self.model.predict()
-            print('[PASSED] Model loaded')
-        except Exception:
-            print('[FAILED] Unable to load the model')
-
+        net, layerNames, classes = self.model.predict()
         while (self.video.isOpened()):
             high_counter, low_counter = 0, 0
             centroids = list()
@@ -71,13 +66,16 @@ class App:
             self.flag, self.frame = self.video.read()
 
             if THREAD == True:
-                self.thread_1 = threading.Thread(target=self.video.read)
-                self.thread_1.daemon = True
-                self.thread_1.start()
+                try:
+                    self.thread_1 = threading.Thread(target=self.video.read)
+                    self.thread_1.daemon = True
+                    self.thread_1.start()
+                except RuntimeError as err:
+                    print(err)
             else:
                 pass
-            active_thread_count = int(threading.activeCount())
-            
+            active_thread_count = int(threading.activeCount())  
+
             # Resize frame for prediction 
             if self.flag:
                 self.frameResized = cv2.resize(self.frame, (416, 416))       
