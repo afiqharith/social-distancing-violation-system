@@ -74,16 +74,16 @@ _Edit program configuration on **config.py**:_
 
 ### 8. Kindly check out below links for references
 
-**📑 Previous project** </br>
+**Previous project** </br>
 [Person Detection for Social Distancing and Safety Violation Alert based on Segmented ROI](https://github.com/afiqharith/SocialDistancing-SafetyViolationROI-MobileNetSSD-FYP.git 'GitHub Repo')
 
-**🎥 Output video** </br>
+**Output video** </br>
 [![Youtube](https://img.shields.io/badge/Social_Distance_Violation_Detection-Youtube-red)](https://www.youtube.com/watch?v=zXBDvDaJLHA)
 
-**👀 YOLO Pre-Trained Model** </br>
+**YOLO Pre-Trained Model** </br>
 [![YOLO](https://img.shields.io/badge/YOLO-Darknet-yellow)](https://pjreddie.com/darknet/yolo/) [![Darknet](https://img.shields.io/badge/Darknet-GitHub-lightgrey)](https://github.com/pjreddie/darknet.git)
 
-**📊 Dataset** </br>
+**Dataset** </br>
 MegaPixels: Origins, Ethics, and Privacy Implications of Publicly Available Face Recognition Image Datasets </br>
 [![Oxford Town Centre CCTV video-dataset](https://img.shields.io/badge/Oxford_Town_Centre-URL-yellowgreen)](https://exposing.ai/oxford_town_centre/)
 </br>
