@@ -1,6 +1,6 @@
 #!/Users/Afiq/Project/SocialDistanceDetector-SODV (YOLOv3)/SODV_venv/Scripts/python
-from setup.model import Model
-from setup.config import *
+from config.model import Model
+from config.config import *
 import numpy as np
 import threading
 import time

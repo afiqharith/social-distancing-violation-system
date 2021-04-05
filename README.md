@@ -6,34 +6,36 @@
 
 ![SoDV](https://img.shields.io/badge/Build-v1.1-blue) [![LICENSE](https://img.shields.io/badge/license-MIT-blue)](https://github.com/afiqharith/SocialDistanceDetector-SODV/blob/master/LICENSE) [![FKE](https://img.shields.io/badge/FKE-UiTM-purple)](https://fke.uitm.edu.my/) [![RMC](https://img.shields.io/badge/RMC-UiTM-purple)](https://rmc.uitm.edu.my/v2/)
 
-The previous development of this project used MobileNet SSD pre-trained on MS-COCO as the person detection algorithm. After the [previous project](https://github.com/afiqharith/SocialDistancing-SafetyViolationROI-MobileNetSSD-FYP.git 'Build v1.0 passing') finished in July 2020, I decided to further improve the detection algorithm by changing from MobileNet SSD to YOLOv3 to increase the accuracy. The program uses OpenCV API for the image processing and utilizing the DNN module which solely tested on CPU. The system accuracy tested on Oxford Town Centre CCTV video-dataset (266 frames). This project was submitted to Malaysia Technology Expo (MTE) 2020 Special Edition COVID-19 International Innovation Awards under Faculty of Electrical Engineering of Universiti Teknologi MARA.
+This project is a social distancing violation detection system implemented using Python. The previous development of this project used MobileNet SSD pre-trained on MS-COCO as the person detection algorithm. After the [previous project](https://github.com/afiqharith/SocialDistancing-SafetyViolationROI-MobileNetSSD-FYP.git 'Build v1.0 passing') finished in July 2020, I decided to further improve the detection algorithm by changing from MobileNet SSD to YOLOv3 to increase the accuracy. The program uses OpenCV for the image processing and utilizing the DNN module which solely tested on CPU. The system accuracy tested on Oxford Town Centre CCTV video-dataset (266 frames). This project was submitted to Malaysia Technology Expo (MTE) 2020 Special Edition COVID-19 International Innovation Awards under Faculty of Electrical Engineering of Universiti Teknologi MARA.
 </br>
 
 ### 1. Prerequisites and Configurations
 
-_Install the dependencies on command line:_
+All the requirements can be installed via the command:
 
 ```sh
 $ pip3 install -r requirements.txt
 ```
 
-_To run the program on command line:_
+The default input is video located in videos file. To change the program to use camera stream as input, you need to change the configuration from `CAMERA = False` to `CAMERA = True`.
+
+Note: All configurations can be changed in the **config.py** file.
+</br>
+
+### 2. Run Project
+
+Run:
 
 ```sh
-$ python3 SODV-app.py
+$ python social_distancing_violation_system.py
 ```
 
-_Edit program configuration on **config.py**:_
-
-- To use device's camera as program input, change `CAMERA = False` to `CAMERA = True`.
-  </br>
-
-### 2. Program Output
+### 3. Program Output
 
 | ![outputimage](/images/TownCentre_new.gif) |
 | ------------------------------------------ |
 
-**Frame 10 to 250:**
+**Output frame 10 to 250:**
 
 | ![outputimage](/images/data/frame_10.jpg) | ![outputimage](/images/data/frame_50.jpg) | ![outputimage](/images/data/frame_100.jpg) |
 | :---------------------------------------: | :---------------------------------------: | :----------------------------------------: |
@@ -43,28 +45,28 @@ _Edit program configuration on **config.py**:_
 | :----------------------------------------: | :----------------------------------------: | :----------------------------------------: |
 |               **FRAME 150**                |               **FRAME 200**                |               **FRAME 250**                |
 
-### 3. Overall accuracies
+### 4. Overall accuracies
 
 | ![graph](/images/graph.png) |
 | --------------------------- |
 
-### 4. Accuracy for person detection
+### 5. Accuracy for person detection
 
 | Dataset            | TP  | TN  | FP  | FN  | %    |
 | ------------------ | --- | --- | --- | --- | ---- |
 | Oxford Town Centre | 29  | 0   | 0   | 11  | 72.5 |
 
-### 5. Accuracy for social distance violation detection
+### 6. Accuracy for social distance violation detection
 
 | Dataset            | TP  | TN  | FP  | FN  | %    |
 | ------------------ | --- | --- | --- | --- | ---- |
 | Oxford Town Centre | 23  | 15  | 9   | 2   | 77.5 |
 
-### 6. Social distance violation detection using distance formula Drawback
+### 7. Project Drawback
 
 - No camera calibration for intrinsic parameter
 
-### 7 .Future upgrades
+### 8 .Future upgrades
 
 | Features                                              | Status                                                                |
 | ----------------------------------------------------- | --------------------------------------------------------------------- |
@@ -72,7 +74,7 @@ _Edit program configuration on **config.py**:_
 | Integration with facemask detection                   | ![STATUS](https://img.shields.io/badge/facemask_detection-TBD-orange) |
 | Integration with DeepSort                             | ![STATUS](https://img.shields.io/badge/DeepSort-TBD-orange)           |
 
-### 8. Kindly check out below links for references
+### 9. Kindly check out below links for references
 
 **Previous project** </br>
 [Person Detection for Social Distancing and Safety Violation Alert based on Segmented ROI](https://github.com/afiqharith/SocialDistancing-SafetyViolationROI-MobileNetSSD-FYP.git 'GitHub Repo')
@@ -88,6 +90,6 @@ MegaPixels: Origins, Ethics, and Privacy Implications of Publicly Available Face
 [![Oxford Town Centre CCTV video-dataset](https://img.shields.io/badge/Oxford_Town_Centre-URL-yellowgreen)](https://exposing.ai/oxford_town_centre/)
 </br>
 
-### 9. LICENSE
+### 10. LICENSE
 
 _This project is under MIT license, please look at [LICENSE](https://github.com/afiqharith/SocialDistanceDetector-SODV/blob/master/LICENSE)._
