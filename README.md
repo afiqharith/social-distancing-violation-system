@@ -66,7 +66,7 @@ $ python social_distancing_violation_system.py
 
 - No camera calibration for intrinsic parameter
 
-### 8 .Future upgrades
+### 8. Future upgrades
 
 | Features                                              | Status                                                                |
 | ----------------------------------------------------- | --------------------------------------------------------------------- |
