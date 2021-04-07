@@ -1,4 +1,3 @@
-#!/Users/Afiq/Project/SocialDistanceDetector-SODV (YOLOv3)/SODV_venv/Scripts/python
 from config.model import Model
 from config.config import *
 import numpy as np
