@@ -1,11 +1,14 @@
-# App configuration
+'''
+Configuration for the program
+-----------------------------
+1. CAMERA_FLAG : Input as camera stream or video stream
+2. THREAD : Activate new thread for the program
+3. THRESHOLD : Non-max supression threshold
+4. CONFIDENCE : Filter weak detection predection
+'''
 CAMERA_FLAG = False
 THREAD      = True
-
-# Threshold when apply NMS 
 THRESHOLD   = 0.4
-
-# Detection confidence to filter weak prediction
 CONFIDENCE  = 0.5
 
 # Model path

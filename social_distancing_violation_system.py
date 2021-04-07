@@ -8,57 +8,83 @@ import math
 import cv2
 import os
 
-# Load video from PATH if CAMERA is OFF
-if CAMERA_FLAG == False:
-    VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
-    VIDEO_IND = VIDEONAME[:-4].upper()
-else:
-    VIDEOPATH = 0
-    VIDEO_IND = "camera_01".upper()
-
 class App:
-    def __init__(self, source = VIDEOPATH, distance = DISTANCE, START = True):
+    '''
+    Social Distancing Violation System SODV
+    =======================================
+    '''
+    def __init__(self, source, distance, input_information, start = True):
+        self.input_information = input_information
         self.video = cv2.VideoCapture(source)
-        self.distance = distance
         self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
-        if START == True: self.main()        
+        self.distance = distance
+        if start == True: self.main()        
 
-    # Ground plane center point of bbox
-    # @param *args: (xmin, ymin, xmax, ymax)
     def calculate_centroid(self, *args):
-        # return (((args[2] + args[0])/2), ((args[3] + args[1])/2)) # to use center point for bbox
-        return (((args[2] + args[0])/2), args[3]) # to use ground plane
+        '''
+        Getting the center point of ground plane for the bounding box (bbox)
+        --------------------------------------------------------------------
+        - param : args : (xmin, ymin, xmax, ymax)
+        - xmin : x-axis minimum value
+        - ymin : y-axis minimum value
+        - xmax : x-axis maximum value
+        - xmax : x-axis maximum value
+
+        - return value : C(x,y), the center of bounding box ground plane 
+
+        - To return bbox center point: 
+        - return (((args[2] + args[0])/2), ((args[3] + args[1])/2))
+        '''
+        return (((args[2] + args[0])/2), args[3])
     
-    # Euclidean distance
-    # @param *args: (xcenter_1, ycenter_1, xcenter_2, ycenter_2)
     def calculate_euclidean_distance(self, *args):        
+        '''
+        Euclidean Distance
+        ------------------
+        - param : args : (xmin, ymin, xmax, ymax)
+        - xcenter_1, ycenter_1 : C1(x,y)
+        - xcenter_2, ycenter_2 : C2(x,y)
+
+        return value : D(C1,C2)
+        '''
         return math.sqrt((args[0]-args[2])**2 + (args[1]-args[3])**2)
     
-    # Draw bounding boxes
-    # @param *args: (frame, xmin, ymin, xmax, ymax, color)
     def rect_detection_box(self, *args):
+        '''
+        Bounding Box (bbox)
+        -------------------
+        - param : args : (frame, xmin, ymin, xmax, ymax, color)
+        - frame : continuos frame stream
+        - xmin  : x-axis minimum value
+        - ymin  : y-axis minimum value
+        - xmax  : x-axis maximum value
+        - xmax  : x-axis maximum value
+        - color : color for the bounding box
+        '''
         cv2.rectangle(args[0], (args[1], args[2]), (args[3], args[4]), args[5], 1)
 
-    # Display dtection information on top-left of the window
-    # @param *args: low_counter, high_counter
-    def information_display(self, *args):
-        cv2.rectangle(args[0], (13, 5), (250, 30), BLACK, cv2.FILLED)
-        cv2.putText(args[0], f'{VIDEO_IND}', (28, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, WHITE, 1, cv2.LINE_AA)
+    def information_display(self):
+        '''
+        Display violation detection information
+        ---------------------------------------
+        '''
+        cv2.rectangle(self.frame, (13, 5), (250, 30), BLACK, cv2.FILLED)
+        cv2.putText(self.frame, f'{self.input_information}', (28, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, WHITE, 1, cv2.LINE_AA)
 
         cv2.rectangle(self.frame, (13, 30), (250, 80), GREY, cv2.FILLED)
         LINE = "--"
-        HIGHRISK_TEXT = f'HIGH RISK: {args[2]} people'
-        cv2.putText(args[0], LINE, (28, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, RED, 2, cv2.LINE_AA)
-        cv2.putText(args[0], HIGHRISK_TEXT, (60, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
+        HIGHRISK_TEXT = f'HIGH RISK: {self.high_counter} people'
+        cv2.putText(self.frame, LINE, (28, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, RED, 2, cv2.LINE_AA)
+        cv2.putText(self.frame, HIGHRISK_TEXT, (60, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
 
-        LOWRISK_TEXT = f'LOW RISK: {args[1]} people'
-        cv2.putText(args[0], LINE, (28, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLACK, 2, cv2.LINE_AA)
-        cv2.putText(args[0], LOWRISK_TEXT, (60, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
+        LOWRISK_TEXT = f'LOW RISK: {self.low_counter} people'
+        cv2.putText(self.frame, LINE, (28, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLACK, 2, cv2.LINE_AA)
+        cv2.putText(self.frame, LOWRISK_TEXT, (60, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
     
     def main(self):
         net, layerNames, classes = self.model.predict()
         while (self.video.isOpened()):
-            high_counter, low_counter = 0, 0
+            self.high_counter, self.low_counter = 0, 0
             centroids = list()
             detected_bbox_colors = list()
             detected_bbox = list()
@@ -155,7 +181,7 @@ class App:
                     ylabel = max(ymin, labelSize[1])
                     cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]), (xmin + labelSize[0], ymin + baseLine), BLACK, cv2.FILLED)
                     cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, GREEN, 1, cv2.LINE_AA)
-                    low_counter += 1
+                    self.low_counter += 1
 
                 # Else, wrap red bbox
                 else:
@@ -166,9 +192,9 @@ class App:
                     ylabel = max(ymin, labelSize[1])
                     cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]),(xmin + labelSize[0], ymin + baseLine), RED, cv2.FILLED)
                     cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, ORANGE, 1, cv2.LINE_AA)
-                    high_counter += 1
+                    self.high_counter += 1
 
-            self.information_display(self.frame, low_counter, high_counter)
+            self.information_display()
             # Resizable windows
             cv2.namedWindow("SODV: Social Distancing Violation System", cv2.WINDOW_NORMAL)
             cv2.imshow("SODV: Social Distancing Violation System", self.frame)
@@ -181,5 +207,11 @@ class App:
 
 if __name__ == '__main__':
     start_time = time.time()
-    App()
+    if CAMERA_FLAG == False:
+        VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
+        VIDEO_IND = VIDEONAME[:-4].upper()
+    else:
+        VIDEOPATH = 0
+        VIDEO_IND = "camera_01".upper()
+    App(VIDEOPATH, DISTANCE, VIDEO_IND)
     print(f'[STATUS] Finished after {round(time.time()-start_time, 2)}s')
