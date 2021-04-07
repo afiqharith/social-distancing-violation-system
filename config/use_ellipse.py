@@ -2,8 +2,11 @@ import cv2
 
 def use_ellipse(*args):
     '''
-    @param args: (frame, xmin, ymin, xmax, ymax, color)
-    @info ellipse: image, ((center_coordinates), (axesLength), angle), startAngle, endAngle, color, thickness
+    Ellipse Implementation
+    ----------------------
+    - param : args : (frame, xmin, ymin, xmax, ymax, color)
+    - frame : continuos frame stream
+    - ellipse: image, ((center_coordinates), (axesLength), angle), startAngle, endAngle, color, thickness
     '''
     axes_1 = (((args[3] + args[1])/2) + args[1])/2
     axes_2 = (((args[4] + args[2])/2) + args[2])/2
