@@ -28,7 +28,7 @@ class App:
         - xmin : x-axis minimum value
         - ymin : y-axis minimum value
         - xmax : x-axis maximum value
-        - xmax : x-axis maximum value
+        - ymax : y-axis maximum value
 
         - return value : C(x,y), the center of bounding box ground plane 
 
@@ -58,7 +58,7 @@ class App:
         - xmin  : x-axis minimum value
         - ymin  : y-axis minimum value
         - xmax  : x-axis maximum value
-        - xmax  : x-axis maximum value
+        - ymax  : y-axis maximum value
         - color : color for the bounding box
         '''
         cv2.rectangle(args[0], (args[1], args[2]), (args[3], args[4]), args[5], 1)
