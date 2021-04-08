@@ -6,6 +6,7 @@ import time
 import math
 import cv2
 import os
+import matplotlib.pyplot as plt
 
 class App:
     '''
@@ -80,6 +81,17 @@ class App:
         cv2.putText(self.frame, LINE, (28, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLACK, 2, cv2.LINE_AA)
         cv2.putText(self.frame, LOWRISK_TEXT, (60, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
     
+    def generate_chart(self):
+        '''
+        Dashboard
+        ---------
+        '''
+        fig, ax = plt.subplots(figsize=(4,4))
+        ax.pie([self.high_counter, self.low_counter], labels = [f'High risk: {self.high_counter}', f'Low risk: {self.low_counter}'], colors=[RED_DB, GREEN_DB])
+        ax.legend()
+        plt.savefig(DASHBOARD, transparent=True, dpi=700)
+        plt.close()
+
     def main(self):
         net, layerNames, classes = self.model.predict()
         while (self.video.isOpened()):
@@ -87,7 +99,7 @@ class App:
             centroids = list()
             detected_bbox_colors = list()
             detected_bbox = list()
-
+ 
             self.flag, self.frame = self.video.read()
 
             if THREAD == True:
@@ -192,8 +204,16 @@ class App:
                     cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]),(xmin + labelSize[0], ymin + baseLine), RED, cv2.FILLED)
                     cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, ORANGE, 1, cv2.LINE_AA)
                     self.high_counter += 1
-
+                    
+            if DASHBOARD_FLAG == True:
+                self.generate_chart()
+                self.dashboard = cv2.imread(DASHBOARD)
+                cv2.namedWindow("Dashboard: SODV", cv2.WINDOW_NORMAL)
+                cv2.imshow("Dashboard: SODV", self.dashboard)
+            else:
+                pass
             self.information_display()
+
             # Resizable windows
             cv2.namedWindow("SODV: Social Distancing Violation System", cv2.WINDOW_NORMAL)
             cv2.imshow("SODV: Social Distancing Violation System", self.frame)
