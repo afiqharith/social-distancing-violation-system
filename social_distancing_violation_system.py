@@ -18,7 +18,7 @@ class App:
         self.video = cv2.VideoCapture(source)
         self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
         self.distance = distance
-        if start == True: self.main()        
+        if start: self.main()        
 
     def calculate_centroid(self, *args):
         '''
@@ -102,7 +102,7 @@ class App:
  
             self.flag, self.frame = self.video.read()
 
-            if THREAD == True:
+            if THREAD:
                 try:
                     self.thread_1 = threading.Thread(target=self.video.read)
                     self.thread_1.daemon = True
@@ -183,19 +183,8 @@ class App:
                 xmax = detected_bbox[i][2]
                 ymax = detected_bbox[i][3]
                 
-                # If euclidean distance less than (<) DISTANCE, wrap black bbox
-                if detected_bbox_colors[i] == False:
-                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
-                    label = "low".upper()
-                    labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
-
-                    ylabel = max(ymin, labelSize[1])
-                    cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]), (xmin + labelSize[0], ymin + baseLine), BLACK, cv2.FILLED)
-                    cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, GREEN, 1, cv2.LINE_AA)
-                    self.low_counter += 1
-
                 # Else, wrap red bbox
-                else:
+                if detected_bbox_colors[i]:
                     self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
                     label = "high".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
@@ -204,8 +193,19 @@ class App:
                     cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]),(xmin + labelSize[0], ymin + baseLine), RED, cv2.FILLED)
                     cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, ORANGE, 1, cv2.LINE_AA)
                     self.high_counter += 1
+
+                # If euclidean distance less than (<) DISTANCE, wrap black bbox
+                else:
+                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
+                    label = "low".upper()
+                    labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
+
+                    ylabel = max(ymin, labelSize[1])
+                    cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]), (xmin + labelSize[0], ymin + baseLine), BLACK, cv2.FILLED)
+                    cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, GREEN, 1, cv2.LINE_AA)
+                    self.low_counter += 1
                     
-            if DASHBOARD_FLAG == True:
+            if DASHBOARD_FLAG:
                 self.generate_chart()
                 self.dashboard = cv2.imread(DASHBOARD)
                 cv2.namedWindow("Dashboard: SODV", cv2.WINDOW_NORMAL)
@@ -226,11 +226,11 @@ class App:
 
 if __name__ == '__main__':
     start_time = time.time()
-    if CAMERA_FLAG == False:
-        VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
-        VIDEO_IND = VIDEONAME[:-4].upper()
-    else:
+    if CAMERA_FLAG:
         VIDEOPATH = 0
         VIDEO_IND = "camera_01".upper()
+    else:
+        VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
+        VIDEO_IND = VIDEONAME[:-4].upper()
     App(VIDEOPATH, DISTANCE, VIDEO_IND)
     print(f'[STATUS] Finished after {round(time.time()-start_time, 2)}s')
