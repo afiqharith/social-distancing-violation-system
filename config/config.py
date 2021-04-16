@@ -7,7 +7,7 @@ Configuration for the program
 4. THRESHOLD : Non-max supression threshold
 5. CONFIDENCE : Filter weak detection predection
 '''
-CAMERA_FLAG     = True
+CAMERA_FLAG     = False
 CAMERA_ID       = 0
 THREAD          = True
 THRESHOLD       = 0.4
