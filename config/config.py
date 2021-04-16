@@ -2,11 +2,13 @@
 Configuration for the program
 -----------------------------
 1. CAMERA_FLAG : Input as camera stream or video stream
-2. THREAD : Activate new thread for the program
-3. THRESHOLD : Non-max supression threshold
-4. CONFIDENCE : Filter weak detection predection
+2. CAMERA_ID : Input camera ID
+3. THREAD : Activate new thread for the program
+4. THRESHOLD : Non-max supression threshold
+5. CONFIDENCE : Filter weak detection predection
 '''
-CAMERA_FLAG     = False
+CAMERA_FLAG     = True
+CAMERA_ID       = 0
 THREAD          = True
 THRESHOLD       = 0.4
 CONFIDENCE      = 0.5

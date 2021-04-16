@@ -227,8 +227,8 @@ class App:
 if __name__ == '__main__':
     start_time = time.time()
     if CAMERA_FLAG:
-        VIDEOPATH = 0
-        VIDEO_IND = "camera_01".upper()
+        VIDEOPATH = CAMERA_ID
+        VIDEO_IND = f'camera_id_{CAMERA_ID}'.upper()
     else:
         VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
         VIDEO_IND = VIDEONAME[:-4].upper()
