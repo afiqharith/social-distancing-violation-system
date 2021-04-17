@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 from config.model import Model
 from config.config import *
 import numpy as np
@@ -6,7 +7,6 @@ import time
 import math
 import cv2
 import os
-import matplotlib.pyplot as plt
 
 class App:
     '''
@@ -18,7 +18,7 @@ class App:
         self.video = cv2.VideoCapture(source)
         self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
         self.distance = distance
-        if start: self.main()        
+        if start: self.main()
 
     def calculate_centroid(self, *args):
         '''
@@ -37,7 +37,7 @@ class App:
         '''
         return (((args[2] + args[0])/2), args[3])
     
-    def calculate_euclidean_distance(self, *args):        
+    def calculate_euclidean_distance(self, *args):
         '''
         Euclidean Distance
         ------------------
@@ -111,11 +111,11 @@ class App:
                     print(err)
             else:
                 pass
-            active_thread_count = int(threading.activeCount())  
+            active_thread_count = int(threading.activeCount())
 
             # Resize frame for prediction 
             if self.flag:
-                self.frameResized = cv2.resize(self.frame, (416, 416))       
+                self.frameResized = cv2.resize(self.frame, (416, 416))
             else:
                 break
 
@@ -175,7 +175,7 @@ class App:
                             cv2.circle(self.frame, (int(centroid[0]), int(centroid[1])), 3, ORANGE, -1, cv2.LINE_AA)
                             break
                     centroids.append(centroid)
-                    detected_bbox_colors.append(violation)        
+                    detected_bbox_colors.append(violation)
 
             for i in range (len(detected_bbox)):
                 xmin = detected_bbox[i][0]
@@ -208,8 +208,8 @@ class App:
             if DASHBOARD_FLAG:
                 self.generate_chart()
                 self.dashboard = cv2.imread(DASHBOARD)
-                cv2.namedWindow("Dashboard: SODV", cv2.WINDOW_NORMAL)
-                cv2.imshow("Dashboard: SODV", self.dashboard)
+                cv2.namedWindow(f'SODV Dashboard: {self.input_information}', cv2.WINDOW_NORMAL)
+                cv2.imshow(f'SODV Dashboard: {self.input_information}', self.dashboard)
             else:
                 pass
             self.information_display()
@@ -220,7 +220,7 @@ class App:
              
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-        print(f'[THREAD] Active thread used: {active_thread_count}')      
+        print(f'[THREAD] Active thread used: {active_thread_count}')
         self.video.release()
         cv2.destroyAllWindows()
 
