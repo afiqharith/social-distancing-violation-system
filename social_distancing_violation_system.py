@@ -16,8 +16,9 @@ class App:
     def __init__(self, source, distance, input_information, start = True):
         self.input_information = input_information
         self.video = cv2.VideoCapture(source)
-        self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
+        self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)
         self.distance = distance
+        self.pTime = 0
         if start: self.main()
 
     def calculate_centroid(self, *args):
@@ -62,6 +63,15 @@ class App:
         - color : color for the bounding box
         '''
         cv2.rectangle(args[0], (args[1], args[2]), (args[3], args[4]), args[5], 1)
+    
+    def cross_line(self, xmin, ymin, xmax, ymax, color):
+        xc = (xmin+xmax)/2
+        yc = (ymin+ymax)/2
+
+        # horizontal = s(xmin, yc), e(xmax, yc)
+        # verticle = s(xc, ymin), e(xc, ymax)
+        cv2.line(self.frame, (int(xmin), int(yc)), (int(xmax), int(yc)), color, 1, cv2.LINE_AA)
+        cv2.line(self.frame, (int(xc), int(ymin)), (int(xc), int(ymax)), color, 1, cv2.LINE_AA)
 
     def information_display(self):
         '''
@@ -70,6 +80,7 @@ class App:
         '''
         cv2.rectangle(self.frame, (13, 5), (250, 30), BLACK, cv2.FILLED)
         cv2.putText(self.frame, f'{self.input_information}', (28, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, WHITE, 1, cv2.LINE_AA)
+        cv2.putText(self.frame, f'{self.fps}fps', (200, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, GREEN, 1, cv2.LINE_AA)
 
         cv2.rectangle(self.frame, (13, 30), (250, 80), GREY, cv2.FILLED)
         LINE = "--"
@@ -81,6 +92,16 @@ class App:
         cv2.putText(self.frame, LINE, (28, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLACK, 2, cv2.LINE_AA)
         cv2.putText(self.frame, LOWRISK_TEXT, (60, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
     
+    def generate_fps(self):
+        '''
+        Frame per second (fps) counter
+        ------------------------------
+        '''
+        self.cTime = time.time()
+        fps = 1/(self.cTime - self.pTime)
+        self.pTime = self.cTime
+        return int(fps)
+
     def generate_chart(self):
         '''
         Dashboard
@@ -162,7 +183,7 @@ class App:
                     ymx = (y + h)
                     # Calculate ground plane center point of bbox (detected_bbox)
                     centroid = self.calculate_centroid(xmn, ymn, xmx, ymx)
-                    detected_bbox.append([xmn, ymn, xmx, ymx, centroid])
+                    detected_bbox.append([xmn, ymn, xmx, ymx])
 
                     violation = False
                     for k in range (len(centroids)):
@@ -182,10 +203,11 @@ class App:
                 ymin = detected_bbox[i][1]
                 xmax = detected_bbox[i][2]
                 ymax = detected_bbox[i][3]
-                
+                # self.cross_line(xmin, ymin, xmax, ymax,GREY)
                 # Else, wrap red bbox
                 if detected_bbox_colors[i]:
-                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
+                    self.cross_line(xmin, ymin, xmax, ymax, RED)
+                    # self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
                     label = "high".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
@@ -196,7 +218,8 @@ class App:
 
                 # If euclidean distance less than (<) DISTANCE, wrap black bbox
                 else:
-                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
+                    self.cross_line(xmin, ymin, xmax, ymax, BLACK)
+                    # self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
                     label = "low".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
@@ -212,8 +235,9 @@ class App:
                 cv2.imshow(f'SODV Dashboard: {self.input_information}', self.dashboard)
             else:
                 pass
+            self.fps = self.generate_fps()
             self.information_display()
-
+            
             # Resizable windows
             cv2.namedWindow("SODV: Social Distancing Violation System", cv2.WINDOW_NORMAL)
             cv2.imshow("SODV: Social Distancing Violation System", self.frame)
