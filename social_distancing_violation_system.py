@@ -63,6 +63,15 @@ class App:
         - color : color for the bounding box
         '''
         cv2.rectangle(args[0], (args[1], args[2]), (args[3], args[4]), args[5], 1)
+    
+    def cross_line(self, xmin, ymin, xmax, ymax, color):
+        xc = (xmin+xmax)/2
+        yc = (ymin+ymax)/2
+
+        # horizontal = s(xmin, yc), e(xmax, yc)
+        # verticle = s(xc, ymin), e(xc, ymax)
+        cv2.line(self.frame, (int(xmin), int(yc)), (int(xmax), int(yc)), color, 1, cv2.LINE_AA)
+        cv2.line(self.frame, (int(xc), int(ymin)), (int(xc), int(ymax)), color, 1, cv2.LINE_AA)
 
     def information_display(self):
         '''
@@ -194,10 +203,11 @@ class App:
                 ymin = detected_bbox[i][1]
                 xmax = detected_bbox[i][2]
                 ymax = detected_bbox[i][3]
-                
+                # self.cross_line(xmin, ymin, xmax, ymax,GREY)
                 # Else, wrap red bbox
                 if detected_bbox_colors[i]:
-                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
+                    self.cross_line(xmin, ymin, xmax, ymax, RED)
+                    # self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
                     label = "high".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
@@ -208,7 +218,8 @@ class App:
 
                 # If euclidean distance less than (<) DISTANCE, wrap black bbox
                 else:
-                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
+                    self.cross_line(xmin, ymin, xmax, ymax, BLACK)
+                    # self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
                     label = "low".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
