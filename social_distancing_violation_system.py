@@ -16,7 +16,7 @@ class App:
     def __init__(self, source, distance, input_information, start = True):
         self.input_information = input_information
         self.video = cv2.VideoCapture(source)
-        self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)
+        self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
         self.distance = distance
         self.pTime = 0
         if start: self.main()
@@ -63,15 +63,6 @@ class App:
         - color : color for the bounding box
         '''
         cv2.rectangle(args[0], (args[1], args[2]), (args[3], args[4]), args[5], 1)
-    
-    def cross_line(self, xmin, ymin, xmax, ymax, color):
-        xc = (xmin+xmax)/2
-        yc = (ymin+ymax)/2
-
-        # horizontal = s(xmin, yc), e(xmax, yc)
-        # verticle = s(xc, ymin), e(xc, ymax)
-        cv2.line(self.frame, (int(xmin), int(yc)), (int(xmax), int(yc)), color, 1, cv2.LINE_AA)
-        cv2.line(self.frame, (int(xc), int(ymin)), (int(xc), int(ymax)), color, 1, cv2.LINE_AA)
 
     def information_display(self):
         '''
@@ -183,7 +174,7 @@ class App:
                     ymx = (y + h)
                     # Calculate ground plane center point of bbox (detected_bbox)
                     centroid = self.calculate_centroid(xmn, ymn, xmx, ymx)
-                    detected_bbox.append([xmn, ymn, xmx, ymx])
+                    detected_bbox.append([xmn, ymn, xmx, ymx, centroid])
 
                     violation = False
                     for k in range (len(centroids)):
@@ -203,11 +194,10 @@ class App:
                 ymin = detected_bbox[i][1]
                 xmax = detected_bbox[i][2]
                 ymax = detected_bbox[i][3]
-                # self.cross_line(xmin, ymin, xmax, ymax,GREY)
+                
                 # Else, wrap red bbox
                 if detected_bbox_colors[i]:
-                    self.cross_line(xmin, ymin, xmax, ymax, RED)
-                    # self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
+                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
                     label = "high".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
@@ -218,8 +208,7 @@ class App:
 
                 # If euclidean distance less than (<) DISTANCE, wrap black bbox
                 else:
-                    self.cross_line(xmin, ymin, xmax, ymax, BLACK)
-                    # self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
+                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
                     label = "low".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
