@@ -174,7 +174,7 @@ class App:
                     ymx = (y + h)
                     # Calculate ground plane center point of bbox (detected_bbox)
                     centroid = self.calculate_centroid(xmn, ymn, xmx, ymx)
-                    detected_bbox.append([xmn, ymn, xmx, ymx, centroid])
+                    detected_bbox.append([xmn, ymn, xmx, ymx])
 
                     violation = False
                     for k in range (len(centroids)):
