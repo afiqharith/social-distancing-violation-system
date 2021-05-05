@@ -3,6 +3,7 @@ from config.model import Model
 from config.config import *
 import numpy as np
 import threading
+import tabulate
 import time
 import math
 import cv2
@@ -18,6 +19,7 @@ class App:
         self.video = cv2.VideoCapture(source)
         self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
         self.distance = distance
+        self.active_thread_count = 0
         self.pTime = 0
         if start: self.main()
 
@@ -132,7 +134,7 @@ class App:
                     print(err)
             else:
                 pass
-            active_thread_count = int(threading.activeCount())
+            self.active_thread_count = int(threading.activeCount())
 
             # Resize frame for prediction 
             if self.flag:
@@ -203,7 +205,7 @@ class App:
                 ymin = detected_bbox[i][1]
                 xmax = detected_bbox[i][2]
                 ymax = detected_bbox[i][3]
-                # self.cross_line(xmin, ymin, xmax, ymax,GREY)
+                self.cross_line(xmin, ymin, xmax, ymax,GREY)
                 # Else, wrap red bbox
                 if detected_bbox_colors[i]:
                     self.cross_line(xmin, ymin, xmax, ymax, RED)
@@ -244,7 +246,6 @@ class App:
              
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-        print(f'[THREAD] Active thread used: {active_thread_count}')
         self.video.release()
         cv2.destroyAllWindows()
 
@@ -256,5 +257,8 @@ if __name__ == '__main__':
     else:
         VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
         VIDEO_IND = VIDEONAME[:-4].upper()
-    App(VIDEOPATH, DISTANCE, VIDEO_IND)
-    print(f'[STATUS] Finished after {round(time.time()-start_time, 2)}s')
+    app = App(VIDEOPATH, DISTANCE, VIDEO_IND)
+
+    data = {"Active thread used": [app.active_thread_count],
+            "Status": [f'Finished after {round(time.time()-start_time, 2)}s']}
+    print(tabulate.tabulate(data, headers="keys", tablefmt="pretty"))
