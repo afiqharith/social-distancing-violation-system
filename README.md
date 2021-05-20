@@ -19,7 +19,7 @@ $ pip3 install -r requirements.txt
 
 The default input is video located in videos file. To change the program to use camera stream as input, you need to change the configuration from `CAMERA = False` to `CAMERA = True`.
 
-Note: All configurations can be changed in the **config.py** file.
+Note: All configurations can be changed in the **config.json** file.
 </br>
 
 ### 2. Run project

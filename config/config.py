@@ -1,5 +1,15 @@
+import json
+import os
+
+CONFIGJSON = os.path.join(os.getcwd(), 'config', 'config.json')
+with open (CONFIGJSON) as fileIn:
+    config = json.load(fileIn)
+    file = config.get("file")
+    attributes = config.get("attributes")
+    color = config.get("color")
+
 '''
-Configuration for the program
+curation for the program
 -----------------------------
 1. CAMERA_FLAG : Input as camera stream or video stream
 2. CAMERA_ID : Input camera ID
@@ -7,39 +17,34 @@ Configuration for the program
 4. THRESHOLD : Non-max supression threshold
 5. CONFIDENCE : Filter weak detection predection
 '''
-CAMERA_FLAG     = False
-CAMERA_ID       = 0
-THREAD          = True
-THRESHOLD       = 0.4
-CONFIDENCE      = 0.5
-DASHBOARD_FLAG  = False
 
-# Model path
-UTILSDIR    = "utils"
-MODELDIR    = "model"
-WEIGHTS     = "yolov3.weights"
-CFG         = "yolov3.cfg"
-LABELSDIR   = "labels"
-COCONAMES   = "coco.names"
-DASHBOARD   = "images/chart.png"
+UTILSDIR    = file['UTILSDIR']
+MODELDIR    = file['MODELDIR']
+WEIGHTS     = file['WEIGHTS']
+CFG         = file['CFG']
+LABELSDIR   = file['LABELSDIR']
+COCONAMES   = file['COCONAMES']
+DASHBOARD   = file['DASHBOARD']
+FOLDERNAME  = file['FOLDERNAME']
+VIDEONAME   = file['VIDEONAME']
 
-# Video path
-FOLDERNAME  = "videos"
-VIDEONAME   = "TownCentre.mp4"
-WIDTH       = 1280
-HEIGHT      = 720
-DISTANCE    = 68.5
+CAMERA_FLAG     = attributes['CAMERA_FLAG']
+CAMERA_ID       = attributes['CAMERA_ID']
+THREAD          = attributes['THREAD']
+THRESHOLD       = attributes['THRESHOLD']
+CONFIDENCE      = attributes['CONFIDENCE']
+DASHBOARD_FLAG  = attributes['DASHBOARD_FLAG']
+WIDTH           = attributes['WIDTH']
+HEIGHT          = attributes['HEIGHT']
+DISTANCE        = attributes['DISTANCE']
 
-# Colors configurations
-GREEN       = (50,205,50)
-RED         = (0,0,255)
-YELLOW      = (0,255,255)
-ORANGE      = (0,165,255)
-BLUE        = (255,0,0)
-GREY        = (192,192,192)
-BLACK       = (0,0,0)
-WHITE       = (255,255,255)
-
-# Dashboard colors
-RED_DB      = '#FF0000'
-GREEN_DB    = '#13FF00'
+GREEN           = color["bgr"]['GREEN']
+RED             = color["bgr"]['RED']
+YELLOW          = color["bgr"]['YELLOW']
+ORANGE          = color["bgr"]['ORANGE']
+BLUE            = color["bgr"]['BLUE']
+GREY            = color["bgr"]['GREY']
+BLACK           = color["bgr"]['BLACK']
+WHITE           = color["bgr"]['WHITE']
+RED_DB          = color["hex"]['RED_DB']
+GREEN_DB        = color["hex"]['GREEN_DB']

@@ -1,0 +1,42 @@
+{
+	"file": {
+		"UTILSDIR": "utils",
+		"MODELDIR": "model",
+		"WEIGHTS": "yolov3.weights",
+		"CFG": "yolov3.cfg",
+		"LABELSDIR": "labels",
+		"COCONAMES": "coco.names",
+		"DASHBOARD": "images/chart.png",
+		"FOLDERNAME": "videos",
+		"VIDEONAME": "TownCentre.mp4"
+	},
+
+	"attributes": {
+		"CAMERA_FLAG": false,
+		"CAMERA_ID": 0,
+		"THREAD": true,
+		"THRESHOLD": 0.4,
+		"CONFIDENCE": 0.5,
+		"DASHBOARD_FLAG": false,
+		"WIDTH": 1280,
+		"HEIGHT": 720,
+		"DISTANCE": 68.5
+	},
+
+	"color": {
+		"bgr": {
+			"GREEN": [50, 205, 50],
+			"RED": [0, 0, 255],
+			"YELLOW": [0, 255, 255],
+			"ORANGE": [0, 165, 255],
+			"BLUE": [255, 0, 0],
+			"GREY": [192, 192, 192],
+			"BLACK": [0, 0, 0],
+			"WHITE": [255, 255, 255]
+		},
+		"hex": {
+			"RED_DB": "#FF0000",
+			"GREEN_DB": "#13FF00"
+		}
+	}
+}
