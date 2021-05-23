@@ -8,19 +8,22 @@ import time
 import math
 import cv2
 import os
-
+import json
+from utils.refresh_data import initialize
 class App:
     '''
     Social Distancing Violation System SODV
     =======================================
     '''
     def __init__(self, source, distance, input_information, start = True):
+        initialize()
         self.input_information = input_information
         self.video = cv2.VideoCapture(source)
         self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
         self.distance = distance
         self.active_thread_count = 0
         self.pTime = 0
+        self.frame_counter = 0
         if start: self.main()
 
     def calculate_centroid(self, *args):
@@ -114,6 +117,31 @@ class App:
         ax.legend()
         plt.savefig(DASHBOARD, transparent=True, dpi=700)
         plt.close()
+
+    def generate_data(self):
+        to_update_item = dict()
+        DATA = os.path.join(os.getcwd(), 'output_data.json')
+        with open(DATA) as fileIn:
+            loaded = json.load(fileIn)
+            data = loaded['data']
+        if self.frame_counter == 1 or self.frame_counter%5 == 0:
+            items = {
+                "frames" : int(self.frame_counter),
+                "high_risk": int(self.high_counter),
+                "low_risk": int(self.low_counter)
+            }
+
+            data.append(items)
+        try:
+            with open(DATA, 'w') as fileOut:
+                json.dump(loaded, fileOut, sort_keys=True)
+        except IOError as e:
+            print(e)
+    
+    def __str__(self, start_time):
+        data = {"Active thread used": [self.active_thread_count],
+                "Status": [f'Finished after {round(time.time()-start_time, 2)}s']}
+        return tabulate.tabulate(data, headers="keys", tablefmt="pretty")
 
     def main(self):
         net, layerNames, classes = self.model.predict()
@@ -239,7 +267,8 @@ class App:
                 pass
             self.fps = self.generate_fps()
             self.information_display()
-            
+            self.frame_counter += 1
+            self.generate_data()
             # Resizable windows
             cv2.namedWindow("SODV: Social Distancing Violation System", cv2.WINDOW_NORMAL)
             cv2.imshow("SODV: Social Distancing Violation System", self.frame)
@@ -258,7 +287,5 @@ if __name__ == '__main__':
         VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
         VIDEO_IND = VIDEONAME[:-4].upper()
     app = App(VIDEOPATH, DISTANCE, VIDEO_IND)
-
-    data = {"Active thread used": [app.active_thread_count],
-            "Status": [f'Finished after {round(time.time()-start_time, 2)}s']}
-    print(tabulate.tabulate(data, headers="keys", tablefmt="pretty"))
+    
+    print(app.__str__(start_time))
