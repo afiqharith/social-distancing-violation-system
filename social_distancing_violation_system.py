@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from utils.refresh_data import Initilization
 from config.model import Model
 from config.config import *
 import numpy as np
@@ -9,14 +10,14 @@ import math
 import cv2
 import os
 import json
-from utils.refresh_data import initialize
 class App:
     '''
     Social Distancing Violation System SODV
     =======================================
     '''
-    def __init__(self, source, distance, input_information, start = True):
-        initialize()
+    def __init__(self, source, distance, input_information, start_time, start = True):
+        Initilization()
+        self.start_time = start_time
         self.input_information = input_information
         self.video = cv2.VideoCapture(source)
         self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
@@ -130,18 +131,38 @@ class App:
                 "high_risk": int(self.high_counter),
                 "low_risk": int(self.low_counter)
             }
-
             data.append(items)
+
         try:
             with open(DATA, 'w') as fileOut:
                 json.dump(loaded, fileOut, sort_keys=True)
         except IOError as e:
             print(e)
     
-    def __str__(self, start_time):
+    def show_data(self):
+        DATA = os.path.join(os.getcwd(), 'output_data.json')
+        with open(DATA, 'r') as fileIn:
+            loaded = json.load(fileIn)
+            data = loaded['data']
+        frame, high, low = list(), list(), list()
+        to_display = {
+            "Frame": frame,
+            "High": high,
+            "Low": low
+        }
+        for i in data:
+            frame.append(i['frames'])
+            high.append(i['high_risk'])
+            low.append(i['low_risk'])
+        return tabulate.tabulate(to_display, headers="keys", tablefmt="pretty")
+    
+    def show_usage(self):
         data = {"Active thread used": [self.active_thread_count],
-                "Status": [f'Finished after {round(time.time()-start_time, 2)}s']}
+                "Status": [f'Finished after {round(time.time()-self.start_time, 2)}s']}
         return tabulate.tabulate(data, headers="keys", tablefmt="pretty")
+    
+    def __str__(self):
+        return f'Output Data =>\n{self.show_data()}\nHardware usage =>\n{self.show_usage()}'
 
     def main(self):
         net, layerNames, classes = self.model.predict()
@@ -286,6 +307,6 @@ if __name__ == '__main__':
     else:
         VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
         VIDEO_IND = VIDEONAME[:-4].upper()
-    app = App(VIDEOPATH, DISTANCE, VIDEO_IND)
+    app = App(VIDEOPATH, DISTANCE, VIDEO_IND, start_time)
     
-    print(app.__str__(start_time))
+    print(app)
