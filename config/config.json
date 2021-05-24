@@ -6,7 +6,7 @@
 		"CFG": "yolov3.cfg",
 		"LABELSDIR": "labels",
 		"COCONAMES": "coco.names",
-		"DASHBOARD": "images/chart.png",
+		"DASHBOARD": "temp/chart.png",
 		"FOLDERNAME": "videos",
 		"VIDEONAME": "TownCentre.mp4"
 	},
@@ -18,6 +18,7 @@
 		"THRESHOLD": 0.4,
 		"CONFIDENCE": 0.5,
 		"DASHBOARD_FLAG": false,
+		"LOGGING": true,
 		"WIDTH": 1280,
 		"HEIGHT": 720,
 		"DISTANCE": 68.5

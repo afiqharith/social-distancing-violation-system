@@ -1,15 +1,17 @@
-import matplotlib.pyplot as plt
 from utils.refresh_data import Initilization
+import matplotlib.pyplot as plt
 from config.model import Model
 from config.config import *
 import numpy as np
 import threading
 import tabulate
+import datetime
+import json
 import time
 import math
 import cv2
 import os
-import json
+
 class App:
     '''
     Social Distancing Violation System SODV
@@ -18,9 +20,10 @@ class App:
     def __init__(self, source, distance, input_information, start_time, start = True):
         Initilization()
         self.start_time = start_time
+        self.temp_log =  os.path.join(os.getcwd(), 'temp', 'logging.json')
         self.input_information = input_information
         self.video = cv2.VideoCapture(source)
-        self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)    
+        self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)
         self.distance = distance
         self.active_thread_count = 0
         self.pTime = 0
@@ -119,14 +122,13 @@ class App:
         plt.savefig(DASHBOARD, transparent=True, dpi=700)
         plt.close()
 
-    def generate_data(self):
-        to_update_item = dict()
-        DATA = os.path.join(os.getcwd(), 'output_data.json')
-        with open(DATA) as fileIn:
+    def generate_logging(self):
+        with open(self.temp_log) as fileIn:
             loaded = json.load(fileIn)
             data = loaded['data']
         if self.frame_counter == 1 or self.frame_counter%5 == 0:
             items = {
+                "time" : f'{self.log_time}',
                 "frames" : int(self.frame_counter),
                 "high_risk": int(self.high_counter),
                 "low_risk": int(self.low_counter)
@@ -134,23 +136,24 @@ class App:
             data.append(items)
 
         try:
-            with open(DATA, 'w') as fileOut:
+            with open(self.temp_log, 'w') as fileOut:
                 json.dump(loaded, fileOut, sort_keys=True)
         except IOError as e:
             print(e)
     
-    def show_data(self):
-        DATA = os.path.join(os.getcwd(), 'output_data.json')
-        with open(DATA, 'r') as fileIn:
+    def show_logging(self):
+        with open(self.temp_log, 'r') as fileIn:
             loaded = json.load(fileIn)
             data = loaded['data']
-        frame, high, low = list(), list(), list()
+        time, frame, high, low = list(), list(), list(), list()
         to_display = {
+            "Time" : time,
             "Frame": frame,
             "High": high,
             "Low": low
         }
         for i in data:
+            time.append(i['time'])
             frame.append(i['frames'])
             high.append(i['high_risk'])
             low.append(i['low_risk'])
@@ -162,7 +165,7 @@ class App:
         return tabulate.tabulate(data, headers="keys", tablefmt="pretty")
     
     def __str__(self):
-        return f'Output Data =>\n{self.show_data()}\nHardware usage =>\n{self.show_usage()}'
+        return f'Output Data =>\n{self.show_logging()}\nHardware usage =>\n{self.show_usage()}'
 
     def main(self):
         net, layerNames, classes = self.model.predict()
@@ -258,7 +261,7 @@ class App:
                 # Else, wrap red bbox
                 if detected_bbox_colors[i]:
                     self.cross_line(xmin, ymin, xmax, ymax, RED)
-                    # self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
+                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
                     label = "high".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
@@ -270,7 +273,7 @@ class App:
                 # If euclidean distance less than (<) DISTANCE, wrap black bbox
                 else:
                     self.cross_line(xmin, ymin, xmax, ymax, BLACK)
-                    # self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
+                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
                     label = "low".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
@@ -289,7 +292,8 @@ class App:
             self.fps = self.generate_fps()
             self.information_display()
             self.frame_counter += 1
-            self.generate_data()
+            self.log_time = datetime.datetime.now().strftime("%d-%m-%Y %I:%M:%S%p")
+            self.generate_logging()
             # Resizable windows
             cv2.namedWindow("SODV: Social Distancing Violation System", cv2.WINDOW_NORMAL)
             cv2.imshow("SODV: Social Distancing Violation System", self.frame)
@@ -309,4 +313,5 @@ if __name__ == '__main__':
         VIDEO_IND = VIDEONAME[:-4].upper()
     app = App(VIDEOPATH, DISTANCE, VIDEO_IND, start_time)
     
-    print(app)
+    if LOGGING:
+        print(app)
