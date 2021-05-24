@@ -257,7 +257,7 @@ class App:
                 ymin = detected_bbox[i][1]
                 xmax = detected_bbox[i][2]
                 ymax = detected_bbox[i][3]
-                self.cross_line(xmin, ymin, xmax, ymax,GREY)
+                # self.cross_line(xmin, ymin, xmax, ymax,GREY)
                 # Else, wrap red bbox
                 if detected_bbox_colors[i]:
                     # self.cross_line(xmin, ymin, xmax, ymax, RED)
