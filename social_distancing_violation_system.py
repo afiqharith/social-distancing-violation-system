@@ -260,7 +260,7 @@ class App:
                 self.cross_line(xmin, ymin, xmax, ymax,GREY)
                 # Else, wrap red bbox
                 if detected_bbox_colors[i]:
-                    self.cross_line(xmin, ymin, xmax, ymax, RED)
+                    # self.cross_line(xmin, ymin, xmax, ymax, RED)
                     self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
                     label = "high".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
@@ -272,7 +272,7 @@ class App:
 
                 # If euclidean distance less than (<) DISTANCE, wrap black bbox
                 else:
-                    self.cross_line(xmin, ymin, xmax, ymax, BLACK)
+                    # self.cross_line(xmin, ymin, xmax, ymax, BLACK)
                     self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
                     label = "low".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
