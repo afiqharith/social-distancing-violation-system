@@ -1,7 +1,7 @@
 from utils.refresh_data import Initilization
 import matplotlib.pyplot as plt
 from config.model import Model
-from config.config import *
+from config.config import Config
 import numpy as np
 import threading
 import tabulate
@@ -11,6 +11,7 @@ import time
 import math
 import cv2
 import os
+c = Config()
 
 class App:
     '''
@@ -23,7 +24,7 @@ class App:
         self.temp_log =  os.path.join(os.getcwd(), 'temp', 'logging.json')
         self.input_information = input_information
         self.video = cv2.VideoCapture(source)
-        self.model = Model(utilsdir=UTILSDIR, modeldir=MODELDIR, weights=WEIGHTS, cfg=CFG, labelsdir=LABELSDIR, coco=COCONAMES)
+        self.model = Model(utilsdir=c.UTILSDIR, modeldir=c.MODELDIR, weights=c.WEIGHTS, cfg=c.CFG, labelsdir=c.LABELSDIR, coco=c.COCONAMES)
         self.distance = distance
         self.active_thread_count = 0
         self.pTime = 0
@@ -87,19 +88,19 @@ class App:
         Display violation detection information
         ---------------------------------------
         '''
-        cv2.rectangle(self.frame, (13, 5), (250, 30), BLACK, cv2.FILLED)
-        cv2.putText(self.frame, f'{self.input_information}', (28, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, WHITE, 1, cv2.LINE_AA)
-        cv2.putText(self.frame, f'{self.fps}fps', (200, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, GREEN, 1, cv2.LINE_AA)
+        cv2.rectangle(self.frame, (13, 5), (250, 30), c.BLACK, cv2.FILLED)
+        cv2.putText(self.frame, f'{self.input_information}', (28, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.WHITE, 1, cv2.LINE_AA)
+        cv2.putText(self.frame, f'{self.fps}fps', (200, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.GREEN, 1, cv2.LINE_AA)
 
-        cv2.rectangle(self.frame, (13, 30), (250, 80), GREY, cv2.FILLED)
+        cv2.rectangle(self.frame, (13, 30), (250, 80), c.GREY, cv2.FILLED)
         LINE = "--"
         HIGHRISK_TEXT = f'HIGH RISK: {self.high_counter} people'
-        cv2.putText(self.frame, LINE, (28, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, RED, 2, cv2.LINE_AA)
-        cv2.putText(self.frame, HIGHRISK_TEXT, (60, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
+        cv2.putText(self.frame, LINE, (28, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.RED, 2, cv2.LINE_AA)
+        cv2.putText(self.frame, HIGHRISK_TEXT, (60, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.BLUE, 1, cv2.LINE_AA)
 
         LOWRISK_TEXT = f'LOW RISK: {self.low_counter} people'
-        cv2.putText(self.frame, LINE, (28, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLACK, 2, cv2.LINE_AA)
-        cv2.putText(self.frame, LOWRISK_TEXT, (60, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, BLUE, 1, cv2.LINE_AA)
+        cv2.putText(self.frame, LINE, (28, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.BLACK, 2, cv2.LINE_AA)
+        cv2.putText(self.frame, LOWRISK_TEXT, (60, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.BLUE, 1, cv2.LINE_AA)
     
     def generate_fps(self):
         '''
@@ -117,9 +118,9 @@ class App:
         ---------
         '''
         fig, ax = plt.subplots(figsize=(4,4))
-        ax.pie([self.high_counter, self.low_counter], labels = [f'High risk: {self.high_counter}', f'Low risk: {self.low_counter}'], colors=[RED_DB, GREEN_DB])
+        ax.pie([self.high_counter, self.low_counter], labels = [f'High risk: {self.high_counter}', f'Low risk: {self.low_counter}'], colors=[c.RED_DB, c.GREEN_DB])
         ax.legend()
-        plt.savefig(DASHBOARD, transparent=True, dpi=700)
+        plt.savefig(c.DASHBOARD, transparent=True, dpi=700)
         plt.close()
 
     def generate_logging(self):
@@ -177,7 +178,7 @@ class App:
  
             self.flag, self.frame = self.video.read()
 
-            if THREAD:
+            if c.THREAD:
                 try:
                     self.thread_1 = threading.Thread(target=self.video.read)
                     self.thread_1.daemon = True
@@ -212,7 +213,7 @@ class App:
                     if classID != 0:
                         continue
                     # If prediction is more than 50% 
-                    if confidence > CONFIDENCE:
+                    if confidence > c.CONFIDENCE:
                         # Object detected
                         center_x = int(detection[0] * width)
                         center_y = int(detection[1] * height)
@@ -227,7 +228,7 @@ class App:
                         confidences.append(float(confidence))
 
             # Apply non-max suppression (NMS)
-            indexes = cv2.dnn.NMSBoxes(boxes, confidences, CONFIDENCE, THRESHOLD)
+            indexes = cv2.dnn.NMSBoxes(boxes, confidences, c.CONFIDENCE, c.THRESHOLD)
             for i in range(len(boxes)):
                 if i in indexes:
                     x, y, w, h = boxes[i]
@@ -245,9 +246,9 @@ class App:
                         if self.calculate_euclidean_distance(centroids[k][0], centroids[k][1], centroid[0], centroid[1]) <= self.distance:
                             detected_bbox_colors[k] = True
                             violation = True
-                            cv2.line(self.frame, (int(centroids[k][0]), int(centroids[k][1])), (int(centroid[0]), int(centroid[1])), YELLOW, 1, cv2.LINE_AA)
-                            cv2.circle(self.frame, (int(centroids[k][0]), int(centroids[k][1])), 3, ORANGE, -1,cv2.LINE_AA)
-                            cv2.circle(self.frame, (int(centroid[0]), int(centroid[1])), 3, ORANGE, -1, cv2.LINE_AA)
+                            cv2.line(self.frame, (int(centroids[k][0]), int(centroids[k][1])), (int(centroid[0]), int(centroid[1])), c.YELLOW, 1, cv2.LINE_AA)
+                            cv2.circle(self.frame, (int(centroids[k][0]), int(centroids[k][1])), 3, c.ORANGE, -1,cv2.LINE_AA)
+                            cv2.circle(self.frame, (int(centroid[0]), int(centroid[1])), 3, c.ORANGE, -1, cv2.LINE_AA)
                             break
                     centroids.append(centroid)
                     detected_bbox_colors.append(violation)
@@ -257,34 +258,34 @@ class App:
                 ymin = detected_bbox[i][1]
                 xmax = detected_bbox[i][2]
                 ymax = detected_bbox[i][3]
-                self.cross_line(xmin, ymin, xmax, ymax,GREY)
+                self.cross_line(xmin, ymin, xmax, ymax, c.GREY)
                 # Else, wrap red bbox
                 if detected_bbox_colors[i]:
-                    self.cross_line(xmin, ymin, xmax, ymax, RED)
+                    self.cross_line(xmin, ymin, xmax, ymax, c.RED)
                     # self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
                     label = "high".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
                     ylabel = max(ymin, labelSize[1])
-                    cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]),(xmin + labelSize[0], ymin + baseLine), RED, cv2.FILLED)
-                    cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, ORANGE, 1, cv2.LINE_AA)
+                    cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]),(xmin + labelSize[0], ymin + baseLine), c.RED, cv2.FILLED)
+                    cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.ORANGE, 1, cv2.LINE_AA)
                     self.high_counter += 1
 
                 # If euclidean distance less than (<) DISTANCE, wrap black bbox
                 else:
-                    self.cross_line(xmin, ymin, xmax, ymax, BLACK)
+                    self.cross_line(xmin, ymin, xmax, ymax, c.BLACK)
                     # self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
                     label = "low".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
                     ylabel = max(ymin, labelSize[1])
-                    cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]), (xmin + labelSize[0], ymin + baseLine), BLACK, cv2.FILLED)
-                    cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, GREEN, 1, cv2.LINE_AA)
+                    cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]), (xmin + labelSize[0], ymin + baseLine), c.BLACK, cv2.FILLED)
+                    cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.GREEN, 1, cv2.LINE_AA)
                     self.low_counter += 1
                     
-            if DASHBOARD_FLAG:
+            if c.DASHBOARD_FLAG:
                 self.generate_chart()
-                self.dashboard = cv2.imread(DASHBOARD)
+                self.dashboard = cv2.imread(c.DASHBOARD)
                 cv2.namedWindow(f'SODV Dashboard: {self.input_information}', cv2.WINDOW_NORMAL)
                 cv2.imshow(f'SODV Dashboard: {self.input_information}', self.dashboard)
             else:
@@ -304,14 +305,15 @@ class App:
         cv2.destroyAllWindows()
 
 if __name__ == '__main__':
+    print(c.CAMERA_FLAG)
     start_time = time.time()
-    if CAMERA_FLAG:
-        VIDEOPATH = CAMERA_ID
-        VIDEO_IND = f'camera_id_{CAMERA_ID}'.upper()
+    if c.CAMERA_FLAG:
+        VIDEOPATH = c.CAMERA_ID
+        VIDEO_IND = f'camera_id_{c.CAMERA_ID}'.upper()
     else:
-        VIDEOPATH = os.path.join(os.getcwd(), FOLDERNAME, VIDEONAME)
-        VIDEO_IND = VIDEONAME[:-4].upper()
-    app = App(VIDEOPATH, DISTANCE, VIDEO_IND, start_time)
+        VIDEOPATH = os.path.join(os.getcwd(), c.FOLDERNAME, c.VIDEONAME)
+        VIDEO_IND = c.VIDEONAME[:-4].upper()
+    app = App(VIDEOPATH, c.DISTANCE, VIDEO_IND, start_time)
     
-    if LOGGING:
+    if c.LOGGING:
         print(app)
