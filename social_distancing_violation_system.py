@@ -1,7 +1,7 @@
-from utils.refresh_data import Initilization
+from utils.refresh_logging_data import Initilization
+from config.config import Config
 import matplotlib.pyplot as plt
 from config.model import Model
-from config.config import Config
 import numpy as np
 import threading
 import tabulate
@@ -18,10 +18,19 @@ class App:
     Social Distancing Violation System SODV
     =======================================
     '''
-    def __init__(self, source, distance, input_information, start_time, start = True):
+    temp_log = os.path.join(os.getcwd(), 'temp', 'logging.json')
+    start_time = time.time()
+    if c.CAMERA_FLAG:
+        VIDEOPATH = c.CAMERA_ID
+        VIDEO_IND = f'camera_id_{c.CAMERA_ID}'.upper()
+    else:
+        VIDEOPATH = os.path.join(os.getcwd(), c.FOLDERNAME, c.VIDEONAME)
+        VIDEO_IND = c.VIDEONAME[:-4].upper()
+
+    def __init__(self, source=VIDEOPATH, distance=c.DISTANCE, input_information=VIDEO_IND, start_time=start_time, temp_log_path=temp_log, start = True):
         Initilization()
         self.start_time = start_time
-        self.temp_log =  os.path.join(os.getcwd(), 'temp', 'logging.json')
+        self.temp_log =  temp_log_path
         self.input_information = input_information
         self.video = cv2.VideoCapture(source)
         self.model = Model(utilsdir=c.UTILSDIR, modeldir=c.MODELDIR, weights=c.WEIGHTS, cfg=c.CFG, labelsdir=c.LABELSDIR, coco=c.COCONAMES)
@@ -305,15 +314,6 @@ class App:
         cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    print(c.CAMERA_FLAG)
-    start_time = time.time()
-    if c.CAMERA_FLAG:
-        VIDEOPATH = c.CAMERA_ID
-        VIDEO_IND = f'camera_id_{c.CAMERA_ID}'.upper()
-    else:
-        VIDEOPATH = os.path.join(os.getcwd(), c.FOLDERNAME, c.VIDEONAME)
-        VIDEO_IND = c.VIDEONAME[:-4].upper()
-    app = App(VIDEOPATH, c.DISTANCE, VIDEO_IND, start_time)
-    
+    app = App()
     if c.LOGGING:
         print(app)
