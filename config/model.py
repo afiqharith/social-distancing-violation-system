@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 import os 
 
 class Model:
@@ -34,5 +33,8 @@ class Model:
         
         self.net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
         self.net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
-        
+        print(f"[STATUS] {Model.__str__(self)} loaded successfully\n")
         return self.net, self.layerNames, self.classes
+
+    def __str__(self):
+        return self.WEIGHTSPATH.split("\\")[-1].split(".")[0].upper()

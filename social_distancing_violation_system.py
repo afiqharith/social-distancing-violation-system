@@ -13,13 +13,13 @@ import cv2
 import os
 c = Config()
 
-class App:
+class Pipeline:
     '''
-    Social Distancing Violation System SODV
-    =======================================
+    Pipeline SODV
+    =============
     '''
     temp_log = os.path.join(os.getcwd(), 'temp', 'logging.json')
-    start_time = time.time()
+    start_time = time.perf_counter()
     if c.CAMERA_FLAG:
         VIDEOPATH = c.CAMERA_ID
         VIDEO_IND = f'camera_id_{c.CAMERA_ID}'.upper()
@@ -27,7 +27,7 @@ class App:
         VIDEOPATH = os.path.join(os.getcwd(), c.FOLDERNAME, c.VIDEONAME)
         VIDEO_IND = c.VIDEONAME[:-4].upper()
 
-    def __init__(self, source=VIDEOPATH, distance=c.DISTANCE, input_information=VIDEO_IND, start_time=start_time, temp_log_path=temp_log, start = True):
+    def __init__(self, source=VIDEOPATH, distance=c.DISTANCE, input_information=VIDEO_IND, start_time=start_time, temp_log_path=temp_log):
         Initilization()
         self.start_time = start_time
         self.temp_log =  temp_log_path
@@ -38,7 +38,6 @@ class App:
         self.active_thread_count = 0
         self.pTime = 0
         self.frame_counter = 0
-        if start: self.main()
 
     def calculate_centroid(self, *args):
         '''
@@ -84,11 +83,15 @@ class App:
         cv2.rectangle(args[0], (args[1], args[2]), (args[3], args[4]), args[5], 1)
     
     def cross_line(self, xmin, ymin, xmax, ymax, color):
+        '''
+        Use cross line as detection output instead of boxes: dev_process(trial)
+        -----------------------------------------------------------------------
+        - horizontal = s(xmin, yc), e(xmax, yc)
+        - verticle = s(xc, ymin), e(xc, ymax)
+        '''
         xc = (xmin+xmax)/2
         yc = (ymin+ymax)/2
 
-        # horizontal = s(xmin, yc), e(xmax, yc)
-        # verticle = s(xc, ymin), e(xc, ymax)
         cv2.line(self.frame, (int(xmin), int(yc)), (int(xmax), int(yc)), color, 1, cv2.LINE_AA)
         cv2.line(self.frame, (int(xc), int(ymin)), (int(xc), int(ymax)), color, 1, cv2.LINE_AA)
 
@@ -133,6 +136,10 @@ class App:
         plt.close()
 
     def generate_logging(self):
+        '''
+        Generate logging for the video
+        ------------------------------
+        '''
         with open(self.temp_log) as fileIn:
             loaded = json.load(fileIn)
             data = loaded['data']
@@ -152,6 +159,10 @@ class App:
             print(e)
     
     def show_logging(self):
+        '''
+        Display logging for the video after video is finished
+        -----------------------------------------------------
+        '''
         with open(self.temp_log, 'r') as fileIn:
             loaded = json.load(fileIn)
             data = loaded['data']
@@ -170,15 +181,30 @@ class App:
         return tabulate.tabulate(to_display, headers="keys", tablefmt="pretty")
     
     def show_usage(self):
+        '''
+        Display thread usage for the video after video is finished
+        ----------------------------------------------------------
+        '''
+        elapsed = time.perf_counter()-self.start_time
         data = {"Active thread used": [self.active_thread_count],
-                "Status": [f'Finished after {round(time.time()-self.start_time, 2)}s']}
+                "Status": [f'Executed in {elapsed:.2f}s']}
         return tabulate.tabulate(data, headers="keys", tablefmt="pretty")
-    
+
     def __str__(self):
         return f'Output Data =>\n{self.show_logging()}\nHardware usage =>\n{self.show_usage()}'
 
+class App(Pipeline):
+    '''
+    Social Distancing Violation System SODV
+    =======================================
+    '''
+    def __init__(self):
+        super().__init__()
+        self.net, self.layerNames, _ = self.model.predict()
+        self.windowName = "SODV: Social Distancing Violation System"
+        self.main()
+
     def main(self):
-        net, layerNames, classes = self.model.predict()
         while (self.video.isOpened()):
             self.high_counter, self.low_counter = 0, 0
             centroids = list()
@@ -206,8 +232,8 @@ class App:
 
             # Detecting objects
             blob = cv2.dnn.blobFromImage(self.frameResized, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
-            net.setInput(blob)
-            layerOutputs = net.forward(layerNames)
+            self.net.setInput(blob)
+            layerOutputs = self.net.forward(self.layerNames)
 
             confidences = list()
             boxes = list()
@@ -249,18 +275,18 @@ class App:
                     centroid = self.calculate_centroid(xmn, ymn, xmx, ymx)
                     detected_bbox.append([xmn, ymn, xmx, ymx])
 
-                    violation = False
+                    isViolation = False
                     for k in range (len(centroids)):
                         # Compare the distance of center point with each other
                         if self.calculate_euclidean_distance(centroids[k][0], centroids[k][1], centroid[0], centroid[1]) <= self.distance:
                             detected_bbox_colors[k] = True
-                            violation = True
+                            isViolation = True
                             cv2.line(self.frame, (int(centroids[k][0]), int(centroids[k][1])), (int(centroid[0]), int(centroid[1])), c.YELLOW, 1, cv2.LINE_AA)
                             cv2.circle(self.frame, (int(centroids[k][0]), int(centroids[k][1])), 3, c.ORANGE, -1,cv2.LINE_AA)
                             cv2.circle(self.frame, (int(centroid[0]), int(centroid[1])), 3, c.ORANGE, -1, cv2.LINE_AA)
                             break
                     centroids.append(centroid)
-                    detected_bbox_colors.append(violation)
+                    detected_bbox_colors.append(isViolation)
 
             for i in range (len(detected_bbox)):
                 xmin = detected_bbox[i][0]
@@ -270,8 +296,8 @@ class App:
                 self.cross_line(xmin, ymin, xmax, ymax, c.GREY)
                 # Else, wrap red bbox
                 if detected_bbox_colors[i]:
-                    self.cross_line(xmin, ymin, xmax, ymax, c.RED)
-                    # self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, RED)
+                    # self.cross_line(xmin, ymin, xmax, ymax, c.RED)
+                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, c.RED)
                     label = "high".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
@@ -282,8 +308,8 @@ class App:
 
                 # If euclidean distance less than (<) DISTANCE, wrap black bbox
                 else:
-                    self.cross_line(xmin, ymin, xmax, ymax, c.BLACK)
-                    # self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, BLACK)
+                    # self.cross_line(xmin, ymin, xmax, ymax, c.BLACK)
+                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, c.BLACK)
                     label = "low".upper()
                     labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
@@ -305,11 +331,13 @@ class App:
             self.log_time = datetime.datetime.now().strftime("%d-%m-%Y %I:%M:%S%p")
             self.generate_logging()
             # Resizable windows
-            cv2.namedWindow("SODV: Social Distancing Violation System", cv2.WINDOW_NORMAL)
-            cv2.imshow("SODV: Social Distancing Violation System", self.frame)
+            cv2.namedWindow(self.windowName, cv2.WINDOW_NORMAL)
+            cv2.imshow(self.windowName, self.frame)
              
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            if cv2.waitKey(1) & 0xFF == ord('q') or cv2.getWindowProperty(self.windowName, cv2.WND_PROP_VISIBLE) <1:
                 break
+
+    def __del__(self):
         self.video.release()
         cv2.destroyAllWindows()
 

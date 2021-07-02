@@ -17,7 +17,7 @@ class Initilization:
         except IOError as e:
             return e
 
-    def __str__(self) -> str:
+    def __str__(self):
         return f'{self.main}'
 
 if __name__ == '__main__':
