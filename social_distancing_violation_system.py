@@ -1,4 +1,5 @@
 from utils.refresh_logging_data import Initilization
+import scipy.spatial.distance as dst
 from config.config import Config
 import matplotlib.pyplot as plt
 from config.model import Model
@@ -55,18 +56,6 @@ class Pipeline:
         - return (((args[2] + args[0])/2), ((args[3] + args[1])/2))
         '''
         return (((args[2] + args[0])/2), args[3])
-    
-    def calculate_euclidean_distance(self, *args):
-        '''
-        Euclidean Distance
-        ------------------
-        - param : args : (xmin, ymin, xmax, ymax)
-        - xcenter_1, ycenter_1 : C1(x,y)
-        - xcenter_2, ycenter_2 : C2(x,y)
-
-        return value : D(C1,C2)
-        '''
-        return math.sqrt((args[0]-args[2])**2 + (args[1]-args[3])**2)
     
     def rect_detection_box(self, *args):
         '''
@@ -278,7 +267,7 @@ class App(Pipeline):
                     isViolation = False
                     for k in range (len(centroids)):
                         # Compare the distance of center point with each other
-                        if self.calculate_euclidean_distance(centroids[k][0], centroids[k][1], centroid[0], centroid[1]) <= self.distance:
+                        if dst.euclidean([centroids[k][0], centroids[k][1]], [centroid[0], centroid[1]]) <= self.distance:
                             detected_bbox_colors[k] = True
                             isViolation = True
                             cv2.line(self.frame, (int(centroids[k][0]), int(centroids[k][1])), (int(centroid[0]), int(centroid[1])), c.YELLOW, 1, cv2.LINE_AA)
