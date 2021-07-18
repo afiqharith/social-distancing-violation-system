@@ -51,5 +51,5 @@ class Config:
         self.RED_DB          = color["hex"]['RED_DB']
         self.GREEN_DB        = color["hex"]['GREEN_DB']
 
-    def __str__(self):
+    def __str__(self) -> str:
         return

@@ -9,7 +9,6 @@ import tabulate
 import datetime
 import json
 import time
-import math
 import cv2
 import os
 c = Config()
@@ -37,10 +36,10 @@ class Pipeline:
         self.model = Model(utilsdir=c.UTILSDIR, modeldir=c.MODELDIR, weights=c.WEIGHTS, cfg=c.CFG, labelsdir=c.LABELSDIR, coco=c.COCONAMES)
         self.distance = distance
         self.active_thread_count = 0
-        self.pTime = 0
+        self.p_time = 0
         self.frame_counter = 0
 
-    def calculate_centroid(self, *args):
+    def calculate_centroid(self, *args) -> tuple:
         '''
         Getting the center point of ground plane for the bounding box (bbox)
         --------------------------------------------------------------------
@@ -71,7 +70,7 @@ class Pipeline:
         '''
         cv2.rectangle(args[0], (args[1], args[2]), (args[3], args[4]), args[5], 1)
     
-    def cross_line(self, xmin, ymin, xmax, ymax, color):
+    def cross_line(self, xmin: int, ymin: int, xmax: int, ymax: int, color: tuple):
         '''
         Use cross line as detection output instead of boxes: dev_process(trial)
         -----------------------------------------------------------------------
@@ -83,6 +82,15 @@ class Pipeline:
 
         cv2.line(self.frame, (int(xmin), int(yc)), (int(xmax), int(yc)), color, 1, cv2.LINE_AA)
         cv2.line(self.frame, (int(xc), int(ymin)), (int(xc), int(ymax)), color, 1, cv2.LINE_AA)
+    
+    def draw_line_distance_between_bbox(self, iteration: int, centroid: tuple, centroids: list):
+        '''
+        Display line between violated bbox
+        ----------------------------------
+        '''
+        cv2.line(self.frame, (int(centroids[iteration][0]), int(centroids[iteration][1])), (int(centroid[0]), int(centroid[1])), c.YELLOW, 1, cv2.LINE_AA)
+        cv2.circle(self.frame, (int(centroids[iteration][0]), int(centroids[iteration][1])), 3, c.ORANGE, -1, cv2.LINE_AA)
+        cv2.circle(self.frame, (int(centroid[0]), int(centroid[1])), 3, c.ORANGE, -1, cv2.LINE_AA)
 
     def information_display(self):
         '''
@@ -103,14 +111,14 @@ class Pipeline:
         cv2.putText(self.frame, LINE, (28, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.BLACK, 2, cv2.LINE_AA)
         cv2.putText(self.frame, LOWRISK_TEXT, (60, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.BLUE, 1, cv2.LINE_AA)
     
-    def generate_fps(self):
+    def generate_fps(self) -> int:
         '''
         Frame per second (fps) counter
         ------------------------------
         '''
-        self.cTime = time.time()
-        fps = 1/(self.cTime - self.pTime)
-        self.pTime = self.cTime
+        self.c_time = time.time()
+        fps = 1/(self.c_time - self.p_time)
+        self.p_time = self.c_time
         return int(fps)
 
     def generate_chart(self):
@@ -129,8 +137,8 @@ class Pipeline:
         Generate logging for the video
         ------------------------------
         '''
-        with open(self.temp_log) as fileIn:
-            loaded = json.load(fileIn)
+        with open(self.temp_log) as file_in:
+            loaded = json.load(file_in)
             data = loaded['data']
         if self.frame_counter == 1 or self.frame_counter%5 == 0:
             items = {
@@ -142,18 +150,18 @@ class Pipeline:
             data.append(items)
 
         try:
-            with open(self.temp_log, 'w') as fileOut:
-                json.dump(loaded, fileOut, sort_keys=True)
+            with open(self.temp_log, 'w') as file_out:
+                json.dump(loaded, file_out, sort_keys=True)
         except IOError as e:
             print(e)
     
-    def show_logging(self):
+    def show_logging(self) -> str:
         '''
         Display logging for the video after video is finished
         -----------------------------------------------------
         '''
-        with open(self.temp_log, 'r') as fileIn:
-            loaded = json.load(fileIn)
+        with open(self.temp_log, 'r') as file_in:
+            loaded = json.load(file_in)
             data = loaded['data']
         time, frame, high, low = list(), list(), list(), list()
         to_display = {
@@ -169,7 +177,7 @@ class Pipeline:
             low.append(i['low_risk'])
         return tabulate.tabulate(to_display, headers="keys", tablefmt="pretty")
     
-    def show_usage(self):
+    def show_usage(self) -> str:
         '''
         Display thread usage for the video after video is finished
         ----------------------------------------------------------
@@ -179,7 +187,7 @@ class Pipeline:
                 "Status": [f'Executed in {elapsed:.2f}s']}
         return tabulate.tabulate(data, headers="keys", tablefmt="pretty")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'Output Data =>\n{self.show_logging()}\nHardware usage =>\n{self.show_usage()}'
 
 class App(Pipeline):
@@ -189,8 +197,8 @@ class App(Pipeline):
     '''
     def __init__(self):
         super().__init__()
-        self.net, self.layerNames, _ = self.model.predict()
-        self.windowName = "SODV: Social Distancing Violation System"
+        self.net, self.layer_names, _ = self.model.network, self.model.layer_names, self.model.classes
+        self.window_name = "SODV: Social Distancing Violation System"
         self.main()
 
     def main(self):
@@ -215,67 +223,67 @@ class App(Pipeline):
 
             # Resize frame for prediction 
             if self.flag:
-                self.frameResized = cv2.resize(self.frame, (416, 416))
+                self.frame_resized = cv2.resize(self.frame, (416, 416))
             else:
                 break
 
             # Detecting objects
-            blob = cv2.dnn.blobFromImage(self.frameResized, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
+            blob = cv2.dnn.blobFromImage(self.frame_resized, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
             self.net.setInput(blob)
-            layerOutputs = self.net.forward(self.layerNames)
+            layer_outputs = self.net.forward(self.layer_names)
 
             confidences = list()
             boxes = list()
             height, width, _ = self.frame.shape
-            for output in layerOutputs:
+            for output in layer_outputs:
                 for detection in output:
                     scores = detection[5:]
-                    classID = np.argmax(scores)
-                    confidence = scores[classID]
+                    class_ID = np.argmax(scores)
+                    confidence = scores[class_ID]
 
                     # If class is not 0 which is person, ignore it.
-                    if classID != 0:
+                    if class_ID != 0:
                         continue
                     # If prediction is more than 50% 
                     if confidence > c.CONFIDENCE:
                         # Object detected
                         center_x = int(detection[0] * width)
                         center_y = int(detection[1] * height)
-                        # Bbox width and height
-                        w = int(detection[2] * width)
-                        h = int(detection[3] * height)
-                        # Bbox x and y axis coordinate
-                        x = int(center_x - w / 2)
-                        y = int(center_y - h / 2)
 
-                        boxes.append([x, y, w, h])
+                        # Bbox width and height
+                        bbox_cluster_w = int(detection[2] * width)
+                        bbox_cluster_h = int(detection[3] * height)
+
+                        # Bbox x and y axis coordinate
+                        bbox_cluster_x = int(center_x - bbox_cluster_w / 2)
+                        bbox_cluster_y = int(center_y - bbox_cluster_h / 2)
+
+                        boxes.append([bbox_cluster_x, bbox_cluster_y, bbox_cluster_w, bbox_cluster_h])
                         confidences.append(float(confidence))
 
-            # Apply non-max suppression (NMS)
+            # Apply non-max suppression (NMS) for clustered bbox
             indexes = cv2.dnn.NMSBoxes(boxes, confidences, c.CONFIDENCE, c.THRESHOLD)
             for i in range(len(boxes)):
                 if i in indexes:
                     x, y, w, h = boxes[i]
-                    xmn = x
-                    ymn = y
-                    xmx = (x + w)
-                    ymx = (y + h)
+                    xmin_pre_process = x
+                    ymin_pre_process = y
+                    xmax_pre_process = (x + w)
+                    ymax_pre_process = (y + h)
                     # Calculate ground plane center point of bbox (detected_bbox)
-                    centroid = self.calculate_centroid(xmn, ymn, xmx, ymx)
-                    detected_bbox.append([xmn, ymn, xmx, ymx])
+                    centroid = self.calculate_centroid(xmin_pre_process, ymin_pre_process, xmax_pre_process, ymax_pre_process)
+                    detected_bbox.append([xmin_pre_process, ymin_pre_process, xmax_pre_process, ymax_pre_process])
 
-                    isViolation = False
-                    for k in range (len(centroids)):
+                    is_violation = False
+                    for j in range (len(centroids)):
                         # Compare the distance of center point with each other
-                        if dst.euclidean([centroids[k][0], centroids[k][1]], [centroid[0], centroid[1]]) <= self.distance:
-                            detected_bbox_colors[k] = True
-                            isViolation = True
-                            cv2.line(self.frame, (int(centroids[k][0]), int(centroids[k][1])), (int(centroid[0]), int(centroid[1])), c.YELLOW, 1, cv2.LINE_AA)
-                            cv2.circle(self.frame, (int(centroids[k][0]), int(centroids[k][1])), 3, c.ORANGE, -1,cv2.LINE_AA)
-                            cv2.circle(self.frame, (int(centroid[0]), int(centroid[1])), 3, c.ORANGE, -1, cv2.LINE_AA)
+                        if dst.euclidean([centroids[j][0], centroids[j][1]], [centroid[0], centroid[1]]) <= self.distance:
+                            detected_bbox_colors[j] = True
+                            is_violation = True
+                            self.draw_line_distance_between_bbox(j, centroid, centroids)
                             break
                     centroids.append(centroid)
-                    detected_bbox_colors.append(isViolation)
+                    detected_bbox_colors.append(is_violation)
 
             for i in range (len(detected_bbox)):
                 xmin = detected_bbox[i][0]
@@ -288,10 +296,10 @@ class App(Pipeline):
                     # self.cross_line(xmin, ymin, xmax, ymax, c.RED)
                     self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, c.RED)
                     label = "high".upper()
-                    labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
+                    label_size, base_line = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
-                    ylabel = max(ymin, labelSize[1])
-                    cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]),(xmin + labelSize[0], ymin + baseLine), c.RED, cv2.FILLED)
+                    ylabel = max(ymin, label_size[1])
+                    cv2.rectangle(self.frame, (xmin, ylabel - label_size[1]),(xmin + label_size[0], ymin + base_line), c.RED, cv2.FILLED)
                     cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.ORANGE, 1, cv2.LINE_AA)
                     self.high_counter += 1
 
@@ -300,10 +308,10 @@ class App(Pipeline):
                     # self.cross_line(xmin, ymin, xmax, ymax, c.BLACK)
                     self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, c.BLACK)
                     label = "low".upper()
-                    labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
+                    label_size, base_line = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
 
-                    ylabel = max(ymin, labelSize[1])
-                    cv2.rectangle(self.frame, (xmin, ylabel - labelSize[1]), (xmin + labelSize[0], ymin + baseLine), c.BLACK, cv2.FILLED)
+                    ylabel = max(ymin, label_size[1])
+                    cv2.rectangle(self.frame, (xmin, ylabel - label_size[1]), (xmin + label_size[0], ymin + base_line), c.BLACK, cv2.FILLED)
                     cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.GREEN, 1, cv2.LINE_AA)
                     self.low_counter += 1
                     
@@ -320,10 +328,10 @@ class App(Pipeline):
             self.log_time = datetime.datetime.now().strftime("%d-%m-%Y %I:%M:%S%p")
             self.generate_logging()
             # Resizable windows
-            cv2.namedWindow(self.windowName, cv2.WINDOW_NORMAL)
-            cv2.imshow(self.windowName, self.frame)
+            cv2.namedWindow(self.window_name, cv2.WINDOW_NORMAL)
+            cv2.imshow(self.window_name, self.frame)
              
-            if cv2.waitKey(1) & 0xFF == ord('q') or cv2.getWindowProperty(self.windowName, cv2.WND_PROP_VISIBLE) <1:
+            if cv2.waitKey(1) & 0xFF == ord('q') or cv2.getWindowProperty(self.window_name, cv2.WND_PROP_VISIBLE) < 1:
                 break
 
     def __del__(self):
