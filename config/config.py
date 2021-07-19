@@ -3,7 +3,7 @@ import os
 
 class Config:
     '''
-    curation for the program
+    Curation for the program
     =========================
     1. CAMERA_FLAG : Input as camera stream or video stream
     2. CAMERA_ID : Input camera ID
@@ -19,6 +19,9 @@ class Config:
             attributes = config.get("attributes")
             color = config.get("color")
 
+        '''
+        Path variables for the program
+        '''
         self.UTILSDIR        = file['UTILSDIR']
         self.MODELDIR        = file['MODELDIR']
         self.WEIGHTS         = file['WEIGHTS']
@@ -29,6 +32,9 @@ class Config:
         self.FOLDERNAME      = file['FOLDERNAME']
         self.VIDEONAME       = file['VIDEONAME']
 
+        '''
+        Attribute variables for the program
+        '''
         self.CAMERA_FLAG     = attributes['CAMERA_FLAG']
         self.CAMERA_ID       = attributes['CAMERA_ID']
         self.THREAD          = attributes['THREAD']
@@ -40,6 +46,9 @@ class Config:
         self.HEIGHT          = attributes['HEIGHT']
         self.DISTANCE        = attributes['DISTANCE']
 
+        '''
+        Color variables for the program
+        '''
         self.GREEN           = color["bgr"]['GREEN']
         self.RED             = color["bgr"]['RED']
         self.YELLOW          = color["bgr"]['YELLOW']

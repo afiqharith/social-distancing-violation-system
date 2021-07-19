@@ -21,6 +21,9 @@ class Model:
         self.network = self.get_network_layer()
         self.layer_names = self.get_layer_names()
 
+        '''
+        Initialize OpenCV backend to utilize CPU on the runtime
+        '''
         self.setup_dnn_backend()
 
     def get_weight_path(self, kwargs: dict) -> str:
@@ -58,7 +61,7 @@ class Model:
         Loading weights and configuration file
         --------------------------------------
         '''
-        print(f"[STATUS] {Model.__str__(self)} loaded successfully\n")
+        print(f"[STATUS] {Model.__str__(self)} loaded successfully")
         return cv2.dnn.readNet(self.WEIGHTSPATH, self.CFGPATH)
     
     def get_layer_names(self) -> list:

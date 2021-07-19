@@ -132,7 +132,7 @@ class Pipeline:
         plt.savefig(c.DASHBOARD, transparent=True, dpi=700)
         plt.close()
 
-    def generate_logging(self):
+    def generate_logging(self) -> json:
         '''
         Generate logging for the video
         ------------------------------
@@ -194,6 +194,7 @@ class App(Pipeline):
     '''
     Social Distancing Violation System SODV
     =======================================
+    A camera tests program to identifie persons who are not adhering to COVID social distancing measures
     '''
     def __init__(self):
         super().__init__()
@@ -221,13 +222,17 @@ class App(Pipeline):
                 pass
             self.active_thread_count = int(threading.activeCount())
 
-            # Resize frame for prediction 
             if self.flag:
+                '''
+                Resize the frame for the object prediction
+                '''
                 self.frame_resized = cv2.resize(self.frame, (416, 416))
             else:
                 break
 
-            # Detecting objects
+            '''
+            Detecting objects in the resized frame
+            '''
             blob = cv2.dnn.blobFromImage(self.frame_resized, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
             self.net.setInput(blob)
             layer_outputs = self.net.forward(self.layer_names)
@@ -241,27 +246,40 @@ class App(Pipeline):
                     class_ID = np.argmax(scores)
                     confidence = scores[class_ID]
 
-                    # If class is not 0 which is person, ignore it.
+                    '''
+                    Ignore the object classes except 'person'
+                    '''
                     if class_ID != 0:
                         continue
-                    # If prediction is more than 50% 
+
+                    '''
+                    Get the bbox axis point if the conficence threshold of detected object class is more than 50%
+                    '''
                     if confidence > c.CONFIDENCE:
-                        # Object detected
+                        '''
+                        Get the bbox center point of detected object class
+                        '''
                         center_x = int(detection[0] * width)
                         center_y = int(detection[1] * height)
 
-                        # Bbox width and height
+                        '''
+                        Get the bbox width and height of detected object class
+                        '''
                         bbox_cluster_w = int(detection[2] * width)
                         bbox_cluster_h = int(detection[3] * height)
 
-                        # Bbox x and y axis coordinate
+                        '''
+                        Compute the bbox minimum x and y axis point of detected object class
+                        '''
                         bbox_cluster_x = int(center_x - bbox_cluster_w / 2)
                         bbox_cluster_y = int(center_y - bbox_cluster_h / 2)
 
                         boxes.append([bbox_cluster_x, bbox_cluster_y, bbox_cluster_w, bbox_cluster_h])
                         confidences.append(float(confidence))
 
-            # Apply non-max suppression (NMS) for clustered bbox
+            '''
+            Apply non-max suppression (NMS) for the clustered detected object class bbox
+            '''
             indexes = cv2.dnn.NMSBoxes(boxes, confidences, c.CONFIDENCE, c.THRESHOLD)
             for i in range(len(boxes)):
                 if i in indexes:
@@ -270,13 +288,18 @@ class App(Pipeline):
                     ymin_pre_process = y
                     xmax_pre_process = (x + w)
                     ymax_pre_process = (y + h)
-                    # Calculate ground plane center point of bbox (detected_bbox)
+
+                    '''
+                    Compute the ground plane center point for the bbox
+                    '''
                     centroid = self.calculate_centroid(xmin_pre_process, ymin_pre_process, xmax_pre_process, ymax_pre_process)
                     detected_bbox.append([xmin_pre_process, ymin_pre_process, xmax_pre_process, ymax_pre_process])
 
                     is_violation = False
                     for j in range (len(centroids)):
-                        # Compare the distance of center point with each other
+                        '''
+                        Compare the pair-wise distance for each bbox center point
+                        '''
                         if dst.euclidean([centroids[j][0], centroids[j][1]], [centroid[0], centroid[1]]) <= self.distance:
                             detected_bbox_colors[j] = True
                             is_violation = True
@@ -291,7 +314,12 @@ class App(Pipeline):
                 xmax = detected_bbox[i][2]
                 ymax = detected_bbox[i][3]
                 self.cross_line(xmin, ymin, xmax, ymax, c.GREY)
-                # Else, wrap red bbox
+
+                '''
+                Compute the euclidean distance between the pairwise bbox and display the bbox output
+                - Wrap with black bbox if the pairwise not violate social distance measure
+                - Wrap with red bbox if the pairwise violate social distance measure
+                '''
                 if detected_bbox_colors[i]:
                     # self.cross_line(xmin, ymin, xmax, ymax, c.RED)
                     self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, c.RED)
@@ -303,7 +331,6 @@ class App(Pipeline):
                     cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.ORANGE, 1, cv2.LINE_AA)
                     self.high_counter += 1
 
-                # If euclidean distance less than (<) DISTANCE, wrap black bbox
                 else:
                     # self.cross_line(xmin, ymin, xmax, ymax, c.BLACK)
                     self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, c.BLACK)
@@ -327,7 +354,7 @@ class App(Pipeline):
             self.frame_counter += 1
             self.log_time = datetime.datetime.now().strftime("%d-%m-%Y %I:%M:%S%p")
             self.generate_logging()
-            # Resizable windows
+
             cv2.namedWindow(self.window_name, cv2.WINDOW_NORMAL)
             cv2.imshow(self.window_name, self.frame)
              

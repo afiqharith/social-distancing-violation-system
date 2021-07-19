@@ -17,7 +17,7 @@ All the requirements can be installed via the command:
 $ pip3 install -r requirements.txt
 ```
 
-The default input is video located in videos file. To change the program to use camera stream as input, you need to change the configuration from `CAMERA_FLAG : false` to `CAMERA_FLAG : true`.
+The default input video is located in videos file. To change the program to use camera stream as input, you need to change the configuration from `CAMERA_FLAG : false` to `CAMERA_FLAG : true`.
 
 Note: All configurations can be changed in the **config.json** file.
 </br>
