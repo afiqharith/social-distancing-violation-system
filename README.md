@@ -71,15 +71,7 @@ $ python social_distancing_violation_system.py
 
 - No camera calibration for intrinsic parameter
 
-### 9. Future upgrades
-
-| Features                                              | Status                                                                |
-| ----------------------------------------------------- | --------------------------------------------------------------------- |
-| Camera calibration for intrinsic parameter (distance) | ![STATUS](https://img.shields.io/badge/camera_calibration-TBD-orange) |
-| Integration with facemask detection                   | ![STATUS](https://img.shields.io/badge/facemask_detection-TBD-orange) |
-| Integration with DeepSort                             | ![STATUS](https://img.shields.io/badge/DeepSort-TBD-orange)           |
-
-### 10. References
+### 9. References
 
 **Previous project** </br>
 [Person Detection for Social Distancing and Safety Violation Alert based on Segmented ROI](https://github.com/afiqharith/SocialDistancing-SafetyViolationROI-MobileNetSSD-FYP.git 'GitHub Repo')
