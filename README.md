@@ -17,7 +17,7 @@ All the requirements can be installed via the command:
 $ pip3 install -r requirements.txt
 ```
 
-The default input video is located in videos file. To change the program to use camera stream as input, you need to change the configuration from `CAMERA_FLAG : false` to `CAMERA_FLAG : true`.
+The default input video is located in videos folder. To change the program to use camera stream as input, you need to change the configuration from `CAMERA_FLAG : false` to `CAMERA_FLAG : true`.
 
 Note: All configurations can be changed in the **config.json** file.
 </br>
@@ -30,7 +30,12 @@ Run:
 $ python social_distancing_violation_system.py
 ```
 
-### 3. Program output
+### 3. Program structure
+
+| ![outputimage](/images/structure.jpg) |
+| ------------------------------------- |
+
+### 4. Program output
 
 | ![outputimage](/images/TownCentre_new.gif) |
 | ------------------------------------------ |
@@ -45,28 +50,28 @@ $ python social_distancing_violation_system.py
 | :----------------------------------------: | :----------------------------------------: | :----------------------------------------: |
 |               **FRAME 150**                |               **FRAME 200**                |               **FRAME 250**                |
 
-### 4. Overall accuracies
+### 5. Overall accuracies
 
 | ![graph](/images/graph.png) |
 | --------------------------- |
 
-### 5. Accuracy for person detection
+### 6. Accuracy for person detection
 
 | Dataset            | TP  | TN  | FP  | FN  | %    |
 | ------------------ | --- | --- | --- | --- | ---- |
 | Oxford Town Centre | 29  | 0   | 0   | 11  | 72.5 |
 
-### 6. Accuracy for social distance violation detection
+### 7. Accuracy for social distance violation detection
 
 | Dataset            | TP  | TN  | FP  | FN  | %    |
 | ------------------ | --- | --- | --- | --- | ---- |
 | Oxford Town Centre | 23  | 15  | 9   | 2   | 77.5 |
 
-### 7. Project drawback
+### 8. Project drawback
 
 - No camera calibration for intrinsic parameter
 
-### 8. Future upgrades
+### 9. Future upgrades
 
 | Features                                              | Status                                                                |
 | ----------------------------------------------------- | --------------------------------------------------------------------- |
@@ -74,7 +79,7 @@ $ python social_distancing_violation_system.py
 | Integration with facemask detection                   | ![STATUS](https://img.shields.io/badge/facemask_detection-TBD-orange) |
 | Integration with DeepSort                             | ![STATUS](https://img.shields.io/badge/DeepSort-TBD-orange)           |
 
-### 9. References
+### 10. References
 
 **Previous project** </br>
 [Person Detection for Social Distancing and Safety Violation Alert based on Segmented ROI](https://github.com/afiqharith/SocialDistancing-SafetyViolationROI-MobileNetSSD-FYP.git 'GitHub Repo')

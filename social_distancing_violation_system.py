@@ -298,7 +298,7 @@ class App(Pipeline):
                     is_violation = False
                     for j in range (len(centroids)):
                         '''
-                        Compare the pair-wise distance for each bbox center point
+                        Compare the pair-wise distance for each bbox center point using euclidean distance
                         '''
                         if dst.euclidean([centroids[j][0], centroids[j][1]], [centroid[0], centroid[1]]) <= self.distance:
                             detected_bbox_colors[j] = True
