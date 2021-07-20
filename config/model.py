@@ -1,7 +1,7 @@
 import cv2
 import os 
 
-class Model:
+class LoadModelFromDisk:
     '''
     Loading weights and configuration file
     ======================================
@@ -12,19 +12,10 @@ class Model:
     4. CFG         : YOLOv3 config file located in model folder
     5. COCONAMES   : file of the list of the COCO object names in the dataset
     '''
-    def __init__(self, **kwargs):
-        self.WEIGHTSPATH = self.get_weight_path(kwargs)
-        self.CFGPATH = self.get_config_path(kwargs)
-        self.COCO_NAMEPATH = self.get_coconames_path(kwargs)
-
-        self.classes = self.get_object_classes()
-        self.network = self.get_network_layer()
-        self.layer_names = self.get_layer_names()
-
-        '''
-        Initialize OpenCV backend to utilize CPU on the runtime
-        '''
-        self.setup_dnn_backend()
+    def __init__(self, **kwargs) -> None:
+        self.WEIGHTSPATH: str = self.get_weight_path(kwargs)
+        self.CFGPATH: str = self.get_config_path(kwargs)
+        self.COCO_NAMEPATH: str = self.get_coconames_path(kwargs)
 
     def get_weight_path(self, kwargs: dict) -> str:
         '''
@@ -61,7 +52,7 @@ class Model:
         Loading weights and configuration file
         --------------------------------------
         '''
-        print(f"[STATUS] {Model.__str__(self)} loaded successfully")
+        print(f"[STATUS] {self.__str__()} loaded successfully")
         return cv2.dnn.readNet(self.WEIGHTSPATH, self.CFGPATH)
     
     def get_layer_names(self) -> list:
@@ -72,10 +63,24 @@ class Model:
         pre_layer_names = self.network.getLayerNames()
         return [pre_layer_names[i[0] - 1] for i in self.network.getUnconnectedOutLayers()]
     
-    def setup_dnn_backend(self):
+    def setup_dnn_backend(self) -> None:
         print(f"[STATUS] Setting up DNN to target CPU\n")
         self.network.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
         self.network.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 
     def __str__(self) -> str:
         return self.WEIGHTSPATH.split("\\")[-1].split(".")[0].upper()
+
+class Model(LoadModelFromDisk):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+        '''
+        Initialize all methods during runtime
+        '''
+        self.classes = self.get_object_classes()
+        self.network = self.get_network_layer()
+        self.layer_names = self.get_layer_names()
+        '''
+        Initialize OpenCV backend to utilize CPU on the runtime
+        '''
+        self.setup_dnn_backend()

@@ -13,28 +13,45 @@ import cv2
 import os
 c = Config()
 
-class Pipeline:
+class LoadInfoFromDisk:
     '''
-    Pipeline SODV
-    =============
+    Loading all informations from disk
+    ==================================
     '''
-    temp_log = os.path.join(os.getcwd(), 'temp', 'logging.json')
-    start_time = time.perf_counter()
-    if c.CAMERA_FLAG:
-        VIDEOPATH = c.CAMERA_ID
-        VIDEO_IND = f'camera_id_{c.CAMERA_ID}'.upper()
-    else:
-        VIDEOPATH = os.path.join(os.getcwd(), c.FOLDERNAME, c.VIDEONAME)
-        VIDEO_IND = c.VIDEONAME[:-4].upper()
+    def __init__(self) -> None:
+        self.temp_log: str = os.path.join(os.getcwd(), 'temp', 'logging.json')
+        self.start_time: float = time.perf_counter()
+        self.distance = c.DISTANCE
 
-    def __init__(self, source=VIDEOPATH, distance=c.DISTANCE, input_information=VIDEO_IND, start_time=start_time, temp_log_path=temp_log):
+        if c.CAMERA_FLAG:
+            self.camera_on()
+        else:
+            self.camera_off()
+
+    def camera_on(self) -> None:
+        '''
+        Get the camera ID for the camera stream
+        '''
+        self.source = c.CAMERA_ID
+        self.input_information = f'camera_id_{c.CAMERA_ID}'.upper()
+    
+    def camera_off(self) -> None:
+        '''
+        Get the path for the video stream
+        '''
+        self.source = os.path.join(os.getcwd(), c.FOLDERNAME, c.VIDEONAME)
+        self.input_information = c.VIDEONAME[:-4].upper()
+
+class ProgramFeatures(LoadInfoFromDisk):
+    '''
+    Features for the SODV
+    =====================
+    '''
+    def __init__(self) -> None:
         Initilization()
-        self.start_time = start_time
-        self.temp_log =  temp_log_path
-        self.input_information = input_information
-        self.video = cv2.VideoCapture(source)
+        super().__init__()
+        self.video = cv2.VideoCapture(self.source)
         self.model = Model(utilsdir=c.UTILSDIR, modeldir=c.MODELDIR, weights=c.WEIGHTS, cfg=c.CFG, labelsdir=c.LABELSDIR, coco=c.COCONAMES)
-        self.distance = distance
         self.active_thread_count = 0
         self.p_time = 0
         self.frame_counter = 0
@@ -56,7 +73,7 @@ class Pipeline:
         '''
         return (((args[2] + args[0])/2), args[3])
     
-    def rect_detection_box(self, *args):
+    def rect_detection_box(self, *args) -> None:
         '''
         Bounding Box (bbox)
         -------------------
@@ -70,7 +87,7 @@ class Pipeline:
         '''
         cv2.rectangle(args[0], (args[1], args[2]), (args[3], args[4]), args[5], 1)
     
-    def cross_line(self, xmin: int, ymin: int, xmax: int, ymax: int, color: tuple):
+    def cross_line(self, xmin: int, ymin: int, xmax: int, ymax: int, color: tuple) -> None:
         '''
         Use cross line as detection output instead of boxes: dev_process(trial)
         -----------------------------------------------------------------------
@@ -83,7 +100,7 @@ class Pipeline:
         cv2.line(self.frame, (int(xmin), int(yc)), (int(xmax), int(yc)), color, 1, cv2.LINE_AA)
         cv2.line(self.frame, (int(xc), int(ymin)), (int(xc), int(ymax)), color, 1, cv2.LINE_AA)
     
-    def draw_line_distance_between_bbox(self, iteration: int, centroid: tuple, centroids: list):
+    def draw_line_distance_between_bbox(self, iteration: int, centroid: tuple, centroids: list) -> None:
         '''
         Display line between violated bbox
         ----------------------------------
@@ -92,7 +109,7 @@ class Pipeline:
         cv2.circle(self.frame, (int(centroids[iteration][0]), int(centroids[iteration][1])), 3, c.ORANGE, -1, cv2.LINE_AA)
         cv2.circle(self.frame, (int(centroid[0]), int(centroid[1])), 3, c.ORANGE, -1, cv2.LINE_AA)
 
-    def information_display(self):
+    def information_display(self) -> None:
         '''
         Display violation detection information
         ---------------------------------------
@@ -121,7 +138,7 @@ class Pipeline:
         self.p_time = self.c_time
         return int(fps)
 
-    def generate_chart(self):
+    def generate_chart(self) -> None:
         '''
         Dashboard
         ---------
@@ -132,7 +149,7 @@ class Pipeline:
         plt.savefig(c.DASHBOARD, transparent=True, dpi=700)
         plt.close()
 
-    def generate_logging(self) -> json:
+    def generate_logging(self) -> None:
         '''
         Generate logging for the video
         ------------------------------
@@ -190,19 +207,19 @@ class Pipeline:
     def __str__(self) -> str:
         return f'Output Data =>\n{self.show_logging()}\nHardware usage =>\n{self.show_usage()}'
 
-class App(Pipeline):
+class App(ProgramFeatures):
     '''
     Social Distancing Violation System SODV
     =======================================
     A camera tests program to identifie persons who are not adhering to COVID social distancing measures
     '''
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.net, self.layer_names, _ = self.model.network, self.model.layer_names, self.model.classes
         self.window_name = "SODV: Social Distancing Violation System"
         self.main()
 
-    def main(self):
+    def main(self) -> None:
         while (self.video.isOpened()):
             self.high_counter, self.low_counter = 0, 0
             centroids = list()
@@ -361,7 +378,7 @@ class App(Pipeline):
             if cv2.waitKey(1) & 0xFF == ord('q') or cv2.getWindowProperty(self.window_name, cv2.WND_PROP_VISIBLE) < 1:
                 break
 
-    def __del__(self):
+    def __del__(self) -> None:
         self.video.release()
         cv2.destroyAllWindows()
 

@@ -1,24 +1,34 @@
 import json
 import os
 
-class Initilization:
-    def __init__(self):
-        self.json_path = os.path.join(os.getcwd(), 'temp', 'logging.json')
-        self.main = self.init_json()
+class LoadJSONFromDisk:
     
-    def init_json(self):
+    def __init__(self) -> None:
+        self.json_path = os.path.join(os.getcwd(), 'temp', 'logging.json')
+    
+    def load_json(self) -> None:
         with open(self.json_path, 'r') as fileIn:
-            loaded = json.load(fileIn)
-            loaded['data'] = list()
-            loaded.update(loaded['data'])
-        try:
-            with open(self.json_path, 'w') as fileOut:
-                json.dump(loaded, fileOut, sort_keys=True)
-        except IOError as e:
-            return e
+            self.loaded = json.load(fileIn)
+    
+    def empty_json(self) -> None:
+        self.loaded['data'] = list()
+        self.loaded.update(self.loaded['data'])
+    
+    def update_json(self) -> None:
+        with open(self.json_path, 'w') as fileOut:
+            json.dump(self.loaded, fileOut, sort_keys=True)
 
-    def __str__(self):
-        return f'{self.main}'
+    def __str__(self) -> str:
+        return f'[STATUS] Refreshing logging info'
+
+class Initilization(LoadJSONFromDisk):
+    def __init__(self) -> None:
+        super().__init__()
+
+        self.load_json()
+        self.empty_json()
+        self.update_json()
+        print(self.__str__())
 
 if __name__ == '__main__':
     Initilization()
