@@ -5,7 +5,7 @@ class LoadModelFromDisk:
     '''
     Loading weights and configuration file
     ======================================
-    - param: kwargs : (UTILSDIR, MODELDIR, WEIGHTS, CFG, COCONAMES)
+    - param: **kwargs : (UTILSDIR, MODELDIR, WEIGHTS, CFG, COCONAMES)
     1. UTILSDIR    : utils folder
     2. MODELDIR    : model folder located in utils folder
     3. WEIGHTS     : YOLOv3 weights file located in model folder

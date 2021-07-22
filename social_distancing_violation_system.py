@@ -52,40 +52,39 @@ class ProgramFeatures(LoadInfoFromDisk):
         super().__init__()
         self.video = cv2.VideoCapture(self.source)
         self.model = Model(utilsdir=c.UTILSDIR, modeldir=c.MODELDIR, weights=c.WEIGHTS, cfg=c.CFG, labelsdir=c.LABELSDIR, coco=c.COCONAMES)
-        self.active_thread_count = 0
+        self.active_thread_count = None
         self.p_time = 0
         self.frame_counter = 0
 
-    def calculate_centroid(self, *args) -> tuple:
+    def calculate_centroid(self, *axis: int) -> tuple:
         '''
         Getting the center point of ground plane for the bounding box (bbox)
         --------------------------------------------------------------------
-        - param : args : (xmin, ymin, xmax, ymax)
-        - xmin : x-axis minimum value
-        - ymin : y-axis minimum value
-        - xmax : x-axis maximum value
-        - ymax : y-axis maximum value
+        - param : *axis : (xmin_pre_process, ymin_pre_process, xmax_pre_process, ymax_pre_process)
+        - xmin_pre_process : x-axis minimum value
+        - ymin_pre_process : y-axis minimum value
+        - xmax_pre_process : x-axis maximum value
+        - ymax_pre_process : y-axis maximum value
 
         - return value : C(x,y), the center of bounding box ground plane 
 
         - To return bbox center point: 
-        - return (((args[2] + args[0])/2), ((args[3] + args[1])/2))
+        - return (((axis[2] + axis[0])/2), ((axis[3] + axis[1])/2))
         '''
-        return (((args[2] + args[0])/2), args[3])
+        return (((axis[2] + axis[0])/2), axis[3])
     
-    def rect_detection_box(self, *args) -> None:
+    def rect_detection_box(self, color: tuple, *axis: int) -> None:
         '''
         Bounding Box (bbox)
         -------------------
-        - param : args : (frame, xmin, ymin, xmax, ymax, color)
-        - frame : continuos frame stream
+        - param : color, *args : (color, xmin, ymin, xmax, ymax)
+        - color : color for the bounding box
         - xmin  : x-axis minimum value
         - ymin  : y-axis minimum value
         - xmax  : x-axis maximum value
         - ymax  : y-axis maximum value
-        - color : color for the bounding box
         '''
-        cv2.rectangle(args[0], (args[1], args[2]), (args[3], args[4]), args[5], 1)
+        cv2.rectangle(self.frame, (axis[0], axis[1]), (axis[2], axis[3]), color, 1)
     
     def cross_line(self, xmin: int, ymin: int, xmax: int, ymax: int, color: tuple) -> None:
         '''
@@ -94,20 +93,30 @@ class ProgramFeatures(LoadInfoFromDisk):
         - horizontal = s(xmin, yc), e(xmax, yc)
         - verticle = s(xc, ymin), e(xc, ymax)
         '''
-        xc = (xmin+xmax)/2
-        yc = (ymin+ymax)/2
+        xcenter = (xmin + xmax)/2
+        ycenter = (ymin + ymax)/2
 
-        cv2.line(self.frame, (int(xmin), int(yc)), (int(xmax), int(yc)), color, 1, cv2.LINE_AA)
-        cv2.line(self.frame, (int(xc), int(ymin)), (int(xc), int(ymax)), color, 1, cv2.LINE_AA)
+        cv2.line(self.frame, (int(xmin), int(ycenter)), (int(xmax), int(ycenter)), color, 1, cv2.LINE_AA)
+        cv2.line(self.frame, (int(xcenter), int(ymin)), (int(xcenter), int(ymax)), color, 1, cv2.LINE_AA)
     
-    def draw_line_distance_between_bbox(self, iteration: int, centroid: tuple, centroids: list) -> None:
+    def draw_line_distance_between_bbox(self, centroid_new: tuple, centroid_old: tuple) -> None:
         '''
         Display line between violated bbox
         ----------------------------------
         '''
-        cv2.line(self.frame, (int(centroids[iteration][0]), int(centroids[iteration][1])), (int(centroid[0]), int(centroid[1])), c.YELLOW, 1, cv2.LINE_AA)
-        cv2.circle(self.frame, (int(centroids[iteration][0]), int(centroids[iteration][1])), 3, c.ORANGE, -1, cv2.LINE_AA)
-        cv2.circle(self.frame, (int(centroid[0]), int(centroid[1])), 3, c.ORANGE, -1, cv2.LINE_AA)
+        cv2.line(self.frame, (int(centroid_new[0]), int(centroid_new[1])), (int(centroid_old[0]), int(centroid_old[1])), c.YELLOW, 1, cv2.LINE_AA)
+        cv2.circle(self.frame, (int(centroid_new[0]), int(centroid_new[1])), 3, c.ORANGE, -1, cv2.LINE_AA)
+        cv2.circle(self.frame, (int(centroid_old[0]), int(centroid_old[1])), 3, c.ORANGE, -1, cv2.LINE_AA)
+
+    def status_display(self, label: str, xmin: int, ymin: int, **color: tuple) -> None:
+        '''
+        Display violation status on top of bbox
+        ---------------------------------------
+        '''
+        label_size, base_line = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
+        ylabel = max(ymin, label_size[1])
+        cv2.rectangle(self.frame, (xmin, ylabel - label_size[1]), (xmin + label_size[0], ymin + base_line), color['background'], cv2.FILLED)
+        cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, color['font'], 1, cv2.LINE_AA)
 
     def information_display(self) -> None:
         '''
@@ -224,7 +233,7 @@ class App(ProgramFeatures):
             self.high_counter, self.low_counter = 0, 0
             centroids = list()
             detected_bbox_colors = list()
-            detected_bbox = list()
+            detected_bboxes = list()
  
             self.flag, self.frame = self.video.read()
 
@@ -298,9 +307,9 @@ class App(ProgramFeatures):
             Apply non-max suppression (NMS) for the clustered detected object class bbox
             '''
             indexes = cv2.dnn.NMSBoxes(boxes, confidences, c.CONFIDENCE, c.THRESHOLD)
-            for i in range(len(boxes)):
+            for i, box in enumerate(boxes):
                 if i in indexes:
-                    x, y, w, h = boxes[i]
+                    x, y, w, h = box
                     xmin_pre_process = x
                     ymin_pre_process = y
                     xmax_pre_process = (x + w)
@@ -309,28 +318,27 @@ class App(ProgramFeatures):
                     '''
                     Compute the ground plane center point for the bbox
                     '''
-                    centroid = self.calculate_centroid(xmin_pre_process, ymin_pre_process, xmax_pre_process, ymax_pre_process)
-                    detected_bbox.append([xmin_pre_process, ymin_pre_process, xmax_pre_process, ymax_pre_process])
+                    centroid_new = self.calculate_centroid(xmin_pre_process, ymin_pre_process, xmax_pre_process, ymax_pre_process)
+                    detected_bboxes.append([xmin_pre_process, ymin_pre_process, xmax_pre_process, ymax_pre_process])
 
-                    is_violation = False
-                    for j in range (len(centroids)):
+                    is_violation = None
+                    for j, centroid_old in enumerate(centroids):
                         '''
-                        Compare the pair-wise distance for each bbox center point using euclidean distance
+                        Compute the pair-wise distance for each bbox center point using euclidean distance
                         '''
-                        if dst.euclidean([centroids[j][0], centroids[j][1]], [centroid[0], centroid[1]]) <= self.distance:
+                        if dst.euclidean([centroid_new[0], centroid_new[1]], [centroid_old[0], centroid_old[1]]) <= self.distance:
                             detected_bbox_colors[j] = True
                             is_violation = True
-                            self.draw_line_distance_between_bbox(j, centroid, centroids)
+                            self.draw_line_distance_between_bbox(centroid_new, centroid_old)
                             break
-                    centroids.append(centroid)
+                    centroids.append(centroid_new)
                     detected_bbox_colors.append(is_violation)
 
-            for i in range (len(detected_bbox)):
-                xmin = detected_bbox[i][0]
-                ymin = detected_bbox[i][1]
-                xmax = detected_bbox[i][2]
-                ymax = detected_bbox[i][3]
-                self.cross_line(xmin, ymin, xmax, ymax, c.GREY)
+            for i, detected_bbox in enumerate(detected_bboxes):
+                xmin = detected_bbox[0]
+                ymin = detected_bbox[1]
+                xmax = detected_bbox[2]
+                ymax = detected_bbox[3]
 
                 '''
                 Compute the euclidean distance between the pairwise bbox and display the bbox output
@@ -339,24 +347,13 @@ class App(ProgramFeatures):
                 '''
                 if detected_bbox_colors[i]:
                     # self.cross_line(xmin, ymin, xmax, ymax, c.RED)
-                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, c.RED)
-                    label = "high".upper()
-                    label_size, base_line = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
-
-                    ylabel = max(ymin, label_size[1])
-                    cv2.rectangle(self.frame, (xmin, ylabel - label_size[1]),(xmin + label_size[0], ymin + base_line), c.RED, cv2.FILLED)
-                    cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.ORANGE, 1, cv2.LINE_AA)
+                    self.rect_detection_box(c.RED, xmin, ymin, xmax, ymax)
+                    self.status_display("high".upper(), xmin, ymin, font=c.ORANGE, background=c.RED)
                     self.high_counter += 1
-
                 else:
                     # self.cross_line(xmin, ymin, xmax, ymax, c.BLACK)
-                    self.rect_detection_box(self.frame, xmin, ymin, xmax, ymax, c.BLACK)
-                    label = "low".upper()
-                    label_size, base_line = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
-
-                    ylabel = max(ymin, label_size[1])
-                    cv2.rectangle(self.frame, (xmin, ylabel - label_size[1]), (xmin + label_size[0], ymin + base_line), c.BLACK, cv2.FILLED)
-                    cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.GREEN, 1, cv2.LINE_AA)
+                    self.rect_detection_box(c.BLACK, xmin, ymin, xmax, ymax)
+                    self.status_display("low".upper(), xmin, ymin, font=c.GREEN, background=c.BLACK)
                     self.low_counter += 1
                     
             if c.DASHBOARD_FLAG:
@@ -364,8 +361,8 @@ class App(ProgramFeatures):
                 self.dashboard = cv2.imread(c.DASHBOARD)
                 cv2.namedWindow(f'SODV Dashboard: {self.input_information}', cv2.WINDOW_NORMAL)
                 cv2.imshow(f'SODV Dashboard: {self.input_information}', self.dashboard)
-            else:
-                pass
+            else: pass
+
             self.fps = self.generate_fps()
             self.information_display()
             self.frame_counter += 1
