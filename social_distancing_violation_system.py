@@ -1,6 +1,6 @@
 from utils.refresh_logging_data import Initilization
+from config.config import Config as c
 import scipy.spatial.distance as dst
-from config.config import Config
 import matplotlib.pyplot as plt
 from config.model import Model
 import numpy as np
@@ -11,7 +11,6 @@ import json
 import time
 import cv2
 import os
-c = Config()
 
 class LoadInfoFromDisk:
     '''
@@ -21,7 +20,7 @@ class LoadInfoFromDisk:
     def __init__(self) -> None:
         self.temp_log: str = os.path.join(os.getcwd(), 'temp', 'logging.json')
         self.start_time: float = time.perf_counter()
-        self.distance = c.DISTANCE
+        self.distance: float = c.DISTANCE
 
         if c.CAMERA_FLAG:
             self.camera_on()
@@ -51,10 +50,10 @@ class ProgramFeatures(LoadInfoFromDisk):
         Initilization()
         super().__init__()
         self.video = cv2.VideoCapture(self.source)
-        self.model = Model(utilsdir=c.UTILSDIR, modeldir=c.MODELDIR, weights=c.WEIGHTS, cfg=c.CFG, labelsdir=c.LABELSDIR, coco=c.COCONAMES)
-        self.active_thread_count = None
-        self.p_time = 0
-        self.frame_counter = 0
+        self.model = Model(utilsdir=c.UTILSDIR, modeldir=c.MODELDIR, weights=c.WEIGHTS, cfg=c.CFG, labelsdir=c.LABELSDIR, coco=c.COCONAMES, cuda=False)
+        self.active_thread_count: int = None
+        self.p_time: float = 0
+        self.frame_counter: int = 0
 
     def calculate_centroid(self, *axis: int) -> tuple:
         '''
@@ -137,25 +136,34 @@ class ProgramFeatures(LoadInfoFromDisk):
         cv2.putText(self.frame, LINE, (28, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.BLACK, 2, cv2.LINE_AA)
         cv2.putText(self.frame, LOWRISK_TEXT, (60, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.BLUE, 1, cv2.LINE_AA)
     
+    def dashboard_display(self) -> None:
+        '''
+        Display dashboard
+        -----------------
+        '''
+        self.dashboard = cv2.imread(c.DASHBOARD_PATH)
+        cv2.namedWindow(f'SODV Dashboard: {self.input_information}', cv2.WINDOW_NORMAL)
+        cv2.imshow(f'SODV Dashboard: {self.input_information}', self.dashboard)
+
     def generate_fps(self) -> int:
         '''
         Frame per second (fps) counter
         ------------------------------
         '''
         self.c_time = time.time()
-        fps = 1/(self.c_time - self.p_time)
+        fps = 1 / (self.c_time - self.p_time)
         self.p_time = self.c_time
         return int(fps)
 
     def generate_chart(self) -> None:
         '''
-        Dashboard
-        ---------
+        Generating chart and save the chart image
+        -----------------------------------------
         '''
         fig, ax = plt.subplots(figsize=(4,4))
         ax.pie([self.high_counter, self.low_counter], labels = [f'High risk: {self.high_counter}', f'Low risk: {self.low_counter}'], colors=[c.RED_DB, c.GREEN_DB])
         ax.legend()
-        plt.savefig(c.DASHBOARD, transparent=True, dpi=700)
+        plt.savefig(c.DASHBOARD_PATH, transparent=True, dpi=700)
         plt.close()
 
     def generate_logging(self) -> None:
@@ -231,9 +239,6 @@ class App(ProgramFeatures):
     def main(self) -> None:
         while (self.video.isOpened()):
             self.high_counter, self.low_counter = 0, 0
-            centroids = list()
-            detected_bbox_colors = list()
-            detected_bboxes = list()
  
             self.flag, self.frame = self.video.read()
 
@@ -265,7 +270,7 @@ class App(ProgramFeatures):
 
             confidences = list()
             boxes = list()
-            height, width, _ = self.frame.shape
+            frame_height, frame_width, _ = self.frame.shape
             for output in layer_outputs:
                 for detection in output:
                     scores = detection[5:]
@@ -281,18 +286,18 @@ class App(ProgramFeatures):
                     '''
                     Get the bbox axis point if the conficence threshold of detected object class is more than 50%
                     '''
-                    if confidence > c.CONFIDENCE:
+                    if confidence > c.MIN_CONFIDENCE:
                         '''
                         Get the bbox center point of detected object class
                         '''
-                        center_x = int(detection[0] * width)
-                        center_y = int(detection[1] * height)
+                        center_x = int(detection[0] * frame_width)
+                        center_y = int(detection[1] * frame_height)
 
                         '''
                         Get the bbox width and height of detected object class
                         '''
-                        bbox_cluster_w = int(detection[2] * width)
-                        bbox_cluster_h = int(detection[3] * height)
+                        bbox_cluster_w = int(detection[2] * frame_width)
+                        bbox_cluster_h = int(detection[3] * frame_height)
 
                         '''
                         Compute the bbox minimum x and y axis point of detected object class
@@ -306,7 +311,10 @@ class App(ProgramFeatures):
             '''
             Apply non-max suppression (NMS) for the clustered detected object class bbox
             '''
-            indexes = cv2.dnn.NMSBoxes(boxes, confidences, c.CONFIDENCE, c.THRESHOLD)
+            centroids = list()
+            detected_bboxes = list()
+            detected_bbox_colors = list()
+            indexes = cv2.dnn.NMSBoxes(boxes, confidences, c.MIN_CONFIDENCE, c.NMS_THRESHOLD)
             for i, box in enumerate(boxes):
                 if i in indexes:
                     x, y, w, h = box
@@ -358,9 +366,7 @@ class App(ProgramFeatures):
                     
             if c.DASHBOARD_FLAG:
                 self.generate_chart()
-                self.dashboard = cv2.imread(c.DASHBOARD)
-                cv2.namedWindow(f'SODV Dashboard: {self.input_information}', cv2.WINDOW_NORMAL)
-                cv2.imshow(f'SODV Dashboard: {self.input_information}', self.dashboard)
+                self.dashboard_display()
             else: pass
 
             self.fps = self.generate_fps()

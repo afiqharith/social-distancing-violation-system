@@ -19,7 +19,7 @@ class LoadJSONFromDisk:
             json.dump(self.loaded, fileOut, sort_keys=True)
 
     def __str__(self) -> str:
-        return f'[STATUS] Refreshing logging info'
+        return f'[INFO] Refreshing logs'
 
 class Initilization(LoadJSONFromDisk):
     def __init__(self) -> None:
