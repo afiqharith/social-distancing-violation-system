@@ -3,8 +3,8 @@ import os
 
 class LoadModelFromDisk:
     '''
-    Loading weights and configuration file
-    ======================================
+    Load weights and configuration file
+    ===================================
     - param: **kwargs : (UTILSDIR, MODELDIR, WEIGHTS, CFG, COCONAMES, CUDA)
     1. UTILSDIR    : utils folder
     2. MODELDIR    : model folder located in utils folder
@@ -21,36 +21,36 @@ class LoadModelFromDisk:
 
     def get_dnn_backend_and_target(self, kwargs: dict) -> bool:
         '''
-        Getting DNN backend and target to utilize CPU/CUDA
-        --------------------------------------------------
+        Get DNN backend and target to utilize CPU/CUDA
+        ----------------------------------------------
         '''
         return kwargs['cuda']
 
     def get_weight_path(self, kwargs: dict) -> str:
         '''
-        Getting YOLO weights file path
-        ------------------------------
+        Get YOLO weights file path
+        --------------------------
         '''
         return os.path.join(os.getcwd(), kwargs['utilsdir'], kwargs['modeldir'], kwargs['weights'])
     
     def get_config_path(self, kwargs: dict) -> str:
         '''
-        Getting YOLO config file path
-        ------------------------------
+        Get YOLO config file path
+        -------------------------
         '''
         return os.path.join(os.getcwd(), kwargs['utilsdir'], kwargs['modeldir'], kwargs['cfg'])
     
     def get_coconames_path(self, kwargs: dict) -> str:
         '''
-        Getting COCO object names file path
-        -----------------------------------
+        Get COCO object names file path
+        -------------------------------
         '''
         return os.path.join(os.getcwd(), kwargs['utilsdir'], kwargs['labelsdir'], kwargs['coco'])
     
     def get_object_classes(self) -> list:
         '''
-        Getting COCO object names file path
-        -----------------------------------
+        Gett COCO object names file path
+        --------------------------------
         '''
         with open(self.COCO_NAMEPATH, "r") as f:
             class_list = [line.strip() for line in f.readlines()]
@@ -58,16 +58,16 @@ class LoadModelFromDisk:
     
     def get_network_layer(self) -> object:
         '''
-        Loading weights and configuration file
-        --------------------------------------
+        Load weights and configuration file
+        -----------------------------------
         '''
         print(f"[INFO] {self.__str__()} loaded successfully")
         return cv2.dnn.readNet(self.WEIGHTSPATH, self.CFGPATH)
     
     def get_layer_names(self) -> list:
         '''
-        Getting list of layers name
-        ----------------------------
+        Get list of layers name
+        -----------------------
         '''
         pre_layer_names = self.network.getLayerNames()
         return [pre_layer_names[i[0] - 1] for i in self.network.getUnconnectedOutLayers()]
