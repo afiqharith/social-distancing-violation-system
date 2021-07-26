@@ -1,13 +1,13 @@
 import cv2
 
-def use_ellipse(*args):
+def use_ellipse(*axis):
     '''
     Ellipse Implementation
     ----------------------
-    - param : args : (frame, xmin, ymin, xmax, ymax, color)
+    - param : *axis : (frame, xmin, ymin, xmax, ymax, color)
     - frame : continuos frame stream
     - ellipse: image, ((center_coordinates), (axesLength), angle), startAngle, endAngle, color, thickness
     '''
-    axes_1 = (((args[3] + args[1])/2) + args[1])/2
-    axes_2 = (((args[4] + args[2])/2) + args[2])/2
-    cv2.ellipse(args[0], ((((args[3] + args[1])/2), args[4]), (axes_1,axes_2), 285), args[5], 2)
+    axes_1 = (((axis[3] + axis[1])/2) + axis[1])/2
+    axes_2 = (((axis[4] + axis[2])/2) + axis[2])/2
+    cv2.ellipse(axis[0], ((((axis[3] + axis[1])/2), axis[4]), (axes_1,axes_2), 285), axis[5], 2)
