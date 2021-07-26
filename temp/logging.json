@@ -1,1 +1,328 @@
-{"data": [{"frames": 1, "high_risk": 4, "low_risk": 8, "time": "26-07-2021 10:47:40PM"}, {"frames": 5, "high_risk": 2, "low_risk": 9, "time": "26-07-2021 10:47:44PM"}, {"frames": 10, "high_risk": 2, "low_risk": 9, "time": "26-07-2021 10:47:49PM"}, {"frames": 15, "high_risk": 4, "low_risk": 8, "time": "26-07-2021 10:47:54PM"}, {"frames": 20, "high_risk": 6, "low_risk": 11, "time": "26-07-2021 10:47:58PM"}, {"frames": 25, "high_risk": 5, "low_risk": 13, "time": "26-07-2021 10:48:02PM"}, {"frames": 30, "high_risk": 4, "low_risk": 13, "time": "26-07-2021 10:48:07PM"}, {"frames": 35, "high_risk": 6, "low_risk": 12, "time": "26-07-2021 10:48:11PM"}, {"frames": 40, "high_risk": 4, "low_risk": 13, "time": "26-07-2021 10:48:15PM"}, {"frames": 45, "high_risk": 5, "low_risk": 14, "time": "26-07-2021 10:48:19PM"}, {"frames": 50, "high_risk": 7, "low_risk": 13, "time": "26-07-2021 10:48:23PM"}, {"frames": 55, "high_risk": 9, "low_risk": 12, "time": "26-07-2021 10:48:27PM"}, {"frames": 60, "high_risk": 9, "low_risk": 11, "time": "26-07-2021 10:48:31PM"}, {"frames": 65, "high_risk": 8, "low_risk": 11, "time": "26-07-2021 10:48:35PM"}, {"frames": 70, "high_risk": 6, "low_risk": 13, "time": "26-07-2021 10:48:40PM"}, {"frames": 75, "high_risk": 8, "low_risk": 11, "time": "26-07-2021 10:48:45PM"}, {"frames": 80, "high_risk": 4, "low_risk": 14, "time": "26-07-2021 10:48:50PM"}, {"frames": 85, "high_risk": 2, "low_risk": 16, "time": "26-07-2021 10:48:54PM"}, {"frames": 90, "high_risk": 4, "low_risk": 14, "time": "26-07-2021 10:48:59PM"}, {"frames": 95, "high_risk": 4, "low_risk": 13, "time": "26-07-2021 10:49:03PM"}, {"frames": 100, "high_risk": 6, "low_risk": 14, "time": "26-07-2021 10:49:08PM"}, {"frames": 105, "high_risk": 6, "low_risk": 12, "time": "26-07-2021 10:49:12PM"}, {"frames": 110, "high_risk": 4, "low_risk": 15, "time": "26-07-2021 10:49:18PM"}, {"frames": 115, "high_risk": 8, "low_risk": 12, "time": "26-07-2021 10:49:22PM"}, {"frames": 120, "high_risk": 8, "low_risk": 12, "time": "26-07-2021 10:49:28PM"}, {"frames": 125, "high_risk": 11, "low_risk": 9, "time": "26-07-2021 10:49:33PM"}, {"frames": 130, "high_risk": 8, "low_risk": 11, "time": "26-07-2021 10:49:37PM"}, {"frames": 135, "high_risk": 8, "low_risk": 10, "time": "26-07-2021 10:49:42PM"}, {"frames": 140, "high_risk": 9, "low_risk": 11, "time": "26-07-2021 10:49:46PM"}, {"frames": 145, "high_risk": 11, "low_risk": 9, "time": "26-07-2021 10:49:50PM"}, {"frames": 150, "high_risk": 10, "low_risk": 9, "time": "26-07-2021 10:49:55PM"}, {"frames": 155, "high_risk": 4, "low_risk": 13, "time": "26-07-2021 10:50:00PM"}, {"frames": 160, "high_risk": 9, "low_risk": 11, "time": "26-07-2021 10:50:05PM"}, {"frames": 165, "high_risk": 10, "low_risk": 8, "time": "26-07-2021 10:50:09PM"}, {"frames": 170, "high_risk": 4, "low_risk": 11, "time": "26-07-2021 10:50:14PM"}, {"frames": 175, "high_risk": 4, "low_risk": 8, "time": "26-07-2021 10:50:18PM"}, {"frames": 180, "high_risk": 4, "low_risk": 8, "time": "26-07-2021 10:50:23PM"}, {"frames": 185, "high_risk": 8, "low_risk": 9, "time": "26-07-2021 10:50:27PM"}, {"frames": 190, "high_risk": 10, "low_risk": 8, "time": "26-07-2021 10:50:32PM"}, {"frames": 195, "high_risk": 8, "low_risk": 9, "time": "26-07-2021 10:50:36PM"}, {"frames": 200, "high_risk": 8, "low_risk": 7, "time": "26-07-2021 10:50:41PM"}, {"frames": 205, "high_risk": 6, "low_risk": 8, "time": "26-07-2021 10:50:45PM"}, {"frames": 210, "high_risk": 6, "low_risk": 10, "time": "26-07-2021 10:50:49PM"}, {"frames": 215, "high_risk": 5, "low_risk": 12, "time": "26-07-2021 10:50:54PM"}, {"frames": 220, "high_risk": 6, "low_risk": 12, "time": "26-07-2021 10:50:58PM"}, {"frames": 225, "high_risk": 5, "low_risk": 12, "time": "26-07-2021 10:51:03PM"}, {"frames": 230, "high_risk": 5, "low_risk": 12, "time": "26-07-2021 10:51:07PM"}, {"frames": 235, "high_risk": 6, "low_risk": 9, "time": "26-07-2021 10:51:12PM"}, {"frames": 240, "high_risk": 9, "low_risk": 8, "time": "26-07-2021 10:51:17PM"}, {"frames": 245, "high_risk": 4, "low_risk": 12, "time": "26-07-2021 10:51:22PM"}, {"frames": 250, "high_risk": 4, "low_risk": 12, "time": "26-07-2021 10:51:26PM"}, {"frames": 255, "high_risk": 7, "low_risk": 11, "time": "26-07-2021 10:51:31PM"}, {"frames": 260, "high_risk": 8, "low_risk": 10, "time": "26-07-2021 10:51:35PM"}, {"frames": 265, "high_risk": 9, "low_risk": 8, "time": "26-07-2021 10:51:39PM"}]}
+{
+	"data": [
+		{
+			"frames": 1,
+			"high_risk": 4,
+			"low_risk": 8,
+			"time": "26-07-2021 10:47:40PM"
+		},
+		{
+			"frames": 5,
+			"high_risk": 2,
+			"low_risk": 9,
+			"time": "26-07-2021 10:47:44PM"
+		},
+		{
+			"frames": 10,
+			"high_risk": 2,
+			"low_risk": 9,
+			"time": "26-07-2021 10:47:49PM"
+		},
+		{
+			"frames": 15,
+			"high_risk": 4,
+			"low_risk": 8,
+			"time": "26-07-2021 10:47:54PM"
+		},
+		{
+			"frames": 20,
+			"high_risk": 6,
+			"low_risk": 11,
+			"time": "26-07-2021 10:47:58PM"
+		},
+		{
+			"frames": 25,
+			"high_risk": 5,
+			"low_risk": 13,
+			"time": "26-07-2021 10:48:02PM"
+		},
+		{
+			"frames": 30,
+			"high_risk": 4,
+			"low_risk": 13,
+			"time": "26-07-2021 10:48:07PM"
+		},
+		{
+			"frames": 35,
+			"high_risk": 6,
+			"low_risk": 12,
+			"time": "26-07-2021 10:48:11PM"
+		},
+		{
+			"frames": 40,
+			"high_risk": 4,
+			"low_risk": 13,
+			"time": "26-07-2021 10:48:15PM"
+		},
+		{
+			"frames": 45,
+			"high_risk": 5,
+			"low_risk": 14,
+			"time": "26-07-2021 10:48:19PM"
+		},
+		{
+			"frames": 50,
+			"high_risk": 7,
+			"low_risk": 13,
+			"time": "26-07-2021 10:48:23PM"
+		},
+		{
+			"frames": 55,
+			"high_risk": 9,
+			"low_risk": 12,
+			"time": "26-07-2021 10:48:27PM"
+		},
+		{
+			"frames": 60,
+			"high_risk": 9,
+			"low_risk": 11,
+			"time": "26-07-2021 10:48:31PM"
+		},
+		{
+			"frames": 65,
+			"high_risk": 8,
+			"low_risk": 11,
+			"time": "26-07-2021 10:48:35PM"
+		},
+		{
+			"frames": 70,
+			"high_risk": 6,
+			"low_risk": 13,
+			"time": "26-07-2021 10:48:40PM"
+		},
+		{
+			"frames": 75,
+			"high_risk": 8,
+			"low_risk": 11,
+			"time": "26-07-2021 10:48:45PM"
+		},
+		{
+			"frames": 80,
+			"high_risk": 4,
+			"low_risk": 14,
+			"time": "26-07-2021 10:48:50PM"
+		},
+		{
+			"frames": 85,
+			"high_risk": 2,
+			"low_risk": 16,
+			"time": "26-07-2021 10:48:54PM"
+		},
+		{
+			"frames": 90,
+			"high_risk": 4,
+			"low_risk": 14,
+			"time": "26-07-2021 10:48:59PM"
+		},
+		{
+			"frames": 95,
+			"high_risk": 4,
+			"low_risk": 13,
+			"time": "26-07-2021 10:49:03PM"
+		},
+		{
+			"frames": 100,
+			"high_risk": 6,
+			"low_risk": 14,
+			"time": "26-07-2021 10:49:08PM"
+		},
+		{
+			"frames": 105,
+			"high_risk": 6,
+			"low_risk": 12,
+			"time": "26-07-2021 10:49:12PM"
+		},
+		{
+			"frames": 110,
+			"high_risk": 4,
+			"low_risk": 15,
+			"time": "26-07-2021 10:49:18PM"
+		},
+		{
+			"frames": 115,
+			"high_risk": 8,
+			"low_risk": 12,
+			"time": "26-07-2021 10:49:22PM"
+		},
+		{
+			"frames": 120,
+			"high_risk": 8,
+			"low_risk": 12,
+			"time": "26-07-2021 10:49:28PM"
+		},
+		{
+			"frames": 125,
+			"high_risk": 11,
+			"low_risk": 9,
+			"time": "26-07-2021 10:49:33PM"
+		},
+		{
+			"frames": 130,
+			"high_risk": 8,
+			"low_risk": 11,
+			"time": "26-07-2021 10:49:37PM"
+		},
+		{
+			"frames": 135,
+			"high_risk": 8,
+			"low_risk": 10,
+			"time": "26-07-2021 10:49:42PM"
+		},
+		{
+			"frames": 140,
+			"high_risk": 9,
+			"low_risk": 11,
+			"time": "26-07-2021 10:49:46PM"
+		},
+		{
+			"frames": 145,
+			"high_risk": 11,
+			"low_risk": 9,
+			"time": "26-07-2021 10:49:50PM"
+		},
+		{
+			"frames": 150,
+			"high_risk": 10,
+			"low_risk": 9,
+			"time": "26-07-2021 10:49:55PM"
+		},
+		{
+			"frames": 155,
+			"high_risk": 4,
+			"low_risk": 13,
+			"time": "26-07-2021 10:50:00PM"
+		},
+		{
+			"frames": 160,
+			"high_risk": 9,
+			"low_risk": 11,
+			"time": "26-07-2021 10:50:05PM"
+		},
+		{
+			"frames": 165,
+			"high_risk": 10,
+			"low_risk": 8,
+			"time": "26-07-2021 10:50:09PM"
+		},
+		{
+			"frames": 170,
+			"high_risk": 4,
+			"low_risk": 11,
+			"time": "26-07-2021 10:50:14PM"
+		},
+		{
+			"frames": 175,
+			"high_risk": 4,
+			"low_risk": 8,
+			"time": "26-07-2021 10:50:18PM"
+		},
+		{
+			"frames": 180,
+			"high_risk": 4,
+			"low_risk": 8,
+			"time": "26-07-2021 10:50:23PM"
+		},
+		{
+			"frames": 185,
+			"high_risk": 8,
+			"low_risk": 9,
+			"time": "26-07-2021 10:50:27PM"
+		},
+		{
+			"frames": 190,
+			"high_risk": 10,
+			"low_risk": 8,
+			"time": "26-07-2021 10:50:32PM"
+		},
+		{
+			"frames": 195,
+			"high_risk": 8,
+			"low_risk": 9,
+			"time": "26-07-2021 10:50:36PM"
+		},
+		{
+			"frames": 200,
+			"high_risk": 8,
+			"low_risk": 7,
+			"time": "26-07-2021 10:50:41PM"
+		},
+		{
+			"frames": 205,
+			"high_risk": 6,
+			"low_risk": 8,
+			"time": "26-07-2021 10:50:45PM"
+		},
+		{
+			"frames": 210,
+			"high_risk": 6,
+			"low_risk": 10,
+			"time": "26-07-2021 10:50:49PM"
+		},
+		{
+			"frames": 215,
+			"high_risk": 5,
+			"low_risk": 12,
+			"time": "26-07-2021 10:50:54PM"
+		},
+		{
+			"frames": 220,
+			"high_risk": 6,
+			"low_risk": 12,
+			"time": "26-07-2021 10:50:58PM"
+		},
+		{
+			"frames": 225,
+			"high_risk": 5,
+			"low_risk": 12,
+			"time": "26-07-2021 10:51:03PM"
+		},
+		{
+			"frames": 230,
+			"high_risk": 5,
+			"low_risk": 12,
+			"time": "26-07-2021 10:51:07PM"
+		},
+		{
+			"frames": 235,
+			"high_risk": 6,
+			"low_risk": 9,
+			"time": "26-07-2021 10:51:12PM"
+		},
+		{
+			"frames": 240,
+			"high_risk": 9,
+			"low_risk": 8,
+			"time": "26-07-2021 10:51:17PM"
+		},
+		{
+			"frames": 245,
+			"high_risk": 4,
+			"low_risk": 12,
+			"time": "26-07-2021 10:51:22PM"
+		},
+		{
+			"frames": 250,
+			"high_risk": 4,
+			"low_risk": 12,
+			"time": "26-07-2021 10:51:26PM"
+		},
+		{
+			"frames": 255,
+			"high_risk": 7,
+			"low_risk": 11,
+			"time": "26-07-2021 10:51:31PM"
+		},
+		{
+			"frames": 260,
+			"high_risk": 8,
+			"low_risk": 10,
+			"time": "26-07-2021 10:51:35PM"
+		},
+		{
+			"frames": 265,
+			"high_risk": 9,
+			"low_risk": 8,
+			"time": "26-07-2021 10:51:39PM"
+		}
+	]
+}
