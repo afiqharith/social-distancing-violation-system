@@ -14,8 +14,8 @@ import os
 
 class LoadInfoFromDisk:
     '''
-    Loading all informations from disk
-    ==================================
+    Load all informations from disk
+    ===============================
     '''
     def __init__(self) -> None:
         self.temp_log: str = os.path.join(os.getcwd(), 'temp', 'logging.json')
@@ -29,14 +29,14 @@ class LoadInfoFromDisk:
 
     def camera_on(self) -> None:
         '''
-        Get the camera ID for the camera stream
+        Get camera ID for the camera stream
         '''
         self.source = c.CAMERA_ID
         self.input_information = f'camera_id_{c.CAMERA_ID}'.upper()
     
     def camera_off(self) -> None:
         '''
-        Get the path for the video stream
+        Get path for the video stream
         '''
         self.source = os.path.join(os.getcwd(), c.FOLDERNAME, c.VIDEONAME)
         self.input_information = c.VIDEONAME[:-4].upper()
@@ -57,8 +57,8 @@ class ProgramFeatures(LoadInfoFromDisk):
 
     def calculate_centroid(self, *axis: int) -> tuple:
         '''
-        Getting the center point of ground plane for the bounding box (bbox)
-        --------------------------------------------------------------------
+        Get center point of ground plane for the bounding box (bbox)
+        ------------------------------------------------------------
         - param : *axis : (xmin_pre_process, ymin_pre_process, xmax_pre_process, ymax_pre_process)
         - xmin_pre_process : x-axis minimum value
         - ymin_pre_process : y-axis minimum value
@@ -87,8 +87,8 @@ class ProgramFeatures(LoadInfoFromDisk):
     
     def cross_line(self, xmin: int, ymin: int, xmax: int, ymax: int, color: tuple) -> None:
         '''
-        Use cross line as detection output instead of boxes: dev_process(trial)
-        -----------------------------------------------------------------------
+        Use cross line as detection output instead of boxes
+        ---------------------------------------------------
         - horizontal = s(xmin, yc), e(xmax, yc)
         - verticle = s(xc, ymin), e(xc, ymax)
         '''
@@ -157,8 +157,8 @@ class ProgramFeatures(LoadInfoFromDisk):
 
     def generate_chart(self) -> None:
         '''
-        Generating chart and save the chart image
-        -----------------------------------------
+        Generate and save chart as image
+        --------------------------------
         '''
         fig, ax = plt.subplots(figsize=(4,4))
         ax.pie([self.high_counter, self.low_counter], labels = [f'High risk: {self.high_counter}', f'Low risk: {self.low_counter}'], colors=[c.RED_DB, c.GREEN_DB])
@@ -166,10 +166,10 @@ class ProgramFeatures(LoadInfoFromDisk):
         plt.savefig(c.DASHBOARD_PATH, transparent=True, dpi=700)
         plt.close()
 
-    def generate_logging(self) -> None:
+    def generate_program_logs(self) -> None:
         '''
-        Generate logging for the video
-        ------------------------------
+        Generate program logs
+        ---------------------
         '''
         with open(self.temp_log) as file_in:
             loaded = json.load(file_in)
@@ -189,10 +189,10 @@ class ProgramFeatures(LoadInfoFromDisk):
         except IOError as e:
             print(e)
     
-    def show_logging(self) -> str:
+    def show_program_logs(self) -> str:
         '''
-        Display logging for the video after video is finished
-        -----------------------------------------------------
+        Display program logs after program finish executed
+        --------------------------------------------------
         '''
         with open(self.temp_log, 'r') as file_in:
             loaded = json.load(file_in)
@@ -211,18 +211,18 @@ class ProgramFeatures(LoadInfoFromDisk):
             low.append(i['low_risk'])
         return tabulate.tabulate(to_display, headers="keys", tablefmt="pretty")
     
-    def show_usage(self) -> str:
+    def show_thread_usage(self) -> str:
         '''
-        Display thread usage for the video after video is finished
-        ----------------------------------------------------------
+        Display thread utilization after program finish executed
+        --------------------------------------------------------
         '''
         elapsed = time.perf_counter()-self.start_time
         data = {"Active thread used": [self.active_thread_count],
-                "Status": [f'Executed in {elapsed:.2f}s']}
+                "Info": [f'Executed in {elapsed:.2f}s']}
         return tabulate.tabulate(data, headers="keys", tablefmt="pretty")
 
     def __str__(self) -> str:
-        return f'Output Data =>\n{self.show_logging()}\nHardware usage =>\n{self.show_usage()}'
+        return f'Program Logs =>\n{self.show_program_logs()}\nHardware usage =>\n{self.show_thread_usage()}'
 
 class App(ProgramFeatures):
     '''
@@ -262,7 +262,7 @@ class App(ProgramFeatures):
                 break
 
             '''
-            Detecting objects in the resized frame
+            Detect objects in the resized frame
             '''
             blob = cv2.dnn.blobFromImage(self.frame_resized, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
             self.net.setInput(blob)
@@ -373,7 +373,7 @@ class App(ProgramFeatures):
             self.information_display()
             self.frame_counter += 1
             self.log_time = datetime.datetime.now().strftime("%d-%m-%Y %I:%M:%S%p")
-            self.generate_logging()
+            self.generate_program_logs()
 
             cv2.namedWindow(self.window_name, cv2.WINDOW_NORMAL)
             cv2.imshow(self.window_name, self.frame)
