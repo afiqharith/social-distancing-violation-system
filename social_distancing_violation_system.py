@@ -1,8 +1,9 @@
-from utils.refresh_logging_data import Initilization
-from config.config import Config as c
+from utils import RefreshProgramLogs
+from config import Config as c
+from config import Model
+
 import scipy.spatial.distance as dst
 import matplotlib.pyplot as plt
-from config.model import Model
 import numpy as np
 import threading
 import tabulate
@@ -47,7 +48,7 @@ class ProgramFeatures(LoadInfoFromDisk):
     =====================
     '''
     def __init__(self) -> None:
-        Initilization()
+        RefreshProgramLogs()
         super().__init__()
         self.video = cv2.VideoCapture(self.source)
         self.model = Model(utilsdir=c.UTILSDIR, modeldir=c.MODELDIR, weights=c.WEIGHTS, cfg=c.CFG, labelsdir=c.LABELSDIR, coco=c.COCONAMES, cuda=False)
