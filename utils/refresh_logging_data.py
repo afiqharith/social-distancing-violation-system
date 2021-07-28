@@ -21,7 +21,7 @@ class LoadJSONFromDisk:
     def __str__(self) -> str:
         return f'[INFO] Refreshing logs'
 
-class Initilization(LoadJSONFromDisk):
+class RefreshProgramLogs(LoadJSONFromDisk):
     def __init__(self) -> None:
         super().__init__()
 
@@ -31,4 +31,4 @@ class Initilization(LoadJSONFromDisk):
         print(self.__str__())
 
 if __name__ == '__main__':
-    Initilization()
+    RefreshProgramLogs()
