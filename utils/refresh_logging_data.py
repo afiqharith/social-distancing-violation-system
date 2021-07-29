@@ -2,7 +2,6 @@ import json
 import os
 
 class LoadJSONFromDisk:
-    
     def __init__(self) -> None:
         self.json_path = os.path.join(os.getcwd(), 'temp', 'logging.json')
     
@@ -24,11 +23,7 @@ class LoadJSONFromDisk:
 class RefreshProgramLogs(LoadJSONFromDisk):
     def __init__(self) -> None:
         super().__init__()
-
         self.load_json()
         self.empty_json()
         self.update_json()
         print(self.__str__())
-
-if __name__ == '__main__':
-    RefreshProgramLogs()
