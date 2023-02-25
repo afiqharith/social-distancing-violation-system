@@ -9,50 +9,62 @@ class LoadDataFromJson:
         attributes = config.get("attributes")
         color = config.get("color")
 
-class Path(LoadDataFromJson):
+conf = LoadDataFromJson()
+
+class Path:
     '''
     Path variables for the program
     '''
-    UTILSDIR: str = LoadDataFromJson().file['UTILSDIR']
-    MODELDIR: str = LoadDataFromJson().file['MODELDIR']
-    WEIGHTS: str = LoadDataFromJson().file['WEIGHTS']
-    CFG: str = LoadDataFromJson().file['CFG']
-    LABELSDIR: str = LoadDataFromJson().file['LABELSDIR']
-    COCONAMES: str = LoadDataFromJson().file['COCONAMES']
-    DASHBOARD_PATH: str = LoadDataFromJson().file['DASHBOARD_PATH']
-    FOLDERNAME: str = LoadDataFromJson().file['FOLDERNAME']
-    VIDEONAME: str = LoadDataFromJson().file['VIDEONAME']
+    UTILSDIR            = conf.file['UTILSDIR']
+    MODELDIR            = conf.file['MODELDIR']
+    WEIGHTS             = conf.file['WEIGHTS']
+    CFG                 = conf.file['CFG']
+    LABELSDIR           = conf.file['LABELSDIR']
+    COCONAMES           = conf.file['COCONAMES']
+    DASHBOARD_FILENAME  = conf.file['DASHBOARD_FILENAME']
+    FOLDERNAME          = conf.file['FOLDERNAME']
+    VIDEONAME           = conf.file['VIDEONAME']
+    TEMP_DIR            = conf.file['TEMP_DIR']
 
-class Attributes(LoadDataFromJson):
+    CFG_ABS_PATH        = os.path.join(os.getcwd(), UTILSDIR, MODELDIR, CFG)
+    WEIGHT_ABS_PATH     = os.path.join(os.getcwd(), UTILSDIR, MODELDIR, WEIGHTS)
+    LABELS_ABS_PATH     = os.path.join(os.getcwd(), UTILSDIR, LABELSDIR, COCONAMES)
+    DASHBOARD_PATH      = os.path.join(os.getcwd(), TEMP_DIR, DASHBOARD_FILENAME)
+    LOG_PATH            = os.path.join(os.getcwd(), TEMP_DIR, "log.txt")
+
+class Attributes:
     '''
     Attribute variables for the program
     '''
-    CAMERA_FLAG: bool = LoadDataFromJson().attributes['CAMERA_FLAG']
-    CAMERA_ID: int = LoadDataFromJson().attributes['CAMERA_ID']
-    THREAD: bool = LoadDataFromJson().attributes['THREAD']
-    NMS_THRESHOLD: float = LoadDataFromJson().attributes['NMS_THRESHOLD']
-    MIN_CONFIDENCE: float = LoadDataFromJson().attributes['MIN_CONFIDENCE']
-    DASHBOARD_FLAG: bool = LoadDataFromJson().attributes['DASHBOARD_FLAG']
-    LOGGING: bool = LoadDataFromJson().attributes['LOGGING']
-    WIDTH: int = LoadDataFromJson().attributes['WIDTH']
-    HEIGHT: int = LoadDataFromJson().attributes['HEIGHT']
-    DISTANCE: float = LoadDataFromJson().attributes['DISTANCE']
+    CAMERA_FLAG: bool       = conf.attributes['CAMERA_FLAG']
+    CAMERA_ID: int          = conf.attributes['CAMERA_ID']
+    THREAD: bool            = conf.attributes['THREAD']
+    NMS_THRESHOLD: float    = conf.attributes['NMS_THRESHOLD']
+    MIN_CONFIDENCE: float   = conf.attributes['MIN_CONFIDENCE']
+    DASHBOARD_FLAG: bool    = conf.attributes['DASHBOARD_FLAG']
+    LOGGING: bool           = conf.attributes['LOGGING']
+    WIDTH: int              = conf.attributes['WIDTH']
+    HEIGHT: int             = conf.attributes['HEIGHT']
+    DISTANCE: float         = conf.attributes['DISTANCE']
 
-class Colors(LoadDataFromJson):
+class Colors:
     '''
     Color variables for the program
     '''
-    GREEN: list= LoadDataFromJson().color["bgr"]['GREEN']
-    RED: list = LoadDataFromJson().color["bgr"]['RED']
-    YELLOW: list = LoadDataFromJson().color["bgr"]['YELLOW']
-    ORANGE: list = LoadDataFromJson().color["bgr"]['ORANGE']
-    BLUE: list = LoadDataFromJson().color["bgr"]['BLUE']
-    GREY: list = LoadDataFromJson().color["bgr"]['GREY']
-    BLACK: list = LoadDataFromJson().color["bgr"]['BLACK']
-    WHITE: list = LoadDataFromJson().color["bgr"]['WHITE']
-    RED_DB: list = LoadDataFromJson().color["hex"]['RED_DB']
-    GREEN_DB: list = LoadDataFromJson().color["hex"]['GREEN_DB']
+    GREEN: list     = conf.color["bgr"]['GREEN']
+    RED: list       = conf.color["bgr"]['RED']
+    YELLOW: list    = conf.color["bgr"]['YELLOW']
+    ORANGE: list    = conf.color["bgr"]['ORANGE']
+    BLUE: list      = conf.color["bgr"]['BLUE']
+    GREY: list      = conf.color["bgr"]['GREY']
+    BLACK: list     = conf.color["bgr"]['BLACK']
+    WHITE: list     = conf.color["bgr"]['WHITE']
+    RED_DB: list    = conf.color["hex"]['RED_DB']
+    GREEN_DB: list  = conf.color["hex"]['GREEN_DB']
 
 class Config(Path, Attributes, Colors):
     def __init__(self) -> None:
         super().__init__()
+
+if __name__ == "__main__":
+    print(Attributes.CAMERA_FLAG)

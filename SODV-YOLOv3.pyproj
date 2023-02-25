@@ -1,0 +1,360 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5cedb285-db22-4811-bde6-3adb8581e5bf}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>social_distancing_violation_system.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId>MSBuild|.venv|$(MSBuildProjectFullPath)</InterpreterId>
+    <IsWindowsApplication>False</IsWindowsApplication>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="config\config.ini" />
+    <Content Include="config\config.json" />
+    <Content Include="deep_sort\data\helpers\demo.gif" />
+    <Content Include="deep_sort\data\helpers\webcam_demo.gif" />
+    <Content Include="deep_sort\detection.txt" />
+    <Content Include="deep_sort\model_data\coco_classes.txt" />
+    <Content Include="deep_sort\model_data\DeepSORT.png" />
+    <Content Include="deep_sort\model_data\voc_classes.txt" />
+    <Content Include="deep_sort\model_data\yolo_anchors.txt" />
+    <Content Include="deep_sort\requirements-gpu.txt" />
+    <Content Include="deep_sort\requirements.txt" />
+    <Content Include="images\data\frame_0.jpg" />
+    <Content Include="images\data\frame_1.jpg" />
+    <Content Include="images\data\frame_10.jpg" />
+    <Content Include="images\data\frame_100.jpg" />
+    <Content Include="images\data\frame_101.jpg" />
+    <Content Include="images\data\frame_102.jpg" />
+    <Content Include="images\data\frame_103.jpg" />
+    <Content Include="images\data\frame_104.jpg" />
+    <Content Include="images\data\frame_105.jpg" />
+    <Content Include="images\data\frame_106.jpg" />
+    <Content Include="images\data\frame_107.jpg" />
+    <Content Include="images\data\frame_108.jpg" />
+    <Content Include="images\data\frame_109.jpg" />
+    <Content Include="images\data\frame_11.jpg" />
+    <Content Include="images\data\frame_110.jpg" />
+    <Content Include="images\data\frame_111.jpg" />
+    <Content Include="images\data\frame_112.jpg" />
+    <Content Include="images\data\frame_113.jpg" />
+    <Content Include="images\data\frame_114.jpg" />
+    <Content Include="images\data\frame_115.jpg" />
+    <Content Include="images\data\frame_116.jpg" />
+    <Content Include="images\data\frame_117.jpg" />
+    <Content Include="images\data\frame_118.jpg" />
+    <Content Include="images\data\frame_119.jpg" />
+    <Content Include="images\data\frame_12.jpg" />
+    <Content Include="images\data\frame_120.jpg" />
+    <Content Include="images\data\frame_121.jpg" />
+    <Content Include="images\data\frame_122.jpg" />
+    <Content Include="images\data\frame_123.jpg" />
+    <Content Include="images\data\frame_124.jpg" />
+    <Content Include="images\data\frame_125.jpg" />
+    <Content Include="images\data\frame_126.jpg" />
+    <Content Include="images\data\frame_127.jpg" />
+    <Content Include="images\data\frame_128.jpg" />
+    <Content Include="images\data\frame_129.jpg" />
+    <Content Include="images\data\frame_13.jpg" />
+    <Content Include="images\data\frame_130.jpg" />
+    <Content Include="images\data\frame_131.jpg" />
+    <Content Include="images\data\frame_132.jpg" />
+    <Content Include="images\data\frame_133.jpg" />
+    <Content Include="images\data\frame_134.jpg" />
+    <Content Include="images\data\frame_135.jpg" />
+    <Content Include="images\data\frame_136.jpg" />
+    <Content Include="images\data\frame_137.jpg" />
+    <Content Include="images\data\frame_138.jpg" />
+    <Content Include="images\data\frame_139.jpg" />
+    <Content Include="images\data\frame_14.jpg" />
+    <Content Include="images\data\frame_140.jpg" />
+    <Content Include="images\data\frame_141.jpg" />
+    <Content Include="images\data\frame_142.jpg" />
+    <Content Include="images\data\frame_143.jpg" />
+    <Content Include="images\data\frame_144.jpg" />
+    <Content Include="images\data\frame_145.jpg" />
+    <Content Include="images\data\frame_146.jpg" />
+    <Content Include="images\data\frame_147.jpg" />
+    <Content Include="images\data\frame_148.jpg" />
+    <Content Include="images\data\frame_149.jpg" />
+    <Content Include="images\data\frame_15.jpg" />
+    <Content Include="images\data\frame_150.jpg" />
+    <Content Include="images\data\frame_151.jpg" />
+    <Content Include="images\data\frame_152.jpg" />
+    <Content Include="images\data\frame_153.jpg" />
+    <Content Include="images\data\frame_154.jpg" />
+    <Content Include="images\data\frame_155.jpg" />
+    <Content Include="images\data\frame_156.jpg" />
+    <Content Include="images\data\frame_157.jpg" />
+    <Content Include="images\data\frame_158.jpg" />
+    <Content Include="images\data\frame_159.jpg" />
+    <Content Include="images\data\frame_16.jpg" />
+    <Content Include="images\data\frame_160.jpg" />
+    <Content Include="images\data\frame_161.jpg" />
+    <Content Include="images\data\frame_162.jpg" />
+    <Content Include="images\data\frame_163.jpg" />
+    <Content Include="images\data\frame_164.jpg" />
+    <Content Include="images\data\frame_165.jpg" />
+    <Content Include="images\data\frame_166.jpg" />
+    <Content Include="images\data\frame_167.jpg" />
+    <Content Include="images\data\frame_168.jpg" />
+    <Content Include="images\data\frame_169.jpg" />
+    <Content Include="images\data\frame_17.jpg" />
+    <Content Include="images\data\frame_170.jpg" />
+    <Content Include="images\data\frame_171.jpg" />
+    <Content Include="images\data\frame_172.jpg" />
+    <Content Include="images\data\frame_173.jpg" />
+    <Content Include="images\data\frame_174.jpg" />
+    <Content Include="images\data\frame_175.jpg" />
+    <Content Include="images\data\frame_176.jpg" />
+    <Content Include="images\data\frame_177.jpg" />
+    <Content Include="images\data\frame_178.jpg" />
+    <Content Include="images\data\frame_179.jpg" />
+    <Content Include="images\data\frame_18.jpg" />
+    <Content Include="images\data\frame_180.jpg" />
+    <Content Include="images\data\frame_181.jpg" />
+    <Content Include="images\data\frame_182.jpg" />
+    <Content Include="images\data\frame_183.jpg" />
+    <Content Include="images\data\frame_184.jpg" />
+    <Content Include="images\data\frame_185.jpg" />
+    <Content Include="images\data\frame_186.jpg" />
+    <Content Include="images\data\frame_187.jpg" />
+    <Content Include="images\data\frame_188.jpg" />
+    <Content Include="images\data\frame_189.jpg" />
+    <Content Include="images\data\frame_19.jpg" />
+    <Content Include="images\data\frame_190.jpg" />
+    <Content Include="images\data\frame_191.jpg" />
+    <Content Include="images\data\frame_192.jpg" />
+    <Content Include="images\data\frame_193.jpg" />
+    <Content Include="images\data\frame_194.jpg" />
+    <Content Include="images\data\frame_195.jpg" />
+    <Content Include="images\data\frame_196.jpg" />
+    <Content Include="images\data\frame_197.jpg" />
+    <Content Include="images\data\frame_198.jpg" />
+    <Content Include="images\data\frame_199.jpg" />
+    <Content Include="images\data\frame_2.jpg" />
+    <Content Include="images\data\frame_20.jpg" />
+    <Content Include="images\data\frame_200.jpg" />
+    <Content Include="images\data\frame_201.jpg" />
+    <Content Include="images\data\frame_202.jpg" />
+    <Content Include="images\data\frame_203.jpg" />
+    <Content Include="images\data\frame_204.jpg" />
+    <Content Include="images\data\frame_205.jpg" />
+    <Content Include="images\data\frame_206.jpg" />
+    <Content Include="images\data\frame_207.jpg" />
+    <Content Include="images\data\frame_208.jpg" />
+    <Content Include="images\data\frame_209.jpg" />
+    <Content Include="images\data\frame_21.jpg" />
+    <Content Include="images\data\frame_210.jpg" />
+    <Content Include="images\data\frame_211.jpg" />
+    <Content Include="images\data\frame_212.jpg" />
+    <Content Include="images\data\frame_213.jpg" />
+    <Content Include="images\data\frame_214.jpg" />
+    <Content Include="images\data\frame_215.jpg" />
+    <Content Include="images\data\frame_216.jpg" />
+    <Content Include="images\data\frame_217.jpg" />
+    <Content Include="images\data\frame_218.jpg" />
+    <Content Include="images\data\frame_219.jpg" />
+    <Content Include="images\data\frame_22.jpg" />
+    <Content Include="images\data\frame_220.jpg" />
+    <Content Include="images\data\frame_221.jpg" />
+    <Content Include="images\data\frame_222.jpg" />
+    <Content Include="images\data\frame_223.jpg" />
+    <Content Include="images\data\frame_224.jpg" />
+    <Content Include="images\data\frame_225.jpg" />
+    <Content Include="images\data\frame_226.jpg" />
+    <Content Include="images\data\frame_227.jpg" />
+    <Content Include="images\data\frame_228.jpg" />
+    <Content Include="images\data\frame_229.jpg" />
+    <Content Include="images\data\frame_23.jpg" />
+    <Content Include="images\data\frame_230.jpg" />
+    <Content Include="images\data\frame_231.jpg" />
+    <Content Include="images\data\frame_232.jpg" />
+    <Content Include="images\data\frame_233.jpg" />
+    <Content Include="images\data\frame_234.jpg" />
+    <Content Include="images\data\frame_235.jpg" />
+    <Content Include="images\data\frame_236.jpg" />
+    <Content Include="images\data\frame_237.jpg" />
+    <Content Include="images\data\frame_238.jpg" />
+    <Content Include="images\data\frame_239.jpg" />
+    <Content Include="images\data\frame_24.jpg" />
+    <Content Include="images\data\frame_240.jpg" />
+    <Content Include="images\data\frame_241.jpg" />
+    <Content Include="images\data\frame_242.jpg" />
+    <Content Include="images\data\frame_243.jpg" />
+    <Content Include="images\data\frame_244.jpg" />
+    <Content Include="images\data\frame_245.jpg" />
+    <Content Include="images\data\frame_246.jpg" />
+    <Content Include="images\data\frame_247.jpg" />
+    <Content Include="images\data\frame_248.jpg" />
+    <Content Include="images\data\frame_249.jpg" />
+    <Content Include="images\data\frame_25.jpg" />
+    <Content Include="images\data\frame_250.jpg" />
+    <Content Include="images\data\frame_251.jpg" />
+    <Content Include="images\data\frame_252.jpg" />
+    <Content Include="images\data\frame_253.jpg" />
+    <Content Include="images\data\frame_254.jpg" />
+    <Content Include="images\data\frame_255.jpg" />
+    <Content Include="images\data\frame_256.jpg" />
+    <Content Include="images\data\frame_257.jpg" />
+    <Content Include="images\data\frame_258.jpg" />
+    <Content Include="images\data\frame_259.jpg" />
+    <Content Include="images\data\frame_26.jpg" />
+    <Content Include="images\data\frame_260.jpg" />
+    <Content Include="images\data\frame_261.jpg" />
+    <Content Include="images\data\frame_262.jpg" />
+    <Content Include="images\data\frame_263.jpg" />
+    <Content Include="images\data\frame_264.jpg" />
+    <Content Include="images\data\frame_265.jpg" />
+    <Content Include="images\data\frame_27.jpg" />
+    <Content Include="images\data\frame_28.jpg" />
+    <Content Include="images\data\frame_29.jpg" />
+    <Content Include="images\data\frame_3.jpg" />
+    <Content Include="images\data\frame_30.jpg" />
+    <Content Include="images\data\frame_31.jpg" />
+    <Content Include="images\data\frame_32.jpg" />
+    <Content Include="images\data\frame_33.jpg" />
+    <Content Include="images\data\frame_34.jpg" />
+    <Content Include="images\data\frame_35.jpg" />
+    <Content Include="images\data\frame_36.jpg" />
+    <Content Include="images\data\frame_37.jpg" />
+    <Content Include="images\data\frame_38.jpg" />
+    <Content Include="images\data\frame_39.jpg" />
+    <Content Include="images\data\frame_4.jpg" />
+    <Content Include="images\data\frame_40.jpg" />
+    <Content Include="images\data\frame_41.jpg" />
+    <Content Include="images\data\frame_42.jpg" />
+    <Content Include="images\data\frame_43.jpg" />
+    <Content Include="images\data\frame_44.jpg" />
+    <Content Include="images\data\frame_45.jpg" />
+    <Content Include="images\data\frame_46.jpg" />
+    <Content Include="images\data\frame_47.jpg" />
+    <Content Include="images\data\frame_48.jpg" />
+    <Content Include="images\data\frame_49.jpg" />
+    <Content Include="images\data\frame_5.jpg" />
+    <Content Include="images\data\frame_50.jpg" />
+    <Content Include="images\data\frame_51.jpg" />
+    <Content Include="images\data\frame_52.jpg" />
+    <Content Include="images\data\frame_53.jpg" />
+    <Content Include="images\data\frame_54.jpg" />
+    <Content Include="images\data\frame_55.jpg" />
+    <Content Include="images\data\frame_56.jpg" />
+    <Content Include="images\data\frame_57.jpg" />
+    <Content Include="images\data\frame_58.jpg" />
+    <Content Include="images\data\frame_59.jpg" />
+    <Content Include="images\data\frame_6.jpg" />
+    <Content Include="images\data\frame_60.jpg" />
+    <Content Include="images\data\frame_61.jpg" />
+    <Content Include="images\data\frame_62.jpg" />
+    <Content Include="images\data\frame_63.jpg" />
+    <Content Include="images\data\frame_64.jpg" />
+    <Content Include="images\data\frame_65.jpg" />
+    <Content Include="images\data\frame_66.jpg" />
+    <Content Include="images\data\frame_67.jpg" />
+    <Content Include="images\data\frame_68.jpg" />
+    <Content Include="images\data\frame_69.jpg" />
+    <Content Include="images\data\frame_7.jpg" />
+    <Content Include="images\data\frame_70.jpg" />
+    <Content Include="images\data\frame_71.jpg" />
+    <Content Include="images\data\frame_72.jpg" />
+    <Content Include="images\data\frame_73.jpg" />
+    <Content Include="images\data\frame_74.jpg" />
+    <Content Include="images\data\frame_75.jpg" />
+    <Content Include="images\data\frame_76.jpg" />
+    <Content Include="images\data\frame_77.jpg" />
+    <Content Include="images\data\frame_78.jpg" />
+    <Content Include="images\data\frame_79.jpg" />
+    <Content Include="images\data\frame_8.jpg" />
+    <Content Include="images\data\frame_80.jpg" />
+    <Content Include="images\data\frame_81.jpg" />
+    <Content Include="images\data\frame_82.jpg" />
+    <Content Include="images\data\frame_83.jpg" />
+    <Content Include="images\data\frame_84.jpg" />
+    <Content Include="images\data\frame_85.jpg" />
+    <Content Include="images\data\frame_86.jpg" />
+    <Content Include="images\data\frame_87.jpg" />
+    <Content Include="images\data\frame_88.jpg" />
+    <Content Include="images\data\frame_89.jpg" />
+    <Content Include="images\data\frame_9.jpg" />
+    <Content Include="images\data\frame_90.jpg" />
+    <Content Include="images\data\frame_91.jpg" />
+    <Content Include="images\data\frame_92.jpg" />
+    <Content Include="images\data\frame_93.jpg" />
+    <Content Include="images\data\frame_94.jpg" />
+    <Content Include="images\data\frame_95.jpg" />
+    <Content Include="images\data\frame_96.jpg" />
+    <Content Include="images\data\frame_97.jpg" />
+    <Content Include="images\data\frame_98.jpg" />
+    <Content Include="images\data\frame_99.jpg" />
+    <Content Include="images\graph.png" />
+    <Content Include="images\sodv_logo.png" />
+    <Content Include="images\structure.jpg" />
+    <Content Include="images\TownCentre_new.gif" />
+    <Content Include="requirements.txt" />
+    <Content Include="temp\chart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="common\bounding_box.py" />
+    <Compile Include="common\__init__.py" />
+    <Compile Include="config\config.py" />
+    <Compile Include="config\__init__.py" />
+    <Compile Include="deep_sort\deep_sort\detection.py" />
+    <Compile Include="deep_sort\deep_sort\iou_matching.py" />
+    <Compile Include="deep_sort\deep_sort\kalman_filter.py" />
+    <Compile Include="deep_sort\deep_sort\linear_assignment.py" />
+    <Compile Include="deep_sort\deep_sort\nn_matching.py" />
+    <Compile Include="deep_sort\deep_sort\preprocessing.py" />
+    <Compile Include="deep_sort\deep_sort\track.py" />
+    <Compile Include="deep_sort\deep_sort\tracker.py" />
+    <Compile Include="deep_sort\deep_sort\__init__.py" />
+    <Compile Include="deep_sort\load_weights.py" />
+    <Compile Include="deep_sort\object_tracker.py" />
+    <Compile Include="deep_sort\tools\freeze_model.py" />
+    <Compile Include="deep_sort\tools\generate_detections.py" />
+    <Compile Include="deep_sort\yolov3_tf2\batch_norm.py" />
+    <Compile Include="deep_sort\yolov3_tf2\dataset.py" />
+    <Compile Include="deep_sort\yolov3_tf2\models.py" />
+    <Compile Include="deep_sort\yolov3_tf2\utils.py" />
+    <Compile Include="social_distancing_violation_system.py" />
+    <Compile Include="utils\use_ellipse.py" />
+    <Compile Include="utils\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="config" />
+    <Folder Include="deep_sort" />
+    <Folder Include="deep_sort\data\" />
+    <Folder Include="deep_sort\data\helpers" />
+    <Folder Include="deep_sort\deep_sort" />
+    <Folder Include="deep_sort\model_data" />
+    <Folder Include="deep_sort\tools" />
+    <Folder Include="deep_sort\yolov3_tf2" />
+    <Folder Include="images" />
+    <Folder Include="images\data" />
+    <Folder Include="common\" />
+    <Folder Include="temp" />
+    <Folder Include="utils" />
+  </ItemGroup>
+  <ItemGroup>
+    <Interpreter Include=".venv\">
+      <Id>.venv</Id>
+      <Description>.venv (Python 3.8 (64-bit))</Description>
+      <InterpreterPath>Scripts\python.exe</InterpreterPath>
+      <WindowsInterpreterPath>Scripts\pythonw.exe</WindowsInterpreterPath>
+      <Version>3.8</Version>
+      <Architecture>X64</Architecture>
+      <PathEnvironmentVariable>PYTHONPATH</PathEnvironmentVariable>
+    </Interpreter>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>

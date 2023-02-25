@@ -1,392 +1,291 @@
-from utils import RefreshProgramLogs
-from config import Config as c
-from config import Model
-
 import scipy.spatial.distance as dst
 import matplotlib.pyplot as plt
+from common import BoundingBox
+from config import Config
 import numpy as np
 import threading
-import tabulate
-import datetime
-import json
+import logging
 import time
 import cv2
 import os
 
-class LoadInfoFromDisk:
-    '''
-    Load all informations from disk
-    ===============================
-    '''
-    def __init__(self) -> None:
-        self.temp_log: str = os.path.join(os.getcwd(), 'temp', 'logging.json')
-        self.start_time: float = time.perf_counter()
-        self.distance: float = c.DISTANCE
+if Config.LOGGING:
+    logging.basicConfig(filename=Config.LOG_PATH, level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(process)d - %(message)s', filemode="a")
+else:
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(process)d - %(message)s',level=logging.DEBUG)
 
-        if c.CAMERA_FLAG:
-            self.camera_on()
+class Model:
+    def __init__(self, weight_path, config_path, coconames_path, cuda_enabled = False) -> None:
+        """
+        Set model object instance attribute
+        """
+        self.weight_path = weight_path
+        self.config_path = config_path
+        self.coconames_path = coconames_path
+        self.cuda_enabled = cuda_enabled
+
+        """
+        Initialize model object
+        """
+        self.object_label = self.get_object_label_list()
+        self.network = self.get_dnn_network_layer()
+        self.set_preferable_backend_and_target()
+
+    def get_object_label_list(self) -> list:
+        with open(self.coconames_path, "r") as f:
+            label_list = [line.strip() for line in f.readlines()]
+        return label_list
+
+    def get_dnn_network_layer(self):
+        return cv2.dnn.readNet(self.weight_path, self.config_path)
+
+    def get_network_layers_name(self):
+        pre_layer_names = self.network.getLayerNames()
+        return [pre_layer_names[i[0] - 1] for i in self.network.getUnconnectedOutLayers()]
+
+    def set_preferable_backend_and_target(self):
+        if self.cuda_enabled:
+            self.get_dnn_network_layer().setPreferableBackend(cv2.dnn.DNN_BACKEND_CUDA)
+            self.get_dnn_network_layer().setPreferableTarget(cv2.dnn.DNN_TARGET_CUDA)
+            logging.info(f"Setting up preferable backend and target to CUDA")
         else:
-            self.camera_off()
+            self.get_dnn_network_layer().setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
+            self.get_dnn_network_layer().setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
+            logging.info(f"Setting up preferable backend and target to CPU")
 
-    def camera_on(self) -> None:
-        '''
-        Get camera ID for the camera stream
-        '''
-        self.source = c.CAMERA_ID
-        self.input_information = f'camera_id_{c.CAMERA_ID}'.upper()
-    
-    def camera_off(self) -> None:
-        '''
-        Get path for the video stream
-        '''
-        self.source = os.path.join(os.getcwd(), c.FOLDERNAME, c.VIDEONAME)
-        self.input_information = c.VIDEONAME[:-4].upper()
-
-class ProgramFeatures(LoadInfoFromDisk):
-    '''
-    Features for the SODV
-    =====================
-    '''
+class MainCtrl:
     def __init__(self) -> None:
-        RefreshProgramLogs()
-        super().__init__()
-        self.video = cv2.VideoCapture(self.source)
-        self.model = Model(utilsdir=c.UTILSDIR, modeldir=c.MODELDIR, weights=c.WEIGHTS, cfg=c.CFG, labelsdir=c.LABELSDIR, coco=c.COCONAMES, cuda=False)
-        self.active_thread_count: int = None
-        self.p_time: float = 0
-        self.frame_counter: int = 0
+        logging.info(f"Loading video source")
+        self.video = cv2.VideoCapture(os.path.join(os.getcwd(), Config.FOLDERNAME, Config.VIDEONAME))
+        self.model = Model(Config.WEIGHT_ABS_PATH, Config.CFG_ABS_PATH, Config.LABELS_ABS_PATH, cuda_enabled=False)
+        self.start_frame_time = 0
 
-    def calculate_centroid(self, *axis: int) -> tuple:
-        '''
-        Get center point of ground plane for the bounding box (bbox)
-        ------------------------------------------------------------
-        - param : *axis : (xmin_pre_process, ymin_pre_process, xmax_pre_process, ymax_pre_process)
-        - xmin_pre_process : x-axis minimum value
-        - ymin_pre_process : y-axis minimum value
-        - xmax_pre_process : x-axis maximum value
-        - ymax_pre_process : y-axis maximum value
+    def draw_object_bounding_box(self, frame, bbox: BoundingBox):
 
-        - return value : C(x,y), the center of bounding box ground plane 
+        if bbox.is_violate == BoundingBox.VIOLATE:
+            color = Config.RED
+        else:
+            color = Config.BLACK
 
-        - To return bbox center point: 
-        - return (((axis[2] + axis[0])/2), ((axis[3] + axis[1])/2))
-        '''
-        return (((axis[2] + axis[0])/2), axis[3])
-    
-    def rect_detection_box(self, color: tuple, *axis: int) -> None:
-        '''
-        Bounding Box (bbox)
-        -------------------
-        - param : color, *args : (color, xmin, ymin, xmax, ymax)
-        - color : color for the bounding box
-        - xmin  : x-axis minimum value
-        - ymin  : y-axis minimum value
-        - xmax  : x-axis maximum value
-        - ymax  : y-axis maximum value
-        '''
-        cv2.rectangle(self.frame, (axis[0], axis[1]), (axis[2], axis[3]), color, 1)
-    
-    def cross_line(self, xmin: int, ymin: int, xmax: int, ymax: int, color: tuple) -> None:
-        '''
-        Use cross line as detection output instead of boxes
-        ---------------------------------------------------
-        - horizontal = s(xmin, yc), e(xmax, yc)
-        - verticle = s(xc, ymin), e(xc, ymax)
-        '''
-        xcenter = (xmin + xmax)/2
-        ycenter = (ymin + ymax)/2
+        cv2.rectangle(frame, (bbox.xmin, bbox.ymin), (bbox.xmax, bbox.ymax), color, 1)
+        logging.debug("min = ({0}, {1}) max = ({2}, {3}) IsViolate = {4}".format(bbox.xmin, bbox.ymin, bbox.xmax, bbox.ymax, bbox.is_violate))
 
-        cv2.line(self.frame, (int(xmin), int(ycenter)), (int(xmax), int(ycenter)), color, 1, cv2.LINE_AA)
-        cv2.line(self.frame, (int(xcenter), int(ymin)), (int(xcenter), int(ymax)), color, 1, cv2.LINE_AA)
-    
-    def draw_line_distance_between_bbox(self, centroid_new: tuple, centroid_old: tuple) -> None:
-        '''
-        Display line between violated bbox
-        ----------------------------------
-        '''
-        cv2.line(self.frame, (int(centroid_new[0]), int(centroid_new[1])), (int(centroid_old[0]), int(centroid_old[1])), c.YELLOW, 1, cv2.LINE_AA)
-        cv2.circle(self.frame, (int(centroid_new[0]), int(centroid_new[1])), 3, c.ORANGE, -1, cv2.LINE_AA)
-        cv2.circle(self.frame, (int(centroid_old[0]), int(centroid_old[1])), 3, c.ORANGE, -1, cv2.LINE_AA)
+    def draw_object_violation_status(self, frame, bbox: BoundingBox):
+        if bbox.is_violate == BoundingBox.VIOLATE:
+            text = "high".upper()
+            font_color = Config.ORANGE
+            backgroud_color = Config.RED
+        else:
+            text = "low".upper()
+            font_color = Config.GREEN
+            backgroud_color = Config.BLACK
 
-    def status_display(self, label: str, xmin: int, ymin: int, **color: tuple) -> None:
-        '''
-        Display violation status on top of bbox
-        ---------------------------------------
-        '''
-        label_size, base_line = cv2.getTextSize(label, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
-        ylabel = max(ymin, label_size[1])
-        cv2.rectangle(self.frame, (xmin, ylabel - label_size[1]), (xmin + label_size[0], ymin + base_line), color['background'], cv2.FILLED)
-        cv2.putText(self.frame, label, (xmin, ymin), cv2.FONT_HERSHEY_DUPLEX, 0.5, color['font'], 1, cv2.LINE_AA)
+        label_size, base_line = cv2.getTextSize(text, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
+        ylabel = max(bbox.ymin, label_size[1])
+        cv2.rectangle(
+            frame, 
+            (bbox.xmin, ylabel - label_size[1]), 
+            (bbox.xmin + label_size[0], bbox.ymin + base_line), 
+            backgroud_color, cv2.FILLED)
 
-    def information_display(self) -> None:
-        '''
-        Display violation detection information
-        ---------------------------------------
-        '''
-        cv2.rectangle(self.frame, (13, 5), (250, 30), c.BLACK, cv2.FILLED)
-        cv2.putText(self.frame, f'{self.input_information}', (28, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.WHITE, 1, cv2.LINE_AA)
-        cv2.putText(self.frame, f'{self.fps}fps', (200, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.GREEN, 1, cv2.LINE_AA)
+        cv2.putText(
+            frame, 
+            text, 
+            (bbox.xmin, bbox.ymin), 
+            cv2.FONT_HERSHEY_DUPLEX, 
+            0.5, 
+            font_color, 
+            1, 
+            cv2.LINE_AA)
 
-        cv2.rectangle(self.frame, (13, 30), (250, 80), c.GREY, cv2.FILLED)
+    def draw_pairwise_bbox_distance_line(self, frame, bbox_new: BoundingBox, bbox_old: BoundingBox):
+        cv2.line(
+            frame, 
+            (bbox_new.get_groundplane_center_point()[0], bbox_new.get_groundplane_center_point()[1]), 
+            (bbox_old.get_groundplane_center_point()[0], bbox_old.get_groundplane_center_point()[1]), 
+            Config.YELLOW, 
+            1, 
+            cv2.LINE_AA)
+
+        cv2.circle(
+            frame, 
+            (bbox_new.get_groundplane_center_point()[0], bbox_new.get_groundplane_center_point()[1]), 
+            3, 
+            Config.ORANGE, 
+            -1, 
+            cv2.LINE_AA)
+
+        cv2.circle(
+            frame, 
+            (bbox_old.get_groundplane_center_point()[0], bbox_old.get_groundplane_center_point()[1]), 
+            3, 
+            Config.ORANGE, 
+            -1, 
+            cv2.LINE_AA)
+
+    def draw_current_frame_legend(self, frame, bbox_list: BoundingBox):
+        cv2.rectangle(frame, (13, 5), (250, 30), Config.BLACK, cv2.FILLED)
+        cv2.putText(frame, "", (28, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, Config.WHITE, 1, cv2.LINE_AA)
+        cv2.putText(frame, "{0}fps".format(self.get_current_fps()), (200, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, Config.GREEN, 1, cv2.LINE_AA)
+
+        high_count = 0
+        low_count = 0
+        for i, bbox in enumerate(bbox_list):
+            if bbox.is_violate == BoundingBox.VIOLATE:
+                high_count += 1
+            else:
+                low_count += 1
+
+        cv2.rectangle(frame, (13, 30), (250, 80), Config.GREY, cv2.FILLED)
         LINE = "--"
-        HIGHRISK_TEXT = f'HIGH RISK: {self.high_counter} people'
-        cv2.putText(self.frame, LINE, (28, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.RED, 2, cv2.LINE_AA)
-        cv2.putText(self.frame, HIGHRISK_TEXT, (60, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.BLUE, 1, cv2.LINE_AA)
+        HIGHRISK_TEXT = "HIGH RISK: {0} people".format(high_count)
+        cv2.putText(frame, LINE, (28, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, Config.RED, 2, cv2.LINE_AA)
+        cv2.putText(frame, HIGHRISK_TEXT, (60, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, Config.BLUE, 1, cv2.LINE_AA)
 
-        LOWRISK_TEXT = f'LOW RISK: {self.low_counter} people'
-        cv2.putText(self.frame, LINE, (28, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.BLACK, 2, cv2.LINE_AA)
-        cv2.putText(self.frame, LOWRISK_TEXT, (60, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, c.BLUE, 1, cv2.LINE_AA)
-    
-    def dashboard_display(self) -> None:
-        '''
-        Display dashboard
-        -----------------
-        '''
-        self.dashboard = cv2.imread(c.DASHBOARD_PATH)
-        cv2.namedWindow(f'SODV Dashboard: {self.input_information}', cv2.WINDOW_NORMAL)
-        cv2.imshow(f'SODV Dashboard: {self.input_information}', self.dashboard)
+        LOWRISK_TEXT = "LOW RISK: {0} people".format(low_count)
+        cv2.putText(frame, LINE, (28, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, Config.BLACK, 2, cv2.LINE_AA)
+        cv2.putText(frame, LOWRISK_TEXT, (60, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, Config.BLUE, 1, cv2.LINE_AA)
 
-    def generate_fps(self) -> int:
-        '''
-        Frame per second (fps) counter
-        ------------------------------
-        '''
-        self.c_time = time.time()
-        fps = 1 / (self.c_time - self.p_time)
-        self.p_time = self.c_time
+    def get_current_fps(self):
+        current_frame_time = time.perf_counter()
+        fps = 1 / (current_frame_time - self.start_frame_time)
+        self.start_frame_time = current_frame_time
         return int(fps)
 
-    def generate_chart(self) -> None:
-        '''
-        Generate and save chart as image
-        --------------------------------
-        '''
-        fig, ax = plt.subplots(figsize=(4,4))
-        ax.pie([self.high_counter, self.low_counter], labels = [f'High risk: {self.high_counter}', f'Low risk: {self.low_counter}'], colors=[c.RED_DB, c.GREEN_DB])
+    def init_chart_image(self, bbox_list: BoundingBox):
+        high_count = 0
+        low_count = 0
+        for i, bbox in enumerate(bbox_list):
+            if bbox.is_violate == BoundingBox.VIOLATE:
+                high_count += 1
+            else:
+                low_count += 1
+
+        _, ax = plt.subplots(figsize=(4,4))
+        ax.pie([high_count, low_count], labels = ["High risk: {0}".format(high_count), "Low risk: {0}".format(low_count)], colors=[Config.RED_DB, Config.GREEN_DB])
         ax.legend()
-        plt.savefig(c.DASHBOARD_PATH, transparent=True, dpi=700)
+        plt.savefig(Config.DASHBOARD_PATH, transparent=True, dpi=700)
         plt.close()
 
-    def generate_program_logs(self) -> None:
-        '''
-        Generate program logs
-        ---------------------
-        '''
-        with open(self.temp_log) as file_in:
-            loaded = json.load(file_in)
-            data = loaded['data']
-        if self.frame_counter == 1 or self.frame_counter%5 == 0:
-            items = {
-                "time" : f'{self.log_time}',
-                "frames" : int(self.frame_counter),
-                "high_risk": int(self.high_counter),
-                "low_risk": int(self.low_counter)
-            }
-            data.append(items)
+    def show_dashboard(self, bbox_list: BoundingBox):
+        self.init_chart_image(bbox_list)
+        dashboard = cv2.imread(Config.DASHBOARD_PATH)
+        cv2.namedWindow("SODV Dashboard", cv2.WINDOW_NORMAL)
+        cv2.imshow("SODV Dashboard", dashboard)
 
-        try:
-            with open(self.temp_log, 'w') as file_out:
-                json.dump(loaded, file_out, sort_keys=True)
-        except IOError as e:
-            print(e)
-    
-    def show_program_logs(self) -> str:
-        '''
-        Display program logs after program finish executed
-        --------------------------------------------------
-        '''
-        with open(self.temp_log, 'r') as file_in:
-            loaded = json.load(file_in)
-            data = loaded['data']
-        time, frame, high, low = list(), list(), list(), list()
-        to_display = {
-            "Time" : time,
-            "Frame": frame,
-            "High": high,
-            "Low": low
-        }
-        for i in data:
-            time.append(i['time'])
-            frame.append(i['frames'])
-            high.append(i['high_risk'])
-            low.append(i['low_risk'])
-        return tabulate.tabulate(to_display, headers="keys", tablefmt="pretty")
-    
-    def show_thread_usage(self) -> str:
-        '''
-        Display thread utilization after program finish executed
-        --------------------------------------------------------
-        '''
-        elapsed = time.perf_counter()-self.start_time
-        data = {"Active thread used": [self.active_thread_count],
-                "Info": [f'Executed in {elapsed:.2f}s']}
-        return tabulate.tabulate(data, headers="keys", tablefmt="pretty")
+    def main(self):
 
-    def __str__(self) -> str:
-        return f'Program Logs =>\n{self.show_program_logs()}\nHardware usage =>\n{self.show_thread_usage()}'
-
-class App(ProgramFeatures):
-    '''
-    Social Distancing Violation System SODV
-    =======================================
-    A camera tests program to identifie persons who are not adhering to COVID social distancing measures
-    '''
-    def __init__(self) -> None:
-        super().__init__()
-        self.net, self.layer_names, _ = self.model.network, self.model.layer_names, self.model.classes
-        self.window_name = "SODV: Social Distancing Violation System"
-        self.main()
-
-    def main(self) -> None:
         while (self.video.isOpened()):
-            self.high_counter, self.low_counter = 0, 0
- 
-            self.flag, self.frame = self.video.read()
+            
+            b_frame_exist, frame = self.video.read()
 
-            if c.THREAD:
+            # TBD
+            if Config.THREAD:
                 try:
                     self.thread_1 = threading.Thread(target=self.video.read)
                     self.thread_1.daemon = True
                     self.thread_1.start()
                 except RuntimeError as err:
-                    print(err)
+                    logging.error(err)
             else:
                 pass
-            self.active_thread_count = int(threading.activeCount())
 
-            if self.flag:
+            if b_frame_exist:
                 '''
                 Resize the frame for the object prediction
                 '''
-                self.frame_resized = cv2.resize(self.frame, (416, 416))
+                frame_resized = cv2.resize(frame, (416, 416))
             else:
                 break
 
-            '''
-            Detect objects in the resized frame
-            '''
-            blob = cv2.dnn.blobFromImage(self.frame_resized, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
-            self.net.setInput(blob)
-            layer_outputs = self.net.forward(self.layer_names)
+            blob = cv2.dnn.blobFromImage(frame_resized, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
+            self.model.network.setInput(blob)
+            layer_output_list = self.model.network.forward(self.model.get_network_layers_name())
 
-            confidences = list()
-            boxes = list()
-            frame_height, frame_width, _ = self.frame.shape
-            for output in layer_outputs:
-                for detection in output:
-                    scores = detection[5:]
-                    class_ID = np.argmax(scores)
-                    confidence = scores[class_ID]
+            clustered_bounding_box_list = list()
+            confidence_list = list()
+            current_frame_height, current_frame_width, _ = frame.shape
 
-                    '''
-                    Ignore the object classes except 'person'
-                    '''
-                    if class_ID != 0:
+            for _, layer_output in enumerate(layer_output_list):
+                for _, detection in enumerate(layer_output):
+                    score_list = detection[5:]
+                    object_class_num = np.argmax(score_list)
+                    object_confidence = score_list[object_class_num]
+
+                    if object_class_num != 0x00:
                         continue
 
-                    '''
-                    Get the bbox axis point if the conficence threshold of detected object class is more than 50%
-                    '''
-                    if confidence > c.MIN_CONFIDENCE:
-                        '''
-                        Get the bbox center point of detected object class
-                        '''
-                        center_x = int(detection[0] * frame_width)
-                        center_y = int(detection[1] * frame_height)
+                    if object_confidence > Config.MIN_CONFIDENCE:
 
-                        '''
-                        Get the bbox width and height of detected object class
-                        '''
-                        bbox_cluster_w = int(detection[2] * frame_width)
-                        bbox_cluster_h = int(detection[3] * frame_height)
+                        clustered_object_bounding_box_center_axis_x = int(detection[0] * current_frame_width)
+                        clustered_object_bounding_box_center_axis_y = int(detection[1] * current_frame_height)
 
-                        '''
-                        Compute the bbox minimum x and y axis point of detected object class
-                        '''
-                        bbox_cluster_x = int(center_x - bbox_cluster_w / 2)
-                        bbox_cluster_y = int(center_y - bbox_cluster_h / 2)
+                        clustered_object_bounding_box_width = int(detection[2] * current_frame_width)
+                        clustered_object_bounding_box_height = int(detection[3] * current_frame_height)
 
-                        boxes.append([bbox_cluster_x, bbox_cluster_y, bbox_cluster_w, bbox_cluster_h])
-                        confidences.append(float(confidence))
+                        clustered_object_bounding_box_minimum_axis_x = int(clustered_object_bounding_box_center_axis_x - clustered_object_bounding_box_width / 2)
+                        clustered_object_bounding_box_minimum_axis_y = int(clustered_object_bounding_box_center_axis_y - clustered_object_bounding_box_height / 2)
 
-            '''
-            Apply non-max suppression (NMS) for the clustered detected object class bbox
-            '''
-            centroids = list()
-            detected_bboxes = list()
-            detected_bbox_colors = list()
-            indexes = cv2.dnn.NMSBoxes(boxes, confidences, c.MIN_CONFIDENCE, c.NMS_THRESHOLD)
-            for i, box in enumerate(boxes):
-                if i in indexes:
-                    x, y, w, h = box
-                    xmin_pre_process = x
-                    ymin_pre_process = y
-                    xmax_pre_process = (x + w)
-                    ymax_pre_process = (y + h)
+                        clustered_bounding_box_list.append(
+                            [clustered_object_bounding_box_minimum_axis_x, 
+                             clustered_object_bounding_box_minimum_axis_y, 
+                             clustered_object_bounding_box_width, 
+                             clustered_object_bounding_box_height])
 
-                    '''
-                    Compute the ground plane center point for the bbox
-                    '''
-                    centroid_new = self.calculate_centroid(xmin_pre_process, ymin_pre_process, xmax_pre_process, ymax_pre_process)
-                    detected_bboxes.append([xmin_pre_process, ymin_pre_process, xmax_pre_process, ymax_pre_process])
+                        confidence_list.append(float(object_confidence))
 
-                    is_violation = None
-                    for j, centroid_old in enumerate(centroids):
-                        '''
-                        Compute the pair-wise distance for each bbox center point using euclidean distance
-                        '''
-                        if dst.euclidean([centroid_new[0], centroid_new[1]], [centroid_old[0], centroid_old[1]]) <= self.distance:
-                            detected_bbox_colors[j] = True
-                            is_violation = True
-                            self.draw_line_distance_between_bbox(centroid_new, centroid_old)
+            """
+             Apply non-max suppression (NMS) for the clustered detected object class bbox
+            """
+            current_frame_detected_object_0x00_bounding_box_list = list()
+            post_frame_detected_object_0x00_bounding_box_list = list()
+            nms_index_list = cv2.dnn.NMSBoxes(clustered_bounding_box_list, confidence_list, Config.MIN_CONFIDENCE, Config.NMS_THRESHOLD)
+
+            for i, clustered_bounding_box in enumerate(clustered_bounding_box_list):
+
+                if i in nms_index_list:
+                    x, y, width, height = clustered_bounding_box
+                    bounding_box_new = BoundingBox(x, y, width, height, BoundingBox.NON_VIOLATE)
+
+                    current_frame_detected_object_0x00_bounding_box_list.append(bounding_box_new)
+
+                    for j, bounding_box_old in enumerate(post_frame_detected_object_0x00_bounding_box_list):
+
+                        bounding_box_new_ground_plane_center_point = bounding_box_new.get_groundplane_center_point()
+                        bounding_box_old_ground_plane_center_point = bounding_box_old.get_groundplane_center_point()
+
+                        if dst.euclidean(
+                            list([bounding_box_new_ground_plane_center_point[0], bounding_box_new_ground_plane_center_point[1]]),
+                            list([bounding_box_old_ground_plane_center_point[0], bounding_box_old_ground_plane_center_point[1]])) <= Config.DISTANCE:
+
+                            bounding_box_new.is_violate = BoundingBox.VIOLATE
+                            bounding_box_old.is_violate = BoundingBox.VIOLATE
+                            self.draw_pairwise_bbox_distance_line(frame, bounding_box_new, bounding_box_old)
                             break
-                    centroids.append(centroid_new)
-                    detected_bbox_colors.append(is_violation)
+                    post_frame_detected_object_0x00_bounding_box_list.append(bounding_box_new)
 
-            for i, detected_bbox in enumerate(detected_bboxes):
-                xmin = detected_bbox[0]
-                ymin = detected_bbox[1]
-                xmax = detected_bbox[2]
-                ymax = detected_bbox[3]
+            for i, bounding_box in enumerate(current_frame_detected_object_0x00_bounding_box_list):
+                
+                self.draw_object_bounding_box(frame, bounding_box)
+                self.draw_object_violation_status(frame, bounding_box)
+            
+            if Config.DASHBOARD_FLAG:
+                self.show_dashboard(current_frame_detected_object_0x00_bounding_box_list)
 
-                '''
-                Compute the euclidean distance between the pairwise bbox and display the bbox output
-                - Wrap with black bbox if the pairwise not violate social distance measure
-                - Wrap with red bbox if the pairwise violate social distance measure
-                '''
-                if detected_bbox_colors[i]:
-                    # self.cross_line(xmin, ymin, xmax, ymax, c.RED)
-                    self.rect_detection_box(c.RED, xmin, ymin, xmax, ymax)
-                    self.status_display("high".upper(), xmin, ymin, font=c.ORANGE, background=c.RED)
-                    self.high_counter += 1
-                else:
-                    # self.cross_line(xmin, ymin, xmax, ymax, c.BLACK)
-                    self.rect_detection_box(c.BLACK, xmin, ymin, xmax, ymax)
-                    self.status_display("low".upper(), xmin, ymin, font=c.GREEN, background=c.BLACK)
-                    self.low_counter += 1
-                    
-            if c.DASHBOARD_FLAG:
-                self.generate_chart()
-                self.dashboard_display()
-            else: pass
+            self.draw_current_frame_legend(frame, current_frame_detected_object_0x00_bounding_box_list)
 
-            self.fps = self.generate_fps()
-            self.information_display()
-            self.frame_counter += 1
-            self.log_time = datetime.datetime.now().strftime("%d-%m-%Y %I:%M:%S%p")
-            self.generate_program_logs()
-
-            cv2.namedWindow(self.window_name, cv2.WINDOW_NORMAL)
-            cv2.imshow(self.window_name, self.frame)
+            window_text = "SODV: Social Distancing Violation System"
+            cv2.namedWindow(window_text, cv2.WINDOW_NORMAL)
+            cv2.imshow(window_text, frame)
              
-            if cv2.waitKey(1) & 0xFF == ord('q') or cv2.getWindowProperty(self.window_name, cv2.WND_PROP_VISIBLE) < 1:
+            if cv2.waitKey(1) & 0xFF == ord('q') or cv2.getWindowProperty(window_text, cv2.WND_PROP_VISIBLE) < 1:
                 break
 
     def __del__(self) -> None:
         self.video.release()
         cv2.destroyAllWindows()
 
+
 if __name__ == '__main__':
-    app = App()
-    if c.LOGGING:
-        print(app)
+    app = MainCtrl()
+    app.main()

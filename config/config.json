@@ -6,7 +6,8 @@
 		"CFG": "yolov3.cfg",
 		"LABELSDIR": "labels",
 		"COCONAMES": "coco.names",
-		"DASHBOARD_PATH": "temp/chart.png",
+		"DASHBOARD_FILENAME": "chart.png",
+		"TEMP_DIR":  "temp",
 		"FOLDERNAME": "videos",
 		"VIDEONAME": "TownCentre.mp4"
 	},
@@ -14,7 +15,7 @@
 	"attributes": {
 		"CAMERA_FLAG": false,
 		"CAMERA_ID": 0,
-		"THREAD": true,
+		"THREAD": false,
 		"NMS_THRESHOLD": 0.4,
 		"MIN_CONFIDENCE": 0.5,
 		"DASHBOARD_FLAG": false,
