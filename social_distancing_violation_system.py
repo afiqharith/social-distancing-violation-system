@@ -14,6 +14,8 @@ if Config.LOGGING:
 else:
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(process)d - %(message)s',level=logging.DEBUG)
 
+USE_BBOX = False
+
 class Model:
     def __init__(self, weight_path, config_path, coconames_path, cuda_enabled = False) -> None:
         """
@@ -59,28 +61,53 @@ class MainCtrl:
         self.video = cv2.VideoCapture(os.path.join(os.getcwd(), Config.FOLDERNAME, Config.VIDEONAME))
         self.model = Model(Config.WEIGHT_ABS_PATH, Config.CFG_ABS_PATH, Config.LABELS_ABS_PATH, cuda_enabled=False)
         self.start_frame_time = 0
+        self.selected_coordinate = []
+        self.window_text = "SODV: Social Distancing Violation System"
 
     def draw_object_bounding_box(self, frame, bbox: BoundingBox):
-
         if bbox.is_violate == BoundingBox.VIOLATE:
             color = Config.RED
         else:
             color = Config.BLACK
+        
+        if USE_BBOX:
+            cv2.rectangle(frame, (bbox.xmin, bbox.ymin), (bbox.xmax, bbox.ymax), color, 1)
+        else:
+            #START EXPERIMENTAL -------------------------
+            xcenter = (bbox.xmin + bbox.xmax) / 2
+            ycenter = (bbox.ymin + bbox.ymax) / 2
 
-        cv2.rectangle(frame, (bbox.xmin, bbox.ymin), (bbox.xmax, bbox.ymax), color, 1)
+            cv2.line(frame, (int(bbox.xmin), int(ycenter)), (int(bbox.xmax), int(ycenter)), Config.WHITE, 1, cv2.LINE_AA)
+            cv2.line(frame, (int(xcenter), int(bbox.ymin)), (int(xcenter), int(bbox.ymax)), Config.WHITE, 1, cv2.LINE_AA)
+
+            _center = (int(((bbox.xmax - bbox.xmin) / 2) + bbox.xmin), int(bbox.ymax) + 5)
+            _lenght = bbox.xmax - bbox.xmin 
+            _axes = (r1, r2) = (int(bbox.xmax - bbox.xmin), int(bbox.xmax - bbox.xmin) + 20)
+            _angle = -80
+            _sangle = 0
+            _eangle = 360
+            cv2.ellipse(frame, (_center, _axes, _angle), color, 1)
+            #END EXPERIMENTAL -------------------------
+
         logging.debug("min = ({0}, {1}) max = ({2}, {3}) IsViolate = {4}".format(bbox.xmin, bbox.ymin, bbox.xmax, bbox.ymax, bbox.is_violate))
+
+    def draw_object_type_confidence(self, frame, bbox: BoundingBox, percentage):
+        PERCENTAGE_TEXT = "person {}%".format(int(percentage*100))
+        label_size, _ = cv2.getTextSize(PERCENTAGE_TEXT, cv2.FONT_HERSHEY_DUPLEX, 0.3, 1)
+        ylabel = max(bbox.ymin - 10, label_size[1])
+        cv2.putText(frame, PERCENTAGE_TEXT, (bbox.xmin - 10, ylabel - label_size[1]), cv2.FONT_HERSHEY_DUPLEX, 0.3, Config.BLUE, 1, cv2.LINE_AA)
 
     def draw_object_violation_status(self, frame, bbox: BoundingBox):
         if bbox.is_violate == BoundingBox.VIOLATE:
-            text = "high".upper()
+            text = "NG".upper()
             font_color = Config.ORANGE
             backgroud_color = Config.RED
         else:
-            text = "low".upper()
+            text = "G".upper()
             font_color = Config.GREEN
             backgroud_color = Config.BLACK
 
-        label_size, base_line = cv2.getTextSize(text, cv2.FONT_HERSHEY_DUPLEX, 0.5, 1)
+        label_size, base_line = cv2.getTextSize(text, cv2.FONT_HERSHEY_DUPLEX, 0.3, 1)
         ylabel = max(bbox.ymin, label_size[1])
         cv2.rectangle(
             frame, 
@@ -93,7 +120,7 @@ class MainCtrl:
             text, 
             (bbox.xmin, bbox.ymin), 
             cv2.FONT_HERSHEY_DUPLEX, 
-            0.5, 
+            0.3, 
             font_color, 
             1, 
             cv2.LINE_AA)
@@ -124,27 +151,65 @@ class MainCtrl:
             cv2.LINE_AA)
 
     def draw_current_frame_legend(self, frame, bbox_list: BoundingBox):
-        cv2.rectangle(frame, (13, 5), (250, 30), Config.BLACK, cv2.FILLED)
-        cv2.putText(frame, "", (28, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, Config.WHITE, 1, cv2.LINE_AA)
-        cv2.putText(frame, "{0}fps".format(self.get_current_fps()), (200, 24), cv2.FONT_HERSHEY_DUPLEX, 0.5, Config.GREEN, 1, cv2.LINE_AA)
 
         high_count = 0
         low_count = 0
+        total_detected = 0
         for i, bbox in enumerate(bbox_list):
+            total_detected += 1
             if bbox.is_violate == BoundingBox.VIOLATE:
                 high_count += 1
             else:
                 low_count += 1
 
-        cv2.rectangle(frame, (13, 30), (250, 80), Config.GREY, cv2.FILLED)
         LINE = "--"
-        HIGHRISK_TEXT = "HIGH RISK: {0} people".format(high_count)
-        cv2.putText(frame, LINE, (28, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, Config.RED, 2, cv2.LINE_AA)
-        cv2.putText(frame, HIGHRISK_TEXT, (60, 50), cv2.FONT_HERSHEY_DUPLEX, 0.5, Config.BLUE, 1, cv2.LINE_AA)
+        HIGHRISK_TEXT = "HIGH RISK: {} people".format(high_count)
+        LOWRISK_TEXT = "LOW RISK: {} people".format(low_count)
+        TOTAL_TEXT = "SUM of DETECTED: {} people".format(total_detected)
+        HEADER_CONTAINER = [(13, 5), (170, 25)]
+        CONTENT_CONTAINER = [(HEADER_CONTAINER[0][0], HEADER_CONTAINER[1][1]), (HEADER_CONTAINER[1][0], HEADER_CONTAINER[1][1] + 55)]
+        cv2.rectangle(frame, HEADER_CONTAINER[0], HEADER_CONTAINER[1], Config.BLACK, cv2.FILLED)
+        cv2.rectangle(frame, CONTENT_CONTAINER[0], CONTENT_CONTAINER[1], Config.GREY, cv2.FILLED)
+        label_size, _  = cv2.getTextSize(LINE, cv2.FONT_HERSHEY_DUPLEX, 0.3, 1)
 
-        LOWRISK_TEXT = "LOW RISK: {0} people".format(low_count)
-        cv2.putText(frame, LINE, (28, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, Config.BLACK, 2, cv2.LINE_AA)
-        cv2.putText(frame, LOWRISK_TEXT, (60, 70), cv2.FONT_HERSHEY_DUPLEX, 0.5, Config.BLUE, 1, cv2.LINE_AA)
+        line_h_xmax = max(CONTENT_CONTAINER[0][0] + 4, label_size[0])
+        cv2.putText(frame, LINE, (CONTENT_CONTAINER[0][0] + 4, CONTENT_CONTAINER[0][1] + 13), cv2.FONT_HERSHEY_DUPLEX, 0.3, Config.RED, 1, cv2.LINE_AA)
+        cv2.putText(frame, HIGHRISK_TEXT, (line_h_xmax + label_size[0], CONTENT_CONTAINER[0][1] + 13), cv2.FONT_HERSHEY_DUPLEX, 0.3, Config.BLUE, 1, cv2.LINE_AA)
+
+        line_l_xmax = max(CONTENT_CONTAINER[0][0] + 4, label_size[0])
+        cv2.putText(frame, LINE, (CONTENT_CONTAINER[0][0] + 4, CONTENT_CONTAINER[0][1] + 27), cv2.FONT_HERSHEY_DUPLEX, 0.3, Config.BLACK, 1, cv2.LINE_AA)
+        cv2.putText(frame, LOWRISK_TEXT, (line_l_xmax + label_size[0], CONTENT_CONTAINER[0][1] + 27), cv2.FONT_HERSHEY_DUPLEX, 0.3, Config.BLUE, 1, cv2.LINE_AA)
+
+        cv2.putText(frame, TOTAL_TEXT, (CONTENT_CONTAINER[0][0] + 4, CONTENT_CONTAINER[0][1] + 41), cv2.FONT_HERSHEY_DUPLEX, 0.3, Config.BLUE, 1, cv2.LINE_AA)
+
+    def get_roi_frame(self, frame, coordinate: list[tuple]):
+        mask = np.zeros(frame.shape, dtype=np.uint8)
+        polygon = np.array([coordinate], dtype=np.int32)
+        num_frame_channels = frame.shape[2]
+        mask_ignore_color = (255,) * num_frame_channels
+        cv2.fillPoly(mask, polygon, mask_ignore_color)
+        masked_frame = cv2.bitwise_and(frame, mask)
+        return masked_frame
+    
+    def draw_roi_frame(self, frame, coordinate: list[tuple]):
+        # frame_overlay = frame.copy()
+        frame_overlay = self.frame_copy
+        polygon = np.array([coordinate], dtype=np.int32)
+        cv2.fillPoly(frame_overlay, polygon, (0, 255, 255))
+        alpha = 0.3
+        output_frame = cv2.addWeighted(frame_overlay, alpha, frame, 1 - alpha, 0)
+        return output_frame
+
+    def window_mouse_click_event(self, event, x, y, flags, params):
+        if event == cv2.EVENT_LBUTTONDOWN:
+            self.selected_coordinate.append((x, y))
+            COORDINATE_TEXT = "{0}, {1}".format(x, y)  
+            print(COORDINATE_TEXT)
+            cv2.putText(self.coordinate_frame, COORDINATE_TEXT, (x, y), cv2.FONT_HERSHEY_DUPLEX, 0.3, Config.YELLOW, 1, cv2.LINE_AA)
+            cv2.imshow(self.window_text, self.coordinate_frame)
+
+        if event == cv2.EVENT_RBUTTONDOWN:
+            self.selected_coordinate.clear()
 
     def get_current_fps(self):
         current_frame_time = time.perf_counter()
@@ -174,10 +239,16 @@ class MainCtrl:
         cv2.imshow("SODV Dashboard", dashboard)
 
     def main(self):
-
         while (self.video.isOpened()):
-            
             b_frame_exist, frame = self.video.read()
+
+            if len(self.selected_coordinate) < 4:
+                self.coordinate_frame = frame
+                cv2.setMouseCallback(self.window_text, self.window_mouse_click_event)
+
+            if len(self.selected_coordinate) >= 4:
+                self.frame_copy = frame.copy()
+                frame = self.get_roi_frame(frame, self.selected_coordinate)
 
             # TBD
             if Config.THREAD:
@@ -265,7 +336,7 @@ class MainCtrl:
                     post_frame_detected_object_0x00_bounding_box_list.append(bounding_box_new)
 
             for i, bounding_box in enumerate(current_frame_detected_object_0x00_bounding_box_list):
-                
+                self.draw_object_type_confidence(frame, bounding_box, confidence_list[i])
                 self.draw_object_bounding_box(frame, bounding_box)
                 self.draw_object_violation_status(frame, bounding_box)
             
@@ -274,11 +345,14 @@ class MainCtrl:
 
             self.draw_current_frame_legend(frame, current_frame_detected_object_0x00_bounding_box_list)
 
-            window_text = "SODV: Social Distancing Violation System"
-            cv2.namedWindow(window_text, cv2.WINDOW_NORMAL)
-            cv2.imshow(window_text, frame)
+            if len(self.selected_coordinate) >= 4:
+                frame = self.draw_roi_frame(frame, self.selected_coordinate)
+
+            
+            cv2.namedWindow(self.window_text, cv2.WINDOW_NORMAL)
+            cv2.imshow(self.window_text, frame)
              
-            if cv2.waitKey(1) & 0xFF == ord('q') or cv2.getWindowProperty(window_text, cv2.WND_PROP_VISIBLE) < 1:
+            if cv2.waitKey(1) & 0xFF == ord('q') or cv2.getWindowProperty(self.window_text, cv2.WND_PROP_VISIBLE) < 1:
                 break
 
     def __del__(self) -> None:
